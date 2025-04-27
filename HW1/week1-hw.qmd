@@ -1,0 +1,38 @@
+---
+title: "OSTA5003 Week 1 Homework"
+format:
+    html:
+        embed-resources: true
+---
+
+## Three suburb housing Data
+
+Use the filtered data from the lab
+
+```{r melbdat}
+smaller.dat <- read.csv("Melbourne_housing_FULL.csv") |>
+  subset(Suburb %in% c("Brunswick", "Craigieburn", "Hawthorn"),
+         select = c("Price", "BuildingArea", "Suburb")) |> na.omit()
+head(smaller.dat)
+```
+
+Fit the regression models to this filtered data,
+
+a. `Price ~ BuildingArea` ($\leadsto \widehat Y = \beta_0 + \beta_1 \cdot \text{BuildingArea}$)
+a. `Price ~ BuildingArea + Suburb`
+
+1. Compare the goodness of fit of the model and explain which model seems better using the metric. (Hint: Use the adjusted R-square)
+
+2. Visualize the data and regression fits on a scatter plot. Hint: You can visualize the `Suburb` information by colour the points differently for each suburb (using the `col` argument and integer coding if using base graphics, if using `tidyverse` you can use the `colour` argument in the aesthetic mapping)
+
+3. Compute the LS criterion for both models. To do this you can use the code below to compute the distance of the points in the data away from the line ($y$ denote the points and $\widehat y$ denote the regression predictions from the features in the data)
+
+```{r}
+LScrit <- function(y, yhat) {
+  sum((y - yhat)^2)
+}
+```
+
+* i.e. `y` is the `Price` variable and `yhat` are the predictions from the line. Can be predicted using `predict.lm` in `R` for the least squares regression line.
+
+4. For the simple regression, show that another candidate line has a larger `LScrit` value than the simple least squares regression line.

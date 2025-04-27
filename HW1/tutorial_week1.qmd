@@ -1,0 +1,133 @@
+---
+title: "Lab Week 1"
+format:
+  html:
+    code-fold: true
+    code-line-numbers: true
+    number-sections: true
+    number-depth: 3
+    code-tools: true
+    embed-resources: true
+---
+
+## R programming
+
+### File I/O
+
+#### Reading a dataset
+
+a) Download the `Cereal.csv` file from the Canvas page and use the `read.csv` command to read in the csv file into `R` and assign it to the object called `cereal`.
+
+```{r load-data}
+library(tidyverse)
+cereal <- read.csv("Cereal.csv")
+head(cereal)
+```
+
+### Data Types
+
+#### Data frames
+
+a) There should be a default dataset in `R` called `cereal`. Use the `head` function to inspect the first few lines of the data frame and use `class` to check that `cereal` is in fact a data frame.
+b) What are the column names of the cereal data frame? How many rows are there? (`dim`  and `nrow`)
+c) Extract the `calories` column using the `$` operator and using the `[[` operator.
+d) Extract rows 1 to 10 from the `cereal` data frame.
+e) Make a new data frame called `Kelloggs` that only contains rows that belongs to manufacturer, Kelloggs (when `mfr` takes the value `"K"`).
+
+```{r}
+# b
+names(cereal)
+# c
+cereal$calories
+# d
+cereal[1:10, ]
+# e
+kellogs.observations <- cereal$mfr == "K"
+kellogs <- cereal[kellogs.observations, ]
+```
+
+#### Factors
+
+a) Load the `Cereal` data again with the `read.csv` command again. This time, use the optional argument, `stringsAsFactors = TRUE`.
+b) The `mfr` and `type` columns are now factors. Check that this is true.
+c) How many levels are there in `mfr` and `type`? (use the functions `levels` or `nlevels`)
+
+```{r}
+cereal <- read.csv("Cereal.csv", stringsAsFactors = TRUE)
+```
+
+#### Vectors
+
+a) Extract the `calories` into a new vector called `cereal.calories`.
+b) How many elements are there in `cereal.calories`? (`length`)
+c) Extract the 5th to the 10th element from `cereal.calories`.
+d) Add one more element to `cereal.calories` using `c()`.
+
+#### Matrix
+
+a) Can you force the cereal data frame to be a Matrix? (`as.matrix(cereal)`). Check that the elements have been forced into the character type.
+b) Now do this again, but this time leave out the `mfr`, `name` and `type` columns. Check that the elements are now numeric.
+
+### Numerical summary
+
+#### Summary
+
+a) Use the `summary` function to extract the median, 1st quartile and 3rd quartile data from the `sodium` column.
+
+#### Basic statistics
+
+b) Find the max, min, standard deviation and mean of the `sodium` (`max()`, `min()`, `sd()`, `mean()`)
+c) Find the mean `sodium` of each `mfr`.
+
+```{r}
+sodium_summarized <- cereal |>
+  select(sodium) |>
+  summarise(sodium_min = min(sodium),
+            sodium_max = max(sodium))
+```
+
+### Graphical summary
+
+#### Boxplot
+
+a) Make a boxplot of the `sodium` against `mfr` using `boxplot()`.
+
+#### Scatterplot
+
+b) Plot `calories` against `sodium` using `plot()`.
+
+### Write Data to File
+
+b) Write data frame with only the Kellogg's observations to a file called `kelloggs.csv`. Use the `write.csv` command.
+
+## Melbourne house prices regression model
+
+In this section we will examine the dataset describing Melbourne house prices. This dataset was downloaded from [Kaggle](https://www.kaggle.com/anthonypino/melbourne-housing-market) and the data was released under the CC BY-NC-SA 4.0 license. For this lab, we will focus on three subrubs - Brunswick, Craigieburn and Hawthorn and examine what variables or factors are associated with the housing price.
+
+### Load the data
+
+Load the Melbourne house price dataset from Canvas.
+
+### Initial data analysis
+
+We will need to subset the data to only look at 3 suburbs - Brunswick, Craigieburn and Hawthorn. Similar to lab 1, start the data analysis by generating some quantitative and graphical summaries. For example, determine the average price in each of these three suburbs. Explore more summaries of the data.
+
+For the following questions, use the subsetted data for the Suburbs of Brunswick, Craigieburn and Hawthorn.
+
+### Finding association I
+
+To examine the association between house prices and a single variable, start by constructing a simple linear regression using only `BuildingArea` as a predictor. Use an appropriate statistic to justify the goodness of fit of the prediction and create a graphical output to enable you to assess your model fit.
+
+Note: you might consider other variables too.
+
+### Finding association II
+
+(a) Variability of house prices are complex and likely to be explained by many different factors. Construct a multiple linear regression here by examining if adding `Suburb` as a predictor will improve the prediction? Notice that `Suburb` is a categorical variable. Briefly describe how to interpret the regression coefficients returned by `lm`.
+(b) There are many other variables in the data, you might consider whether adding the number of car spaces as a predictor improve the prediction model?
+
+### Impact of outliers
+
+Model construction can be affected by unwanted variation and noise such as outliers. For example, houses with very small building areas of 5sqm and lower and larger places over 300 sqm look like outliers. How would you assess the impact of outliers?
+
+### Prediction
+Predict the price of a house in Hawthorn with 2 car spaces and 100 sqm in building area. What is the 95% confidence interval of your prediction value?
