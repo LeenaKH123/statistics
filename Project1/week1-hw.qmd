@@ -14,6 +14,51 @@ smaller.dat <- read.csv("Melbourne_housing_FULL.csv") |>
   subset(Suburb %in% c("Brunswick", "Craigieburn", "Hawthorn"),
          select = c("Price", "BuildingArea", "Suburb")) |> na.omit()
 head(smaller.dat)
+# Fit model (a): Price ~ BuildingArea
+model_a <- lm(Price ~ BuildingArea, data = smaller.dat)
+
+# Fit model (b): Price ~ BuildingArea + Suburb
+model_b <- lm(Price ~ BuildingArea + Suburb, data = smaller.dat)
+
+# Get Adjusted R-squared
+adj_r2_a <- summary(model_a)$adj.r.squared
+adj_r2_b <- summary(model_b)$adj.r.squared
+
+adj_r2_a
+adj_r2_b
+library(ggplot2)
+
+# Scatter plot colored by Suburb
+ggplot(smaller.dat, aes(x = BuildingArea, y = Price, color = Suburb)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "House Prices vs Building Area by Suburb")
+# Function already given
+LScrit <- function(y, yhat) {
+  sum((y - yhat)^2)
+}
+
+# Predict values
+yhat_a <- predict(model_a)
+yhat_b <- predict(model_b)
+
+# Calculate LScrit
+lscrit_a <- LScrit(smaller.dat$Price, yhat_a)
+lscrit_b <- LScrit(smaller.dat$Price, yhat_b)
+
+lscrit_a
+lscrit_b
+# Create a fake candidate model with wrong coefficients
+candidate_yhat <- smaller.dat$BuildingArea * 1000 + 50000  # Arbitrary wrong model
+
+# Calculate LScrit for candidate
+lscrit_candidate <- LScrit(smaller.dat$Price, candidate_yhat)
+
+lscrit_candidate
+
+
+
+
 ```
 
 Fit the regression models to this filtered data,
@@ -36,3 +81,6 @@ LScrit <- function(y, yhat) {
 * i.e. `y` is the `Price` variable and `yhat` are the predictions from the line. Can be predicted using `predict.lm` in `R` for the least squares regression line.
 
 4. For the simple regression, show that another candidate line has a larger `LScrit` value than the simple least squares regression line.
+
+
+
