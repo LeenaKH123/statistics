@@ -1,0 +1,55 @@
+---
+title: "OSTA5003 Week 2 Homework"
+format:
+    html:
+        embed-resources: true
+---
+
+## Vehicle Data
+
+Consider the Vehicle data set from the `mlbench` package. This data set contains information about 846 vehicles and records the type of vehicle in the `Class` variable. The features include information about the vehicle silhouette. The original data contains 4 class labels (multi-class problem). Consider a simpler problem of identifying only the binary class problem of a `saab` vs `opel`
+
+```{r vehicle}
+data(Vehicle, package = "mlbench")
+smaller <- Vehicle |>
+    subset(Class %in% c("saab", "opel")) |>
+    droplevels() # remove unused levels of bus and van
+```
+
+# Partition the data in training and test
+
+Partition the data into training and test sets. Use 70% of the data for training and 30% for testing. Use the `caret` package to do this.
+
+```{r caret}
+library(caret)
+set.seed(5003)
+```
+
+# Fit 4 classifiers, glm, SVM, LDA and kNN
+
+Using the `caret::train` approach fit the classifiers using the training data. Use the default settings for each classifier. Use the `Class` variable as the outcome variable and all other variables as predictors.
+
+```{r train}
+models_to_fit <- c("glm", "svmLinearWeights", "lda", "knn")
+```
+
+# Evaluate the models against the training data
+
+Assess the model performance against the training data and compute the accuracy. Determine which technique has the best accuracy in this data.
+
+```{r}
+```
+
+# Evaluate the models against the test data
+
+Assess the model performance against the test data and compute the accuracy. Determine which technique has the best accuracy in this data. Explain if the performance metrics are different in this case.
+
+```{r accuracy}
+```
+
+# Compute the cross tabulation of the predictions for the glm model in the test data.
+
+Compute the cross tabulation of the predictions for the glm model in the test data.
+
+```{r cross-tab}
+```
