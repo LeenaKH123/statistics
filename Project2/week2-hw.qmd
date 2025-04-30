@@ -22,7 +22,10 @@ Partition the data into training and test sets. Use 70% of the data for training
 
 ```{r caret}
 library(caret)
-set.seed(5003)
+set.se# Create data partition
+split_index <- createDataPartition(smaller$Class, p = 0.7, list = FALSE)
+train_data <- smaller[split_index, ]
+test_data <- smaller[-split_index, ]
 ```
 
 # Fit 4 classifiers, glm, SVM, LDA and kNN
@@ -31,6 +34,11 @@ Using the `caret::train` approach fit the classifiers using the training data. U
 
 ```{r train}
 models_to_fit <- c("glm", "svmLinearWeights", "lda", "knn")
+trained_models <- list()
+
+for (model in models_to_fit) {
+  trained_models[[model]] <- train(Class ~ ., data = train_data, method = model)
+}
 ```
 
 # Evaluate the models against the training data
