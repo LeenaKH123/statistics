@@ -8,56 +8,122 @@ format:
 ## Vehicle Data
 
 Consider the Vehicle data set from the `mlbench` package. This data set contains information about 846 vehicles and records the type of vehicle in the `Class` variable. The features include information about the vehicle silhouette. The original data contains 4 class labels (multi-class problem). Consider a simpler problem of identifying only the binary class problem of a `saab` vs `opel`
+# load libraries and data
 
-```{r vehicle}
-data(Vehicle, package = "mlbench")
-smaller <- Vehicle |>
-    subset(Class %in% c("saab", "opel")) |>
-    droplevels() # remove unused levels of bus and van
+```{r}
+library(mlbench)
+data(Vehicle)
+
+# Check structure
+str(Vehicle)
 ```
+
+# filter data for saab and opel
+```{r}
+smaller <- Vehicle |>
+  subset(Class %in% c("saab", "opel")) |>
+  droplevels()
+
+# Check filtered data
+table(smaller$Class)
+```
+
+
 
 # Partition the data in training and test
 
 Partition the data into training and test sets. Use 70% of the data for training and 30% for testing. Use the `caret` package to do this.
 
-```{r caret}
+# split into training and test - 70% goes to training
+```{r}
 library(caret)
-set.se# Create data partition
-split_index <- createDataPartition(smaller$Class, p = 0.7, list = FALSE)
-train_data <- smaller[split_index, ]
-test_data <- smaller[-split_index, ]
+set.seed(5003)
+
+train_index <- createDataPartition(smaller$Class, p = 0.7, list = FALSE)
+train_data <- smaller[train_index, ]
+test_data <- smaller[-train_index, ]
+
+# Check dimensions
+dim(train_data)
+dim(test_data)
 ```
 
 # Fit 4 classifiers, glm, SVM, LDA and kNN
 
 Using the `caret::train` approach fit the classifiers using the training data. Use the default settings for each classifier. Use the `Class` variable as the outcome variable and all other variables as predictors.
 
-```{r train}
-models_to_fit <- c("glm", "svmLinearWeights", "lda", "knn")
-trained_models <- list()
+# fit one model first - glm
 
-for (model in models_to_fit) {
-  trained_models[[model]] <- train(Class ~ ., data = train_data, method = model)
-}
+```{r}
+model_glm <- train(
+  Class ~ ., 
+  data = train_data,
+  method = "glm",
+  trControl = trainControl(method = "none")
+)
+
+summary(model_glm)
+```
+
+# Test model on test data
+```{r}
+pred_glm <- predict(model_glm, newdata = test_data)
+
+# View predictions
+head(pred_glm)
+
+# Calculate accuracy
+mean(pred_glm == test_data$Class)
+```
+
+# Confusion matrix
+```{r}
+confusionMatrix(pred_glm, test_data$Class)
 ```
 
 # Evaluate the models against the training data
+```{r}
+library(caret)
 
-Assess the model performance against the training data and compute the accuracy. Determine which technique has the best accuracy in this data.
+models_to_fit <- c("glm", "svmLinearWeights", "lda", "knn")
+fitted_models <- list()
+
+for (model in models_to_fit) {
+  fitted_models[[model]] <- train(
+    Class ~ ., 
+    data = train_data,
+    method = model,
+    trControl = trainControl(method = "none")
+  )
+}
+```
 
 ```{r}
+train_accuracies <- sapply(fitted_models, function(model) {
+  preds <- predict(model, newdata = train_data)
+  mean(preds == train_data$Class)
+})
+
+train_accuracies
 ```
 
-# Evaluate the models against the test data
+# Evaluate models on test data
+```{r}
+# Evaluate accuracy on test data
+test_accuracies <- sapply(fitted_models, function(model) {
+  preds <- predict(model, newdata = test_data)
+  mean(preds == test_data$Class)
+})
 
-Assess the model performance against the test data and compute the accuracy. Determine which technique has the best accuracy in this data. Explain if the performance metrics are different in this case.
-
-```{r accuracy}
+# Show test accuracies
+test_accuracies
 ```
+# Cross tabulation confusion matrix for glm model on test data
+```{r}
+# Predict with glm model on test data
+glm_preds <- predict(fitted_models[["glm"]], newdata = test_data)
 
-# Compute the cross tabulation of the predictions for the glm model in the test data.
-
-Compute the cross tabulation of the predictions for the glm model in the test data.
-
-```{r cross-tab}
+# Show confusion matrix
+library(caret)
+confusionMatrix(glm_preds, test_data$Class)
 ```
