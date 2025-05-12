@@ -1,4 +1,4 @@
-
+1. Load the data
 ```{r}
 # Load required libraries
 library(tidyverse)
@@ -10,8 +10,100 @@ library(factoextra)
 # Load the data
 df <- read.csv("ProjectPlanEDA/diabetes_binary_health_indicators_BRFSS2015.csv")
 ```
+
+2. View structure and summary
 ```{r}
 str(df)               # Structure of the dataset
 summary(df)           # Summary statistics
 dim(df)               # Dimensions (rows, columns)
+```
+
+3. Chekc for missing values
+```{r}
+colSums(is.na(df))    # Count missing values per column        
+```
+
+4. Class Balance (Target Variable)
+```{r}
+table(df$Diabetes_binary)
+prop.table(table(df$Diabetes_binary))
+
+# Plot class balance
+ggplot(df, aes(x = factor(Diabetes_binary))) +
+  geom_bar(fill = "steelblue") +
+  labs(title = "Class Distribution", x = "Diabetes", y = "Count")
+     
+```
+
+5. Correlation Matrix
+```{r}
+cor_mat <- cor(df)
+round(cor_mat[,"Diabetes_binary"], 2)[order(-abs(cor_mat[,"Diabetes_binary"]))]
+
+# Visualize correlations
+ggcorr(df, label = TRUE, label_alpha = TRUE)
+               
+```
+
+6. PCA for visualisation
+```{r}
+# Remove target variable
+df_features <- df %>% select(-Diabetes_binary)
+
+# Standardize features
+df_scaled <- scale(df_features)
+
+# Run PCA
+pca_result <- prcomp(df_scaled, center = TRUE, scale. = TRUE)
+
+# Visualize PCA (first 2 components)
+fviz_pca_ind(pca_result,
+             geom.ind = "point",
+             pointshape = 21,
+             col.ind = as.factor(df$Diabetes_binary),
+             palette = c("#00AFBB", "#FC4E07"),
+             legend.title = "Diabetes") +
+  labs(title = "PCA - BRFSS Diabetes Indicators")
+
+              
+```
+
+7. Distribution Plot
+```{r}
+# Example: BMI by diabetes status
+ggplot(df, aes(x = BMI, fill = factor(Diabetes_binary))) +
+  geom_histogram(position = "identity", alpha = 0.5, bins = 30) +
+  labs(title = "BMI Distribution by Diabetes Status", x = "BMI", fill = "Diabetes")
+
+# Example: Boxplot of GenHlth
+ggplot(df, aes(x = factor(Diabetes_binary), y = GenHlth)) +
+  geom_boxplot() +
+  labs(title = "General Health Score by Diabetes", x = "Diabetes", y = "GenHlth")            
+```
+
+```{r}
+               
+```
+
+```{r}
+              
+```
+
+```{r}
+               
+```
+```{r}
+               # Dimensions (rows, columns)
+```
+
+```{r}
+               # Dimensions (rows, columns)
+```
+
+```{r}
+               # Dimensions (rows, columns)
+```
+
+```{r}
+               # Dimensions (rows, columns)
 ```
