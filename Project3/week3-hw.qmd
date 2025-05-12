@@ -13,7 +13,7 @@ Load the wine quality data and remove the id column
 # load necessary library
 suppressPackageStartupMessages(library(tidyverse))
 # Load the data
-wine_dat <- read.csv("Project3/winequality-data.csv", stringsAsFactors = TRUE)
+wine_dat <- read.csv("winequality-data.csv", stringsAsFactors = TRUE)
 # Remove he id column
 wine_dat[["id"]] <- NULL
 # view the first few rows
@@ -24,8 +24,8 @@ head(wine_dat)
 
 Split the dataset into 50% training and 50% testing.
 
-```{r load}
-#| eval: false
+```{r load, eval=TRUE}
+
 # Delete the eval line (or set to true) once you fix the code below
 # Use caret to create a training and test split
 # load caret for data splitting
@@ -259,21 +259,29 @@ kfold_training_and_test <- lapply(kfolds, create_training_and_test, data = wine_
 Using your training test split over the 10 folds. Fit the `knn` models and extract the observed and predicted class labels for each of the 10 folds. (_Hint_: Write a function that does this prediction step for later use, ideally it should have arguments for the training and test data and perhaps the number of nearest neighbours)
 
 ```{r fit}
-#| eval: false
 # Delete the eval line (or set to true) once you fix the code below
 library(class)
+
 fit_knn_and_reports_obs_and_pred <- function(data_list, k = 5) {
+  # Extract train/test sets
   train_data <- data_list[["training"]]
-  test_data <- data_list[["test"]]
-  train_arg <- train_data[] # Remove the target/outcome column
-  test_arg <- test_data[] # Remove the target/outcome column
-  cl_arg <- train_data[] # Extract the target/outcome
-  model <- knn(
-    train = train_arg,
-# More code here
-    k = k)
-  list(observed = .., predicted = ...)
+  test_data  <- data_list[["test"]]
+  
+  # Extract predictors (all columns except the outcome "quality")
+  train_arg <- train_data[, !(names(train_data) %in% "quality")]
+  test_arg  <- test_data[, !(names(test_data) %in% "quality")]
+  
+  # Extract class labels (as factor)
+  cl_arg <- train_data[["quality"]]
+  
+  # Fit KNN
+  pred <- knn(train = train_arg, test = test_arg, cl = cl_arg, k = k)
+  
+  # Return both actual and predicted
+  list(observed = test_data[["quality"]], predicted = pred)
 }
+
+# Apply function to all 10 folds
 obs_and_pred <- lapply(kfold_training_and_test, fit_knn_and_reports_obs_and_pred)
 ```
 
@@ -282,16 +290,54 @@ obs_and_pred <- lapply(kfold_training_and_test, fit_knn_and_reports_obs_and_pred
 Using the predicted and observed values in each case, calculate the sensitivity, specificity, accuracy and $F_1$ score for the kNN classifier. You may use the `caret::confusionMatrix` or an equivalent helper function from another package if you wish. Look at the performance and identify if it has good/bad performance in the metrics.
 
 ```{r performance}
-#| eval: false
+library(caret)
+
 performance_calcs <- function(obs_and_pred) {
-  # Code that computes accuracy and confusion matrix
+  obs <- obs_and_pred$observed
+  pred <- obs_and_pred$predicted
+  
+  # Ensure same factor levels for caret::confusionMatrix
+  levels_union <- union(levels(factor(obs)), levels(factor(pred)))
+  obs  <- factor(obs,  levels = levels_union)
+  pred <- factor(pred, levels = levels_union)
+  
+  # Confusion matrix
+  cm <- confusionMatrix(pred, obs)
+  acc <- cm$overall["Accuracy"]
+  
+  # Binary or multi-class handling
+  if (is.matrix(cm$byClass)) {
+    sens <- mean(cm$byClass[, "Sensitivity"], na.rm = TRUE)
+    spec <- mean(cm$byClass[, "Specificity"], na.rm = TRUE)
+    f1   <- mean(cm$byClass[, "F1"], na.rm = TRUE)
+  } else {
+    sens <- cm$byClass["Sensitivity"]
+    spec <- cm$byClass["Specificity"]
+    f1   <- cm$byClass["F1"]
+  }
+  
+  list(
+    Accuracy = acc,
+    Sensitivity = sens,
+    Specificity = spec,
+    F1 = f1
+  )
 }
-lapply(obs_and_pred, performance_calcs)
+
+# Apply to each fold
+knn_metrics <- lapply(obs_and_pred, performance_calcs)
 ```
+
+
 
 # Extend to write your own repeated cross validation
 
 Use your code above to conduct a repeated cross validation of say `m = 100` runs (or however many you wish given the speed of your code or computation power of your hardware) to construct a sample of CV performance estimates for Accuracy, Sensitivity, Specificity and the F1 scores. Visualize your estimates. You may use the `caret::createMultiFolds` or create your own if you wish. The `createMultiFolds` function returns the data in a slightly different format (see the documentation at `? createFolds`)
+Steps i will follow:
+Create 100 resampled folds using caret::createMultiFolds().
+Run knn() for each fold.
+Collect accuracy, sensitivity, specificity, and F1.
+Combine results and plot them.
 
 ```{r}
 
