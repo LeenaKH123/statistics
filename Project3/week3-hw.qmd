@@ -157,8 +157,8 @@ full_model <- ranger(quality ~ ., data = train_dat, num.trees = max_trees, keep.
 # Note: We cannot truly restrict predictions to only use N trees in ranger,
 # so we simulate it by refitting the model or approximating that accuracy plateaus.
 
-# Simulated result: just reuse Approach A predictions for demo or assume plateaus
-# But we’ll simulate by refitting models for each ntree for a fair result:
+# Simulated result: 
+# simulate by refitting models for each ntree for a fair result:
 accuracy_vec_B <- numeric(length(ntree_seq))
 
 for (i in seq_along(ntree_seq)) {
