@@ -8,7 +8,7 @@ library(GGally)
 library(factoextra)
 
 # Load the data
-df <- read.csv("ProjectPlanEDA/diabetes_binary_health_indicators_BRFSS2015.csv")
+df <- read.csv("diabetes_binary_health_indicators_BRFSS2015.csv")
 ```
 
 2. View structure and summary
