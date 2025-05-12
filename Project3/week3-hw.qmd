@@ -28,11 +28,19 @@ Split the dataset into 50% training and 50% testing.
 #| eval: false
 # Delete the eval line (or set to true) once you fix the code below
 # Use caret to create a training and test split
+# load caret for data splitting
 library(caret)
+# Set a seed for reproducibility
 set.seed(5003)
-indices <- #
-train_dat <- #
-test_dat <- #
+# create 50/50 split
+indices <- createDataPartition(wine_dat$quality, p = 0.5, list = FALSE)
+# Subset the training and testing data
+train_dat <- wine_dat[indices, ]
+test_dat  <- wine_dat[-indices, ]
+
+# Check dimensions
+dim(train_dat)
+dim(test_dat)
 ```
 
 ## Calibrating Random Forest
