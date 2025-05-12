@@ -3106,46 +3106,277 @@ vertical-align: -.125em;
 
 <section id="vehicle-data" class="level2">
 <h2 class="anchored" data-anchor-id="vehicle-data">Vehicle Data</h2>
-<p>Consider the Vehicle data set from the <code>mlbench</code> package. This data set contains information about 846 vehicles and records the type of vehicle in the <code>Class</code> variable. The features include information about the vehicle silhouette. The original data contains 4 class labels (multi-class problem). Consider a simpler problem of identifying only the binary class problem of a <code>saab</code> vs <code>opel</code></p>
+<p>Consider the Vehicle data set from the <code>mlbench</code> package. This data set contains information about 846 vehicles and records the type of vehicle in the <code>Class</code> variable. The features include information about the vehicle silhouette. The original data contains 4 class labels (multi-class problem). Consider a simpler problem of identifying only the binary class problem of a <code>saab</code> vs <code>opel</code> # load libraries and data</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Vehicle, <span class="at">package =</span> <span class="st">&quot;mlbench&quot;</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>smaller <span class="ot">&lt;-</span> Vehicle <span class="sc">|&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">subset</span>(Class <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;saab&quot;</span>, <span class="st">&quot;opel&quot;</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">droplevels</span>() <span class="co"># remove unused levels of bus and van</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlbench)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Vehicle)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Check structure</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(Vehicle)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&#39;data.frame&#39;:   846 obs. of  19 variables:
+ $ Comp        : num  95 91 104 93 85 107 97 90 86 93 ...
+ $ Circ        : num  48 41 50 41 44 57 43 43 34 44 ...
+ $ D.Circ      : num  83 84 106 82 70 106 73 66 62 98 ...
+ $ Rad.Ra      : num  178 141 209 159 205 172 173 157 140 197 ...
+ $ Pr.Axis.Ra  : num  72 57 66 63 103 50 65 65 61 62 ...
+ $ Max.L.Ra    : num  10 9 10 9 52 6 6 9 7 11 ...
+ $ Scat.Ra     : num  162 149 207 144 149 255 153 137 122 183 ...
+ $ Elong       : num  42 45 32 46 45 26 42 48 54 36 ...
+ $ Pr.Axis.Rect: num  20 19 23 19 19 28 19 18 17 22 ...
+ $ Max.L.Rect  : num  159 143 158 143 144 169 143 146 127 146 ...
+ $ Sc.Var.Maxis: num  176 170 223 160 241 280 176 162 141 202 ...
+ $ Sc.Var.maxis: num  379 330 635 309 325 957 361 281 223 505 ...
+ $ Ra.Gyr      : num  184 158 220 127 188 264 172 164 112 152 ...
+ $ Skew.Maxis  : num  70 72 73 63 127 85 66 67 64 64 ...
+ $ Skew.maxis  : num  6 9 14 6 9 5 13 3 2 4 ...
+ $ Kurt.maxis  : num  16 14 9 10 11 9 1 3 14 14 ...
+ $ Kurt.Maxis  : num  187 189 188 199 180 181 200 193 200 195 ...
+ $ Holl.Ra     : num  197 199 196 207 183 183 204 202 208 204 ...
+ $ Class       : Factor w/ 4 levels &quot;bus&quot;,&quot;opel&quot;,&quot;saab&quot;,..: 4 4 3 4 1 1 1 4 4 3 ...</code></pre>
+</div>
+</div>
+</section>
+<section id="filter-data-for-saab-and-opel" class="level1">
+<h1>filter data for saab and opel</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>smaller <span class="ot">&lt;-</span> Vehicle <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">subset</span>(Class <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;saab&quot;</span>, <span class="st">&quot;opel&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">droplevels</span>()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Check filtered data</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(smaller<span class="sc">$</span>Class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+opel saab 
+ 212  217 </code></pre>
+</div>
 </div>
 </section>
 <section id="partition-the-data-in-training-and-test" class="level1">
 <h1>Partition the data in training and test</h1>
 <p>Partition the data into training and test sets. Use 70% of the data for training and 30% for testing. Use the <code>caret</code> package to do this.</p>
+</section>
+<section id="split-into-training-and-test---70-goes-to-training" class="level1">
+<h1>split into training and test - 70% goes to training</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: ggplot2</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Loading required package: lattice</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">5003</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">5003</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>train_index <span class="ot">&lt;-</span> <span class="fu">createDataPartition</span>(smaller<span class="sc">$</span>Class, <span class="at">p =</span> <span class="fl">0.7</span>, <span class="at">list =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> smaller[train_index, ]</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> smaller[<span class="sc">-</span>train_index, ]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Check dimensions</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(train_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 301  19</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(test_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 128  19</code></pre>
+</div>
 </div>
 </section>
 <section id="fit-4-classifiers-glm-svm-lda-and-knn" class="level1">
 <h1>Fit 4 classifiers, glm, SVM, LDA and kNN</h1>
 <p>Using the <code>caret::train</code> approach fit the classifiers using the training data. Use the default settings for each classifier. Use the <code>Class</code> variable as the outcome variable and all other variables as predictors.</p>
+</section>
+<section id="fit-one-model-first---glm" class="level1">
+<h1>fit one model first - glm</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>models_to_fit <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;glm&quot;</span>, <span class="st">&quot;svmLinearWeights&quot;</span>, <span class="st">&quot;lda&quot;</span>, <span class="st">&quot;knn&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model_glm <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  Class <span class="sc">~</span> ., </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> train_data,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">&quot;glm&quot;</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+NULL
+
+Coefficients:
+               Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  -8.573e+01  4.348e+01  -1.972 0.048630 *  
+Comp          2.098e-01  4.179e-02   5.021 5.14e-07 ***
+Circ         -6.764e-01  1.882e-01  -3.593 0.000327 ***
+D.Circ        3.944e-02  3.627e-02   1.087 0.276866    
+Rad.Ra        9.995e-04  3.960e-02   0.025 0.979864    
+Pr.Axis.Ra    5.526e-02  1.215e-01   0.455 0.649121    
+Max.L.Ra     -2.212e-01  1.860e-01  -1.189 0.234439    
+Scat.Ra       3.718e-01  2.282e-01   1.629 0.103307    
+Elong         7.158e-02  2.915e-01   0.246 0.806033    
+Pr.Axis.Rect  8.135e-01  4.871e-01   1.670 0.094922 .  
+Max.L.Rect    8.786e-02  6.455e-02   1.361 0.173488    
+Sc.Var.Maxis -5.663e-02  4.297e-02  -1.318 0.187561    
+Sc.Var.maxis -8.225e-02  3.310e-02  -2.485 0.012972 *  
+Ra.Gyr        7.163e-02  1.653e-02   4.334 1.46e-05 ***
+Skew.Maxis    1.844e-01  8.721e-02   2.115 0.034452 *  
+Skew.maxis   -1.795e-02  3.178e-02  -0.565 0.572062    
+Kurt.maxis   -6.648e-02  2.083e-02  -3.192 0.001413 ** 
+Kurt.Maxis   -4.351e-01  1.416e-01  -3.072 0.002127 ** 
+Holl.Ra       5.125e-01  1.259e-01   4.072 4.66e-05 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 417.24  on 300  degrees of freedom
+Residual deviance: 319.51  on 282  degrees of freedom
+AIC: 357.51
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+</section>
+<section id="test-model-on-test-data" class="level1">
+<h1>Test model on test data</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pred_glm <span class="ot">&lt;-</span> <span class="fu">predict</span>(model_glm, <span class="at">newdata =</span> test_data)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># View predictions</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] opel opel saab saab saab saab
+Levels: opel saab</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate accuracy</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(pred_glm <span class="sc">==</span> test_data<span class="sc">$</span>Class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.671875</code></pre>
+</div>
+</div>
+</section>
+<section id="confusion-matrix" class="level1">
+<h1>Confusion matrix</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(pred_glm, test_data<span class="sc">$</span>Class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction opel saab
+      opel   40   19
+      saab   23   46
+                                          
+               Accuracy : 0.6719          
+                 95% CI : (0.5833, 0.7522)
+    No Information Rate : 0.5078          
+    P-Value [Acc &gt; NIR] : 0.0001261       
+                                          
+                  Kappa : 0.3429          
+                                          
+ Mcnemar&#39;s Test P-Value : 0.6434288       
+                                          
+            Sensitivity : 0.6349          
+            Specificity : 0.7077          
+         Pos Pred Value : 0.6780          
+         Neg Pred Value : 0.6667          
+             Prevalence : 0.4922          
+         Detection Rate : 0.3125          
+   Detection Prevalence : 0.4609          
+      Balanced Accuracy : 0.6713          
+                                          
+       &#39;Positive&#39; Class : opel            
+                                          </code></pre>
+</div>
 </div>
 </section>
 <section id="evaluate-the-models-against-the-training-data" class="level1">
 <h1>Evaluate the models against the training data</h1>
-<p>Assess the model performance against the training data and compute the accuracy. Determine which technique has the best accuracy in this data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>models_to_fit <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;glm&quot;</span>, <span class="st">&quot;svmLinearWeights&quot;</span>, <span class="st">&quot;lda&quot;</span>, <span class="st">&quot;knn&quot;</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>fitted_models <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (model <span class="cf">in</span> models_to_fit) {</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  fitted_models[[model]] <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    Class <span class="sc">~</span> ., </span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> train_data,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> model,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">trControl =</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>train_accuracies <span class="ot">&lt;-</span> <span class="fu">sapply</span>(fitted_models, <span class="cf">function</span>(model) {</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">newdata =</span> train_data)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(preds <span class="sc">==</span> train_data<span class="sc">$</span>Class)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>train_accuracies</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             glm svmLinearWeights              lda              knn 
+       0.7209302        0.7109635        0.7209302        0.7009967 </code></pre>
+</div>
+</div>
 </section>
-<section id="evaluate-the-models-against-the-test-data" class="level1">
-<h1>Evaluate the models against the test data</h1>
-<p>Assess the model performance against the test data and compute the accuracy. Determine which technique has the best accuracy in this data. Explain if the performance metrics are different in this case.</p>
+<section id="evaluate-models-on-test-data" class="level1">
+<h1>Evaluate models on test data</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate accuracy on test data</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>test_accuracies <span class="ot">&lt;-</span> <span class="fu">sapply</span>(fitted_models, <span class="cf">function</span>(model) {</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">newdata =</span> test_data)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>(preds <span class="sc">==</span> test_data<span class="sc">$</span>Class)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Show test accuracies</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>test_accuracies</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             glm svmLinearWeights              lda              knn 
+       0.6718750        0.6406250        0.6796875        0.5546875 </code></pre>
+</div>
+</div>
 </section>
-<section id="compute-the-cross-tabulation-of-the-predictions-for-the-glm-model-in-the-test-data." class="level1">
-<h1>Compute the cross tabulation of the predictions for the glm model in the test data.</h1>
-<p>Compute the cross tabulation of the predictions for the glm model in the test data.</p>
+<section id="cross-tabulation-confusion-matrix-for-glm-model-on-test-data" class="level1">
+<h1>Cross tabulation confusion matrix for glm model on test data</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict with glm model on test data</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>glm_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(fitted_models[[<span class="st">&quot;glm&quot;</span>]], <span class="at">newdata =</span> test_data)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Show confusion matrix</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(glm_preds, test_data<span class="sc">$</span>Class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction opel saab
+      opel   40   19
+      saab   23   46
+                                          
+               Accuracy : 0.6719          
+                 95% CI : (0.5833, 0.7522)
+    No Information Rate : 0.5078          
+    P-Value [Acc &gt; NIR] : 0.0001261       
+                                          
+                  Kappa : 0.3429          
+                                          
+ Mcnemar&#39;s Test P-Value : 0.6434288       
+                                          
+            Sensitivity : 0.6349          
+            Specificity : 0.7077          
+         Pos Pred Value : 0.6780          
+         Neg Pred Value : 0.6667          
+             Prevalence : 0.4922          
+         Detection Rate : 0.3125          
+   Detection Prevalence : 0.4609          
+      Balanced Accuracy : 0.6713          
+                                          
+       &#39;Positive&#39; Class : opel            
+                                          </code></pre>
+</div>
+</div>
 </section>
 
 </main>
