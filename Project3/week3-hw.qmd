@@ -186,22 +186,72 @@ ggplot(results_rfB, aes(x = ntree, y = accuracy)) +
 
 Design a 10-fold cross-validation procedure to evaluate a kNN classification model (with $k=5$) accuracy. Use `class::knn()` and NOT the `caret` package (but you can use the caret package to create validation cross fold partitions.)
 
+1. Use createFolds() from caret to split the data into 10 folds
+2. Use a loop to iterate over the folds:
+Each time, hold out 1 fold as test data
+Use the other 9 folds as training data
+Apply class::knn() with 
+𝑘
+=
+5
+k=5
+3. Compute and store accuracy
+4. Average the accuracy across the 10 folds
+```{r}
+library(caret)
+library(class)
+
+set.seed(42)  # for reproducibility
+
+# Create 10 stratified folds based on the target variable
+folds <- createFolds(wine_dat$quality, k = 10)
+
+# Store accuracies
+acc_vec <- numeric(10)
+
+for (i in seq_along(folds)) {
+  # Define test and train indices
+  test_idx <- folds[[i]]
+  train_idx <- setdiff(seq_len(nrow(wine_dat)), test_idx)
+  
+  # Create training and test sets
+  train_x <- wine_dat[train_idx, !(names(wine_dat) %in% "quality")]
+  train_y <- wine_dat[train_idx, "quality"]
+  test_x  <- wine_dat[test_idx, !(names(wine_dat) %in% "quality")]
+  test_y  <- wine_dat[test_idx, "quality"]
+  
+  # Apply kNN (k = 5)
+  pred_y <- knn(train = train_x, test = test_x, cl = train_y, k = 5)
+  
+  # Compute accuracy
+  acc_vec[i] <- mean(pred_y == test_y)
+}
+
+# Report mean cross-validation accuracy
+mean_cv_accuracy <- mean(acc_vec)
+mean_cv_accuracy
+```
+
 ## Create a 10 fold split
 
 Create a 10-fold split and partition up the data into the appropriate training, test splits to be used in the `knn` call
 
 ```{r kfolds}
-#| eval: false
 # Delete the eval line above (or set to true) once you fix the code below
+library(caret)
+
+# Create 10 stratified folds
 kfolds <- createFolds(wine_dat$quality, k = 10)
-# Function that takes observation indices, creates training and test split
-# returns a list with two data.frames (training and test)
-create_training_and_test <- function(index, data, k = 10) {
-  train_data <- data[, ] # incomplete code, use index in the right way
-  test_data <- data[, ]
+
+# Function that takes a test set index vector and returns training/test splits
+create_training_and_test <- function(index, data) {
+  test_data <- data[index, ]
+  train_data <- data[-index, ]
   list(training = train_data, test = test_data)
 }
-kfold_training_and_test <- lapply(kfolds, create_training_and_test)
+
+# Apply to each fold
+kfold_training_and_test <- lapply(kfolds, create_training_and_test, data = wine_dat)
 ```
 
 ## Compute the predicted values on each test fold
