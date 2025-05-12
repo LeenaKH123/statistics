@@ -1,0 +1,17 @@
+
+```{r}
+# Load required libraries
+library(tidyverse)
+library(ggplot2)
+library(caret)
+library(GGally)
+library(factoextra)
+
+# Load the data
+df <- read.csv("ProjectPlanEDA/diabetes_binary_health_indicators_BRFSS2015.csv")
+```
+```{r}
+str(df)               # Structure of the dataset
+summary(df)           # Summary statistics
+dim(df)               # Dimensions (rows, columns)
+```
