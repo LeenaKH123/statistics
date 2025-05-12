@@ -54,7 +54,52 @@ Assess the performance of a random forest model using `ranger`. Build the model 
 ```{r split}
 #| eval: false
 # Delete the eval line (or set to true) once you fix the code below
-ntree_seq <- #
+# Create a sequence of number-of-tree values (e.g. 1 to 100).
+# Train a model for each value on train_dat.
+# Predict and compute accuracy on test_dat.
+# Visualize accuracy vs. number of trees.
+
+# Load required libraries
+library(ranger)
+library(caret)
+library(tibble)
+
+# Define number of trees to try — from 1 to 100 in steps
+ntree_seq <- c(1, 5, 10, 20, 30, 40, 50, 60, 75, 100)
+
+# Initialize results storage
+results <- tibble(ntree = ntree_seq, accuracy = NA_real_)
+
+# Loop through ntree values
+for (i in seq_along(ntree_seq)) {
+  # Train model
+  model <- ranger(quality ~ ., data = train_dat, num.trees = ntree_seq[i], probability = FALSE)
+  
+  # Predict on test data
+  preds <- predict(model, test_dat)$predictions
+  
+  # Compute accuracy
+  acc <- mean(preds == test_dat$quality)
+  
+  # Store
+  results$accuracy[i] <- acc
+}
+
+# Print results
+results
+
+# Plot number of trees vs. accuracy
+library(ggplot2)
+
+ggplot(results, aes(x = ntree, y = accuracy)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Accuracy vs Number of Trees in Random Forest",
+    x = "Number of Trees",
+    y = "Accuracy on Test Data"
+  ) +
+  theme_minimal()
 ```
 
 Using the `ntree_seq` vector, do the three steps mentioned above in two ways.
