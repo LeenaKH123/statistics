@@ -40,26 +40,24 @@ missmap(train,
         legend = TRUE)      
 ```
 
-4. 
+4. Data type correction
+Several columns originally read as character variables contain numeric data. These are converted to numeric or categorical types to enable statistical analysis.
 ```{r}
-table(df$Diabetes_binary)
-prop.table(table(df$Diabetes_binary))
+cols_to_convert <- c("Age", "Annual_Income", "Outstanding_Debt", "Num_of_Loan", 
+                     "Changed_Credit_Limit", "Num_of_Delayed_Payment", "Amount_invested_monthly", 
+                     "Monthly_Balance")
 
-# Plot class balance
-ggplot(df, aes(x = factor(Diabetes_binary))) +
-  geom_bar(fill = "steelblue") +
-  labs(title = "Class Distribution", x = "Diabetes", y = "Count")
-     
+train[cols_to_convert] <- lapply(train[cols_to_convert], function(x) as.numeric(as.character(x)))
+
+train$Credit_Mix <- as.factor(train$Credit_Mix)
+train$Payment_of_Min_Amount <- as.factor(train$Payment_of_Min_Amount)     
 ```
 
-5. Correlation Matrix
+5. Removal of Irrelevant Features
+Columns such as identifiers and personal details (Ex: ID, Name, SSN) are removed as they do not contribute predictive value to the modeling task.
 ```{r}
-cor_mat <- cor(df)
-round(cor_mat[,"Diabetes_binary"], 2)[order(-abs(cor_mat[,"Diabetes_binary"]))]
+    colnames(train)
 
-# Visualize correlations
-ggcorr(df, label = TRUE, label_alpha = TRUE)
-               
 ```
 
 6. PCA for visualisation
