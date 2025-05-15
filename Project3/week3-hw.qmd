@@ -340,5 +340,67 @@ Collect accuracy, sensitivity, specificity, and F1.
 Combine results and plot them.
 
 ```{r}
+library(caret)
+library(class)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
 
+set.seed(123)
+
+# Number of repetitions
+m <- 100
+
+# Create repeated folds (returns a list of training indices)
+repeats <- createMultiFolds(wine_dat$quality, k = 10, times = m)
+
+# Function to compute metrics
+evaluate_knn <- function(train_idx, data, k = 5) {
+  train_data <- data[train_idx, ]
+  test_data  <- data[-train_idx, ]
+  
+  train_x <- train_data[, !(names(train_data) %in% "quality")]
+  train_y <- train_data[["quality"]]
+  test_x  <- test_data[, !(names(test_data) %in% "quality")]
+  test_y  <- test_data[["quality"]]
+  
+  pred_y <- knn(train = train_x, test = test_x, cl = train_y, k = k)
+  
+  # Ensure matching factor levels
+  all_levels <- union(levels(factor(test_y)), levels(factor(pred_y)))
+  obs  <- factor(test_y, levels = all_levels)
+  pred <- factor(pred_y, levels = all_levels)
+  
+  cm <- confusionMatrix(pred, obs)
+  
+  acc <- cm$overall["Accuracy"]
+  
+  if (is.matrix(cm$byClass)) {
+    sens <- mean(cm$byClass[, "Sensitivity"], na.rm = TRUE)
+    spec <- mean(cm$byClass[, "Specificity"], na.rm = TRUE)
+    f1   <- mean(cm$byClass[, "F1"], na.rm = TRUE)
+  } else {
+    sens <- cm$byClass["Sensitivity"]
+    spec <- cm$byClass["Specificity"]
+    f1   <- cm$byClass["F1"]
+  }
+  
+  tibble(Accuracy = acc, Sensitivity = sens, Specificity = spec, F1 = f1)
+}
+
+# Run repeated CV
+repeated_results <- lapply(repeats, evaluate_knn, data = wine_dat)
+cv_metrics_df <- bind_rows(repeated_results)
+
+# Convert to long format for ggplot
+cv_metrics_long <- cv_metrics_df %>%
+  pivot_longer(cols = everything(), names_to = "Metric", values_to = "Value")
+
+# Plot distribution of metrics
+ggplot(cv_metrics_long, aes(x = Metric, y = Value, fill = Metric)) +
+  geom_boxplot() +
+  labs(title = "Repeated 10-Fold CV Performance Metrics (k = 5)",
+       y = "Score", x = "Metric") +
+  theme_minimal() +
+  theme(legend.position = "none")
 ```

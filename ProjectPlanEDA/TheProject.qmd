@@ -1,29 +1,46 @@
-1. Load the data
+Data Source
+https://www.kaggle.com/code/sudhanshu2198/multi-class-credit-score-classification/input?select=Score.csv
+
+Introduction:
+This report presents the exploratory data analysis (EDA) for a credit score classification problem. The goal is to understand the structure, qualiy and statistical properties of the dataset to inform feature selection and model development in subsequent phases.
+
+1. Data Loading and Initial Inspection
+The training, test and the benchmark scoring datasets are imported and examined to uderstand their structure and and valriable types.
+
 ```{r}
 # Load required libraries
 library(tidyverse)
-library(ggplot2)
-library(caret)
-library(GGally)
-library(factoextra)
+library(janitor)
+library(skimr)
+library(DataExplorer)
+library(corrplot)
 
 # Load the data
-df <- read.csv("diabetes_binary_health_indicators_BRFSS2015.csv")
+train <- read.csv("ProjectPlanEDA/train.csv", stringsAsFactors = TRUE)
+test <- read.csv("ProjectPlanEDA/test.csv", stringsAsFactors = TRUE)
+score <- read.csv("ProjectPlanEDA/Score.csv", stringsAsFactors = TRUE)
+
+glimpse(train)
 ```
 
-2. View structure and summary
+2. Assessment of missing values
+A through check for missing values is conducted to determine the extent and distribution of incompleteness across the dataset
 ```{r}
-str(df)               # Structure of the dataset
-summary(df)           # Summary statistics
-dim(df)               # Dimensions (rows, columns)
+colSums(is.na(train))
+skim(train)
 ```
 
-3. Chekc for missing values
+3. Visualise missing values
+Yellow represents missing values, and black represents available values. Blocks of missingness in specific columns indicate a need for either targeted imputation or column removal, especially if missingness is extensive or not missing at random (NMAR).
 ```{r}
-colSums(is.na(df))    # Count missing values per column        
+library(Amelia)  # For missmap visualization
+missmap(train, 
+        main = "Missing Values Map", 
+        col = c("yellow", "black"), 
+        legend = TRUE)      
 ```
 
-4. Class Balance (Target Variable)
+4. 
 ```{r}
 table(df$Diabetes_binary)
 prop.table(table(df$Diabetes_binary))
