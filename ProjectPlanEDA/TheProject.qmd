@@ -14,12 +14,19 @@ library(janitor)
 library(skimr)
 library(DataExplorer)
 library(corrplot)
+library(Amelia)
 
 # Load the data
 train <- read.csv("ProjectPlanEDA/train.csv", stringsAsFactors = TRUE)
 test <- read.csv("ProjectPlanEDA/test.csv", stringsAsFactors = TRUE)
 score <- read.csv("ProjectPlanEDA/Score.csv", stringsAsFactors = TRUE)
 
+# View dimensions
+dim(train)
+dim(test)
+dim(score)
+
+# Quick glimpse
 glimpse(train)
 ```
 
