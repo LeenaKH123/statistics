@@ -17,9 +17,9 @@ library(corrplot)
 library(Amelia)
 
 # Load the data
-train <- read.csv("ProjectPlanEDA/train.csv", stringsAsFactors = TRUE)
-test <- read.csv("ProjectPlanEDA/test.csv", stringsAsFactors = TRUE)
-score <- read.csv("ProjectPlanEDA/Score.csv", stringsAsFactors = TRUE)
+train <- read.csv("train.csv", stringsAsFactors = TRUE)
+test <- read.csv("test.csv", stringsAsFactors = TRUE)
+score <- read.csv("Score.csv", stringsAsFactors = TRUE)
 
 # View dimensions
 dim(train)
@@ -50,15 +50,40 @@ missmap(train,
 4. Data type correction
 Several columns originally read as character variables contain numeric data. These are converted to numeric or categorical types to enable statistical analysis.
 ```{r}
+# Define a function to clean and convert character values to numeric
+clean_numeric <- function(x) {
+  x <- as.character(x)
+  x <- gsub(",", "", x)
+  x <- gsub("[$%]", "", x)
+  x <- gsub("[^0-9\\.\\-]", "", x)
+  suppressWarnings(as.numeric(x))
+}
+
+# List of columns expected to be numeric but possibly read as character
 cols_to_convert <- c("Age", "Annual_Income", "Outstanding_Debt", "Num_of_Loan", 
-                     "Changed_Credit_Limit", "Num_of_Delayed_Payment", "Amount_invested_monthly", 
-                     "Monthly_Balance")
+                     "Changed_Credit_Limit", "Num_of_Delayed_Payment", 
+                     "Amount_invested_monthly", "Monthly_Balance")
 
-train[cols_to_convert] <- lapply(train[cols_to_convert], function(x) as.numeric(as.character(x)))
+# Check which columns exist in the data before applying
+cols_to_convert <- intersect(cols_to_convert, colnames(train))
 
-train$Credit_Mix <- as.factor(train$Credit_Mix)
-train$Payment_of_Min_Amount <- as.factor(train$Payment_of_Min_Amount)
-    
+# Apply cleaning function only to existing columns
+for (col in cols_to_convert) {
+  train[[col]] <- clean_numeric(train[[col]])
+}
+
+# Convert these columns to factors only if they exist
+if ("Credit_Mix" %in% names(train)) {
+  train$Credit_Mix <- as.factor(train$Credit_Mix)
+}
+if ("Payment_of_Min_Amount" %in% names(train)) {
+  train$Payment_of_Min_Amount <- as.factor(train$Payment_of_Min_Amount)
+}
+
+# Show summary of the cleaned dataset
+summary(train)
+
+ 
 ```
 
 5. Removal of Irrelevant Features
@@ -70,38 +95,13 @@ Columns such as identifiers and personal details (Ex: ID, Name, SSN) are removed
 
 6. PCA for visualisation
 ```{r}
-# Remove target variable
-df_features <- df %>% select(-Diabetes_binary)
-
-# Standardize features
-df_scaled <- scale(df_features)
-
-# Run PCA
-pca_result <- prcomp(df_scaled, center = TRUE, scale. = TRUE)
-
-# Visualize PCA (first 2 components)
-fviz_pca_ind(pca_result,
-             geom.ind = "point",
-             pointshape = 21,
-             col.ind = as.factor(df$Diabetes_binary),
-             palette = c("#00AFBB", "#FC4E07"),
-             legend.title = "Diabetes") +
-  labs(title = "PCA - BRFSS Diabetes Indicators")
 
               
 ```
 
 7. Distribution Plot
 ```{r}
-# Example: BMI by diabetes status
-ggplot(df, aes(x = BMI, fill = factor(Diabetes_binary))) +
-  geom_histogram(position = "identity", alpha = 0.5, bins = 30) +
-  labs(title = "BMI Distribution by Diabetes Status", x = "BMI", fill = "Diabetes")
-
-# Example: Boxplot of GenHlth
-ggplot(df, aes(x = factor(Diabetes_binary), y = GenHlth)) +
-  geom_boxplot() +
-  labs(title = "General Health Score by Diabetes", x = "Diabetes", y = "GenHlth")            
+       
 ```
 
 ```{r}

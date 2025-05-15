@@ -80,8 +80,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
+<p>Data Source https://www.kaggle.com/code/sudhanshu2198/multi-class-credit-score-classification/input?select=Score.csv</p>
+<p>Introduction: This report presents the exploratory data analysis (EDA) for a credit score classification problem. The goal is to understand the structure, qualiy and statistical properties of the dataset to inform feature selection and model development in subsequent phases.</p>
 <ol type="1">
-<li>Load the data</li>
+<li>Data Loading and Initial Inspection The training, test and the benchmark scoring datasets are imported and examined to uderstand their structure and and valriable types.</li>
 </ol>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required libraries</span></span>
@@ -98,263 +100,662 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: lattice
+<pre><code>
+Attaching package: 'janitor'
 
-Attaching package: 'caret'
+The following objects are masked from 'package:stats':
 
-The following object is masked from 'package:purrr':
-
-    lift</code></pre>
+    chisq.test, fisher.test</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Registered S3 method overwritten by 'GGally':
-  method from   
-  +.gg   ggplot2</code></pre>
+<pre><code>corrplot 0.95 loaded</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Amelia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa</code></pre>
+<pre><code>Loading required package: Rcpp
+## 
+## Amelia II: Multiple Imputation
+## (Version 1.8.3, built: 2024-11-07)
+## Copyright (C) 2005-2025 James Honaker, Gary King and Matthew Blackwell
+## Refer to http://gking.harvard.edu/amelia/ for more information
+## </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"diabetes_binary_health_indicators_BRFSS2015.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"train.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"test.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Score.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># View dimensions</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 100000     28</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 50000    27</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(score)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 99960    21</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick glimpse</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 100,000
+Columns: 28
+$ ID                       &lt;dbl&gt; 5634, 5635, 5636, 5637, 5638, 5639, 5640, 564…
+$ Customer_ID              &lt;fct&gt; CUS_0xd40, CUS_0xd40, CUS_0xd40, CUS_0xd40, C…
+$ Month                    &lt;fct&gt; January, February, March, April, May, June, J…
+$ Name                     &lt;fct&gt; "Aaron Maashoh", "Aaron Maashoh", "Aaron Maas…
+$ Age                      &lt;fct&gt; 23, 23, -500, 23, 23, 23, 23, 23, 28_, 28, 28…
+$ SSN                      &lt;fct&gt; 821-00-0265, 821-00-0265, 821-00-0265, 821-00…
+$ Occupation               &lt;fct&gt; Scientist, Scientist, Scientist, Scientist, S…
+$ Annual_Income            &lt;fct&gt; 19114.12, 19114.12, 19114.12, 19114.12, 19114…
+$ Monthly_Inhand_Salary    &lt;dbl&gt; 1824.843, NA, NA, NA, 1824.843, NA, 1824.843,…
+$ Num_Bank_Accounts        &lt;int&gt; 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, …
+$ Num_Credit_Card          &lt;int&gt; 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1385, 4, 4, 4, …
+$ Interest_Rate            &lt;int&gt; 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, …
+$ Num_of_Loan              &lt;fct&gt; 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, …
+$ Type_of_Loan             &lt;fct&gt; "Auto Loan, Credit-Builder Loan, Personal Loa…
+$ Delay_from_due_date      &lt;int&gt; 3, -1, 3, 5, 6, 8, 3, 3, 3, 7, 3, 3, 3, 3, 3,…
+$ Num_of_Delayed_Payment   &lt;fct&gt; 7, , 7, 4, , 4, 8_, 6, 4, 1, -1, 3_, 1, 0, 4,…
+$ Changed_Credit_Limit     &lt;fct&gt; 11.27, 11.27, _, 6.27, 11.27, 9.27, 11.27, 11…
+$ Num_Credit_Inquiries     &lt;dbl&gt; 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, …
+$ Credit_Mix               &lt;fct&gt; _, Good, Good, Good, Good, Good, Good, Good, …
+$ Outstanding_Debt         &lt;fct&gt; 809.98, 809.98, 809.98, 809.98, 809.98, 809.9…
+$ Credit_Utilization_Ratio &lt;dbl&gt; 26.82262, 31.94496, 28.60935, 31.37786, 24.79…
+$ Credit_History_Age       &lt;fct&gt; 22 Years and 1 Months, NA, 22 Years and 3 Mon…
+$ Payment_of_Min_Amount    &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, N…
+$ Total_EMI_per_month      &lt;dbl&gt; 49.57495, 49.57495, 49.57495, 49.57495, 49.57…
+$ Amount_invested_monthly  &lt;fct&gt; 80.41529543900253, 118.28022162236736, 81.699…
+$ Payment_Behaviour        &lt;fct&gt; High_spent_Small_value_payments, Low_spent_La…
+$ Monthly_Balance          &lt;fct&gt; 312.49408867943663, 284.62916249607184, 331.2…
+$ Credit_Score             &lt;fct&gt; Good, Good, Good, Good, Good, Good, Good, Sta…</code></pre>
+</div>
 </div>
 <ol start="2" type="1">
-<li>View structure and summary</li>
+<li>Assessment of missing values A through check for missing values is conducted to determine the extent and distribution of incompleteness across the dataset</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)               <span class="co"># Structure of the dataset</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(train))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>'data.frame':   253680 obs. of  22 variables:
- $ Diabetes_binary     : num  0 0 0 0 0 0 0 0 1 0 ...
- $ HighBP              : num  1 0 1 1 1 1 1 1 1 0 ...
- $ HighChol            : num  1 0 1 0 1 1 0 1 1 0 ...
- $ CholCheck           : num  1 0 1 1 1 1 1 1 1 1 ...
- $ BMI                 : num  40 25 28 27 24 25 30 25 30 24 ...
- $ Smoker              : num  1 1 0 0 0 1 1 1 1 0 ...
- $ Stroke              : num  0 0 0 0 0 0 0 0 0 0 ...
- $ HeartDiseaseorAttack: num  0 0 0 0 0 0 0 0 1 0 ...
- $ PhysActivity        : num  0 1 0 1 1 1 0 1 0 0 ...
- $ Fruits              : num  0 0 1 1 1 1 0 0 1 0 ...
- $ Veggies             : num  1 0 0 1 1 1 0 1 1 1 ...
- $ HvyAlcoholConsump   : num  0 0 0 0 0 0 0 0 0 0 ...
- $ AnyHealthcare       : num  1 0 1 1 1 1 1 1 1 1 ...
- $ NoDocbcCost         : num  0 1 1 0 0 0 0 0 0 0 ...
- $ GenHlth             : num  5 3 5 2 2 2 3 3 5 2 ...
- $ MentHlth            : num  18 0 30 0 3 0 0 0 30 0 ...
- $ PhysHlth            : num  15 0 30 0 0 2 14 0 30 0 ...
- $ DiffWalk            : num  1 0 1 0 0 0 0 1 1 0 ...
- $ Sex                 : num  0 0 0 0 0 1 0 0 0 1 ...
- $ Age                 : num  9 7 9 11 11 10 9 11 9 8 ...
- $ Education           : num  4 6 4 3 5 6 6 4 5 4 ...
- $ Income              : num  3 1 8 6 4 8 7 4 1 3 ...</code></pre>
+<pre><code>                      ID              Customer_ID                    Month 
+                       0                        0                        0 
+                    Name                      Age                      SSN 
+                       0                        0                        0 
+              Occupation            Annual_Income    Monthly_Inhand_Salary 
+                       0                        0                    15002 
+       Num_Bank_Accounts          Num_Credit_Card            Interest_Rate 
+                       0                        0                        0 
+             Num_of_Loan             Type_of_Loan      Delay_from_due_date 
+                       0                        0                        0 
+  Num_of_Delayed_Payment     Changed_Credit_Limit     Num_Credit_Inquiries 
+                       0                        0                     1965 
+              Credit_Mix         Outstanding_Debt Credit_Utilization_Ratio 
+                       0                        0                        0 
+      Credit_History_Age    Payment_of_Min_Amount      Total_EMI_per_month 
+                    9030                        0                        0 
+ Amount_invested_monthly        Payment_Behaviour          Monthly_Balance 
+                       0                        0                        0 
+            Credit_Score 
+                       0 </code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)           <span class="co"># Summary statistics</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> Diabetes_binary      HighBP         HighChol        CholCheck     
- Min.   :0.0000   Min.   :0.000   Min.   :0.0000   Min.   :0.0000  
- 1st Qu.:0.0000   1st Qu.:0.000   1st Qu.:0.0000   1st Qu.:1.0000  
- Median :0.0000   Median :0.000   Median :0.0000   Median :1.0000  
- Mean   :0.1393   Mean   :0.429   Mean   :0.4241   Mean   :0.9627  
- 3rd Qu.:0.0000   3rd Qu.:1.000   3rd Qu.:1.0000   3rd Qu.:1.0000  
- Max.   :1.0000   Max.   :1.000   Max.   :1.0000   Max.   :1.0000  
-      BMI            Smoker           Stroke        HeartDiseaseorAttack
- Min.   :12.00   Min.   :0.0000   Min.   :0.00000   Min.   :0.00000     
- 1st Qu.:24.00   1st Qu.:0.0000   1st Qu.:0.00000   1st Qu.:0.00000     
- Median :27.00   Median :0.0000   Median :0.00000   Median :0.00000     
- Mean   :28.38   Mean   :0.4432   Mean   :0.04057   Mean   :0.09419     
- 3rd Qu.:31.00   3rd Qu.:1.0000   3rd Qu.:0.00000   3rd Qu.:0.00000     
- Max.   :98.00   Max.   :1.0000   Max.   :1.00000   Max.   :1.00000     
-  PhysActivity        Fruits          Veggies       HvyAlcoholConsump
- Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   
- 1st Qu.:1.0000   1st Qu.:0.0000   1st Qu.:1.0000   1st Qu.:0.0000   
- Median :1.0000   Median :1.0000   Median :1.0000   Median :0.0000   
- Mean   :0.7565   Mean   :0.6343   Mean   :0.8114   Mean   :0.0562   
- 3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.0000   
- Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   
- AnyHealthcare     NoDocbcCost         GenHlth         MentHlth     
- Min.   :0.0000   Min.   :0.00000   Min.   :1.000   Min.   : 0.000  
- 1st Qu.:1.0000   1st Qu.:0.00000   1st Qu.:2.000   1st Qu.: 0.000  
- Median :1.0000   Median :0.00000   Median :2.000   Median : 0.000  
- Mean   :0.9511   Mean   :0.08418   Mean   :2.511   Mean   : 3.185  
- 3rd Qu.:1.0000   3rd Qu.:0.00000   3rd Qu.:3.000   3rd Qu.: 2.000  
- Max.   :1.0000   Max.   :1.00000   Max.   :5.000   Max.   :30.000  
-    PhysHlth         DiffWalk           Sex              Age        
- Min.   : 0.000   Min.   :0.0000   Min.   :0.0000   Min.   : 1.000  
- 1st Qu.: 0.000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.: 6.000  
- Median : 0.000   Median :0.0000   Median :0.0000   Median : 8.000  
- Mean   : 4.242   Mean   :0.1682   Mean   :0.4403   Mean   : 8.032  
- 3rd Qu.: 3.000   3rd Qu.:0.0000   3rd Qu.:1.0000   3rd Qu.:10.000  
- Max.   :30.000   Max.   :1.0000   Max.   :1.0000   Max.   :13.000  
-   Education        Income     
- Min.   :1.00   Min.   :1.000  
- 1st Qu.:4.00   1st Qu.:5.000  
- Median :5.00   Median :7.000  
- Mean   :5.05   Mean   :6.054  
- 3rd Qu.:6.00   3rd Qu.:8.000  
- Max.   :6.00   Max.   :8.000  </code></pre>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `dplyr::summarize()`.
+ℹ In argument: `dplyr::across(tidyselect::any_of(variable_names),
+  mangled_skimmers$funs)`.
+ℹ In group 0: .
+Caused by warning:
+! There were 5 warnings in `dplyr::summarize()`.
+The first warning was:
+ℹ In argument: `dplyr::across(tidyselect::any_of(variable_names),
+  mangled_skimmers$funs)`.
+Caused by warning in `sorted_count()`:
+! Variable contains value(s) of "" that have been converted to "empty".
+ℹ Run `dplyr::last_dplyr_warnings()` to see the 4 remaining warnings.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(df)               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 253680     22</code></pre>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">train</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">100000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">28</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">factor</td>
+<td style="text-align: left;">19</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">numeric</td>
+<td style="text-align: left;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 8%">
+<col style="width: 12%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 41%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: left;">ordered</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: left;">top_counts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Customer_ID</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">12500</td>
+<td style="text-align: left;">CUS: 8, CUS: 8, CUS: 8, CUS: 8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Month</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Apr: 12500, Aug: 12500, Feb: 12500, Jan: 12500</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">10140</td>
+<td style="text-align: left;">emp: 9985, Lan: 44, Ste: 44, Jes: 39</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Age</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">1788</td>
+<td style="text-align: left;">38: 2833, 28: 2829, 31: 2806, 26: 2792</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SSN</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">12501</td>
+<td style="text-align: left;">#F%: 5572, 000: 8, 000: 8, 000: 8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Occupation</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">___: 7062, Law: 6575, Arc: 6355, Eng: 6350</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Annual_Income</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">18940</td>
+<td style="text-align: left;">172: 16, 208: 16, 365: 16, 178: 15</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Num_of_Loan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">434</td>
+<td style="text-align: left;">3: 14386, 2: 14250, 4: 14016, 0: 10380</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Type_of_Loan</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">6261</td>
+<td style="text-align: left;">emp: 11408, Not: 1408, Cre: 1280, Per: 1272</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Num_of_Delayed_Payment</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">750</td>
+<td style="text-align: left;">emp: 7002, 19: 5327, 17: 5261, 16: 5173</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Changed_Credit_Limit</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">4384</td>
+<td style="text-align: left;">_: 2091, 8.2: 133, 11.: 127, 11.: 126</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Credit_Mix</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Sta: 36479, Goo: 24337, _: 20195, Bad: 18989</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Outstanding_Debt</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">13178</td>
+<td style="text-align: left;">136: 24, 110: 23, 115: 23, 460: 23</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Credit_History_Age</td>
+<td style="text-align: right;">9030</td>
+<td style="text-align: right;">0.91</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">404</td>
+<td style="text-align: left;">15 : 446, 19 : 445, 19 : 444, 17 : 443</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Payment_of_Min_Amount</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Yes: 52326, No: 35667, NM: 12007</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Amount_invested_monthly</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">91050</td>
+<td style="text-align: left;">emp: 4479, __1: 4305, 0.0: 169, 10.: 1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Payment_Behaviour</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: left;">Low: 25513, Hig: 17540, Low: 13861, Hig: 13721</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Monthly_Balance</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">98793</td>
+<td style="text-align: left;">emp: 1200, __-: 9, 0.0: 1, 0.0: 1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Credit_Score</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Sta: 53174, Poo: 28998, Goo: 17828</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 8%">
+<col style="width: 11%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 6%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 5%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">sd</th>
+<th style="text-align: right;">p0</th>
+<th style="text-align: right;">p25</th>
+<th style="text-align: right;">p50</th>
+<th style="text-align: right;">p75</th>
+<th style="text-align: right;">p100</th>
+<th style="text-align: left;">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ID</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">80631.50</td>
+<td style="text-align: right;">43301.49</td>
+<td style="text-align: right;">5634.00</td>
+<td style="text-align: right;">43132.75</td>
+<td style="text-align: right;">80631.50</td>
+<td style="text-align: right;">118130.25</td>
+<td style="text-align: right;">155629.00</td>
+<td style="text-align: left;">▇▇▇▇▇</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Monthly_Inhand_Salary</td>
+<td style="text-align: right;">15002</td>
+<td style="text-align: right;">0.85</td>
+<td style="text-align: right;">4194.17</td>
+<td style="text-align: right;">3183.69</td>
+<td style="text-align: right;">303.65</td>
+<td style="text-align: right;">1625.57</td>
+<td style="text-align: right;">3093.75</td>
+<td style="text-align: right;">5957.45</td>
+<td style="text-align: right;">15204.63</td>
+<td style="text-align: left;">▇▃▂▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Num_Bank_Accounts</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">17.09</td>
+<td style="text-align: right;">117.40</td>
+<td style="text-align: right;">-1.00</td>
+<td style="text-align: right;">3.00</td>
+<td style="text-align: right;">6.00</td>
+<td style="text-align: right;">7.00</td>
+<td style="text-align: right;">1798.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Num_Credit_Card</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">22.47</td>
+<td style="text-align: right;">129.06</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">4.00</td>
+<td style="text-align: right;">5.00</td>
+<td style="text-align: right;">7.00</td>
+<td style="text-align: right;">1499.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Interest_Rate</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">72.47</td>
+<td style="text-align: right;">466.42</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">8.00</td>
+<td style="text-align: right;">13.00</td>
+<td style="text-align: right;">20.00</td>
+<td style="text-align: right;">5797.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Delay_from_due_date</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">21.07</td>
+<td style="text-align: right;">14.86</td>
+<td style="text-align: right;">-5.00</td>
+<td style="text-align: right;">10.00</td>
+<td style="text-align: right;">18.00</td>
+<td style="text-align: right;">28.00</td>
+<td style="text-align: right;">67.00</td>
+<td style="text-align: left;">▅▇▅▂▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Num_Credit_Inquiries</td>
+<td style="text-align: right;">1965</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">27.75</td>
+<td style="text-align: right;">193.18</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">3.00</td>
+<td style="text-align: right;">6.00</td>
+<td style="text-align: right;">9.00</td>
+<td style="text-align: right;">2597.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Credit_Utilization_Ratio</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">32.29</td>
+<td style="text-align: right;">5.12</td>
+<td style="text-align: right;">20.00</td>
+<td style="text-align: right;">28.05</td>
+<td style="text-align: right;">32.31</td>
+<td style="text-align: right;">36.50</td>
+<td style="text-align: right;">50.00</td>
+<td style="text-align: left;">▃▇▇▃▁</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Total_EMI_per_month</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">1403.12</td>
+<td style="text-align: right;">8306.04</td>
+<td style="text-align: right;">0.00</td>
+<td style="text-align: right;">30.31</td>
+<td style="text-align: right;">69.25</td>
+<td style="text-align: right;">161.22</td>
+<td style="text-align: right;">82331.00</td>
+<td style="text-align: left;">▇▁▁▁▁</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <ol start="3" type="1">
-<li>Chekc for missing values</li>
+<li>Visualise missing values Yellow represents missing values, and black represents available values. Blocks of missingness in specific columns indicate a need for either targeted imputation or column removal, especially if missingness is extensive or not missing at random (NMAR).</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(df))    <span class="co"># Count missing values per column        </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     Diabetes_binary               HighBP             HighChol 
-                   0                    0                    0 
-           CholCheck                  BMI               Smoker 
-                   0                    0                    0 
-              Stroke HeartDiseaseorAttack         PhysActivity 
-                   0                    0                    0 
-              Fruits              Veggies    HvyAlcoholConsump 
-                   0                    0                    0 
-       AnyHealthcare          NoDocbcCost              GenHlth 
-                   0                    0                    0 
-            MentHlth             PhysHlth             DiffWalk 
-                   0                    0                    0 
-                 Sex                  Age            Education 
-                   0                    0                    0 
-              Income 
-                   0 </code></pre>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Amelia)  <span class="co"># For missmap visualization</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">missmap</span>(train, </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Missing Values Map"</span>, </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"yellow"</span>, <span class="st">"black"</span>), </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend =</span> <span class="cn">TRUE</span>)      </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TheProject_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <ol start="4" type="1">
-<li>Class Balance (Target Variable)</li>
+<li>Data type correction Several columns originally read as character variables contain numeric data. These are converted to numeric or categorical types to enable statistical analysis.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(df<span class="sc">$</span>Diabetes_binary)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a function to clean and convert character values to numeric</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>clean_numeric <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">as.character</span>(x)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, x)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[$%]"</span>, <span class="st">""</span>, x)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[^0-9</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">-]"</span>, <span class="st">""</span>, x)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">suppressWarnings</span>(<span class="fu">as.numeric</span>(x))</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co"># List of columns expected to be numeric but possibly read as character</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>cols_to_convert <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Age"</span>, <span class="st">"Annual_Income"</span>, <span class="st">"Outstanding_Debt"</span>, <span class="st">"Num_of_Loan"</span>, </span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Changed_Credit_Limit"</span>, <span class="st">"Num_of_Delayed_Payment"</span>, </span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Amount_invested_monthly"</span>, <span class="st">"Monthly_Balance"</span>)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Check which columns exist in the data before applying</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>cols_to_convert <span class="ot">&lt;-</span> <span class="fu">intersect</span>(cols_to_convert, <span class="fu">colnames</span>(train))</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply cleaning function only to existing columns</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> cols_to_convert) {</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  train[[col]] <span class="ot">&lt;-</span> <span class="fu">clean_numeric</span>(train[[col]])</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert these columns to factors only if they exist</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="st">"Credit_Mix"</span> <span class="sc">%in%</span> <span class="fu">names</span>(train)) {</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  train<span class="sc">$</span>Credit_Mix <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(train<span class="sc">$</span>Credit_Mix)</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="st">"Payment_of_Min_Amount"</span> <span class="sc">%in%</span> <span class="fu">names</span>(train)) {</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>  train<span class="sc">$</span>Payment_of_Min_Amount <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(train<span class="sc">$</span>Payment_of_Min_Amount)</span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Show summary of the cleaned dataset</span></span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-     0      1 
-218334  35346 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(<span class="fu">table</span>(df<span class="sc">$</span>Diabetes_binary))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-       0        1 
-0.860667 0.139333 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot class balance</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(Diabetes_binary))) <span class="sc">+</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Class Distribution"</span>, <span class="at">x =</span> <span class="st">"Diabetes"</span>, <span class="at">y =</span> <span class="st">"Count"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="TheProject_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<pre><code>       ID             Customer_ID         Month             Name      
+ Min.   :  5634   CUS_0x1000:    8   April   :12500           : 9985  
+ 1st Qu.: 43133   CUS_0x1009:    8   August  :12500   Langep  :   44  
+ Median : 80632   CUS_0x100b:    8   February:12500   Stevex  :   44  
+ Mean   : 80632   CUS_0x1011:    8   January :12500   Jessicad:   39  
+ 3rd Qu.:118130   CUS_0x1013:    8   July    :12500   Vaughanl:   39  
+ Max.   :155629   CUS_0x1015:    8   June    :12500   Danielz :   38  
+                  (Other)   :99952   (Other) :25000   (Other) :89811  
+      Age                  SSN            Occupation    Annual_Income     
+ Min.   :-500.0   #F%$D@*&amp;8  : 5572   _______  : 7062   Min.   :    7006  
+ 1st Qu.:  24.0   000-08-1349:    8   Lawyer   : 6575   1st Qu.:   19458  
+ Median :  33.0   000-40-3312:    8   Architect: 6355   Median :   37579  
+ Mean   : 110.7   000-58-0568:    8   Engineer : 6350   Mean   :  176416  
+ 3rd Qu.:  42.0   000-60-0688:    8   Scientist: 6299   3rd Qu.:   72791  
+ Max.   :8698.0   000-80-0683:    8   Mechanic : 6291   Max.   :24198062  
+                  (Other)    :94388   (Other)  :61068                     
+ Monthly_Inhand_Salary Num_Bank_Accounts Num_Credit_Card   Interest_Rate    
+ Min.   :  303.6       Min.   :  -1.00   Min.   :   0.00   Min.   :   1.00  
+ 1st Qu.: 1625.6       1st Qu.:   3.00   1st Qu.:   4.00   1st Qu.:   8.00  
+ Median : 3093.7       Median :   6.00   Median :   5.00   Median :  13.00  
+ Mean   : 4194.2       Mean   :  17.09   Mean   :  22.47   Mean   :  72.47  
+ 3rd Qu.: 5957.4       3rd Qu.:   7.00   3rd Qu.:   7.00   3rd Qu.:  20.00  
+ Max.   :15204.6       Max.   :1798.00   Max.   :1499.00   Max.   :5797.00  
+ NA's   :15002                                                              
+  Num_of_Loan                       Type_of_Loan   Delay_from_due_date
+ Min.   :-100.00                          :11408   Min.   :-5.00      
+ 1st Qu.:   1.00   Not Specified          : 1408   1st Qu.:10.00      
+ Median :   3.00   Credit-Builder Loan    : 1280   Median :18.00      
+ Mean   :   3.01   Personal Loan          : 1272   Mean   :21.07      
+ 3rd Qu.:   5.00   Debt Consolidation Loan: 1264   3rd Qu.:28.00      
+ Max.   :1496.00   Student Loan           : 1240   Max.   :67.00      
+                   (Other)                :82128                      
+ Num_of_Delayed_Payment Changed_Credit_Limit Num_Credit_Inquiries
+ Min.   :  -3.00        Min.   :-6.49        Min.   :   0.00     
+ 1st Qu.:   9.00        1st Qu.: 5.32        1st Qu.:   3.00     
+ Median :  14.00        Median : 9.40        Median :   6.00     
+ Mean   :  30.92        Mean   :10.39        Mean   :  27.75     
+ 3rd Qu.:  18.00        3rd Qu.:14.87        3rd Qu.:   9.00     
+ Max.   :4397.00        Max.   :36.97        Max.   :2597.00     
+ NA's   :7002           NA's   :2091         NA's   :1965        
+    Credit_Mix    Outstanding_Debt  Credit_Utilization_Ratio
+ _       :20195   Min.   :   0.23   Min.   :20.00           
+ Bad     :18989   1st Qu.: 566.07   1st Qu.:28.05           
+ Good    :24337   Median :1166.15   Median :32.31           
+ Standard:36479   Mean   :1426.22   Mean   :32.29           
+                  3rd Qu.:1945.96   3rd Qu.:36.50           
+                  Max.   :4998.07   Max.   :50.00           
+                                                            
+              Credit_History_Age Payment_of_Min_Amount Total_EMI_per_month
+ 15 Years and 11 Months:  446    NM :12007             Min.   :    0.00   
+ 19 Years and 4 Months :  445    No :35667             1st Qu.:   30.31   
+ 19 Years and 5 Months :  444    Yes:52326             Median :   69.25   
+ 17 Years and 11 Months:  443                          Mean   : 1403.12   
+ 19 Years and 3 Months :  441                          3rd Qu.:  161.22   
+ (Other)               :88751                          Max.   :82331.00   
+ NA's                  : 9030                                             
+ Amount_invested_monthly                        Payment_Behaviour
+ Min.   :    0.00        !@9#%8                          : 7600  
+ 1st Qu.:   74.53        High_spent_Large_value_payments :13721  
+ Median :  135.93        High_spent_Medium_value_payments:17540  
+ Mean   :  637.41        High_spent_Small_value_payments :11340  
+ 3rd Qu.:  265.73        Low_spent_Large_value_payments  :10425  
+ Max.   :10000.00        Low_spent_Medium_value_payments :13861  
+ NA's   :4479            Low_spent_Small_value_payments  :25513  
+ Monthly_Balance        Credit_Score  
+ Min.   :-3.333e+26   Good    :17828  
+ 1st Qu.: 2.700e+02   Poor    :28998  
+ Median : 3.370e+02   Standard:53174  
+ Mean   :-3.036e+22                   
+ 3rd Qu.: 4.700e+02                   
+ Max.   : 1.602e+03                   
+ NA's   :1200                         </code></pre>
 </div>
 </div>
 <ol start="5" type="1">
-<li>Correlation Matrix</li>
+<li>Removal of Irrelevant Features Columns such as identifiers and personal details (Ex: ID, Name, SSN) are removed as they do not contribute predictive value to the modeling task.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>cor_mat <span class="ot">&lt;-</span> <span class="fu">cor</span>(df)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(cor_mat[,<span class="st">"Diabetes_binary"</span>], <span class="dv">2</span>)[<span class="fu">order</span>(<span class="sc">-</span><span class="fu">abs</span>(cor_mat[,<span class="st">"Diabetes_binary"</span>]))]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colnames</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     Diabetes_binary              GenHlth               HighBP 
-                1.00                 0.29                 0.26 
-            DiffWalk                  BMI             HighChol 
-                0.22                 0.22                 0.20 
-                 Age HeartDiseaseorAttack             PhysHlth 
-                0.18                 0.18                 0.17 
-              Income            Education         PhysActivity 
-               -0.16                -0.12                -0.12 
-              Stroke             MentHlth            CholCheck 
-                0.11                 0.07                 0.06 
-              Smoker    HvyAlcoholConsump              Veggies 
-                0.06                -0.06                -0.06 
-              Fruits          NoDocbcCost                  Sex 
-               -0.04                 0.03                 0.03 
-       AnyHealthcare 
-                0.02 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize correlations</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggcorr</span>(df, <span class="at">label =</span> <span class="cn">TRUE</span>, <span class="at">label_alpha =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="TheProject_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
+<pre><code> [1] "ID"                       "Customer_ID"             
+ [3] "Month"                    "Name"                    
+ [5] "Age"                      "SSN"                     
+ [7] "Occupation"               "Annual_Income"           
+ [9] "Monthly_Inhand_Salary"    "Num_Bank_Accounts"       
+[11] "Num_Credit_Card"          "Interest_Rate"           
+[13] "Num_of_Loan"              "Type_of_Loan"            
+[15] "Delay_from_due_date"      "Num_of_Delayed_Payment"  
+[17] "Changed_Credit_Limit"     "Num_Credit_Inquiries"    
+[19] "Credit_Mix"               "Outstanding_Debt"        
+[21] "Credit_Utilization_Ratio" "Credit_History_Age"      
+[23] "Payment_of_Min_Amount"    "Total_EMI_per_month"     
+[25] "Amount_invested_monthly"  "Payment_Behaviour"       
+[27] "Monthly_Balance"          "Credit_Score"            </code></pre>
 </div>
 </div>
 <ol start="6" type="1">
 <li>PCA for visualisation</li>
 </ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove target variable</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>df_features <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>Diabetes_binary)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardize features</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>df_scaled <span class="ot">&lt;-</span> <span class="fu">scale</span>(df_features)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Run PCA</span></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(df_scaled, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize PCA (first 2 components)</span></span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(pca_result,</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">geom.ind =</span> <span class="st">"point"</span>,</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">pointshape =</span> <span class="dv">21</span>,</span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.ind =</span> <span class="fu">as.factor</span>(df<span class="sc">$</span>Diabetes_binary),</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#00AFBB"</span>, <span class="st">"#FC4E07"</span>),</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>             <span class="at">legend.title =</span> <span class="st">"Diabetes"</span>) <span class="sc">+</span></span>
-<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"PCA - BRFSS Diabetes Indicators"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="TheProject_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
 <ol start="7" type="1">
 <li>Distribution Plot</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: BMI by diabetes status</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> BMI, <span class="at">fill =</span> <span class="fu">factor</span>(Diabetes_binary))) <span class="sc">+</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">position =</span> <span class="st">"identity"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">bins =</span> <span class="dv">30</span>) <span class="sc">+</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"BMI Distribution by Diabetes Status"</span>, <span class="at">x =</span> <span class="st">"BMI"</span>, <span class="at">fill =</span> <span class="st">"Diabetes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="TheProject_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Boxplot of GenHlth</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(Diabetes_binary), <span class="at">y =</span> GenHlth)) <span class="sc">+</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"General Health Score by Diabetes"</span>, <span class="at">x =</span> <span class="st">"Diabetes"</span>, <span class="at">y =</span> <span class="st">"GenHlth"</span>)            </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="TheProject_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 </main>
