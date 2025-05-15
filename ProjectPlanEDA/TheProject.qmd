@@ -1,3 +1,13 @@
+---
+title: "The Project"
+format:
+  html:
+    code-fold: true
+    code-tools: true
+    toc: true
+    theme: flatly
+---
+
 Data Source
 https://www.kaggle.com/code/sudhanshu2198/multi-class-credit-score-classification/input?select=Score.csv
 
@@ -123,10 +133,10 @@ Columns such as identifiers and personal details (Ex: ID, Name, SSN) are removed
                # Dimensions (rows, columns)
 ```
 
-```{r}
+```{r collapse=TRUE}
                # Dimensions (rows, columns)
 ```
 
-```{r}
+```{r collapse=TRUE}
                # Dimensions (rows, columns)
 ```

@@ -87,139 +87,121 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.4     ✔ readr     2.1.5
-✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   3.5.2     ✔ tibble    3.2.1
-✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-✔ purrr     1.0.4     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'janitor'
-
-The following objects are masked from 'package:stats':
-
-    chisq.test, fisher.test</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>corrplot 0.95 loaded</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Amelia)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: Rcpp
-## 
-## Amelia II: Multiple Imputation
-## (Version 1.8.3, built: 2024-11-07)
-## Copyright (C) 2005-2025 James Honaker, Gary King and Matthew Blackwell
-## Refer to http://gking.harvard.edu/amelia/ for more information
-## </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"train.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"test.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Score.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># View dimensions</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 100000     28</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 50000    27</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(score)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 99960    21</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick glimpse</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 100,000
-Columns: 28
-$ ID                       &lt;dbl&gt; 5634, 5635, 5636, 5637, 5638, 5639, 5640, 564…
-$ Customer_ID              &lt;fct&gt; CUS_0xd40, CUS_0xd40, CUS_0xd40, CUS_0xd40, C…
-$ Month                    &lt;fct&gt; January, February, March, April, May, June, J…
-$ Name                     &lt;fct&gt; "Aaron Maashoh", "Aaron Maashoh", "Aaron Maas…
-$ Age                      &lt;fct&gt; 23, 23, -500, 23, 23, 23, 23, 23, 28_, 28, 28…
-$ SSN                      &lt;fct&gt; 821-00-0265, 821-00-0265, 821-00-0265, 821-00…
-$ Occupation               &lt;fct&gt; Scientist, Scientist, Scientist, Scientist, S…
-$ Annual_Income            &lt;fct&gt; 19114.12, 19114.12, 19114.12, 19114.12, 19114…
-$ Monthly_Inhand_Salary    &lt;dbl&gt; 1824.843, NA, NA, NA, 1824.843, NA, 1824.843,…
-$ Num_Bank_Accounts        &lt;int&gt; 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, …
-$ Num_Credit_Card          &lt;int&gt; 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1385, 4, 4, 4, …
-$ Interest_Rate            &lt;int&gt; 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, …
-$ Num_of_Loan              &lt;fct&gt; 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, …
-$ Type_of_Loan             &lt;fct&gt; "Auto Loan, Credit-Builder Loan, Personal Loa…
-$ Delay_from_due_date      &lt;int&gt; 3, -1, 3, 5, 6, 8, 3, 3, 3, 7, 3, 3, 3, 3, 3,…
-$ Num_of_Delayed_Payment   &lt;fct&gt; 7, , 7, 4, , 4, 8_, 6, 4, 1, -1, 3_, 1, 0, 4,…
-$ Changed_Credit_Limit     &lt;fct&gt; 11.27, 11.27, _, 6.27, 11.27, 9.27, 11.27, 11…
-$ Num_Credit_Inquiries     &lt;dbl&gt; 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, …
-$ Credit_Mix               &lt;fct&gt; _, Good, Good, Good, Good, Good, Good, Good, …
-$ Outstanding_Debt         &lt;fct&gt; 809.98, 809.98, 809.98, 809.98, 809.98, 809.9…
-$ Credit_Utilization_Ratio &lt;dbl&gt; 26.82262, 31.94496, 28.60935, 31.37786, 24.79…
-$ Credit_History_Age       &lt;fct&gt; 22 Years and 1 Months, NA, 22 Years and 3 Mon…
-$ Payment_of_Min_Amount    &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, N…
-$ Total_EMI_per_month      &lt;dbl&gt; 49.57495, 49.57495, 49.57495, 49.57495, 49.57…
-$ Amount_invested_monthly  &lt;fct&gt; 80.41529543900253, 118.28022162236736, 81.699…
-$ Payment_Behaviour        &lt;fct&gt; High_spent_Small_value_payments, Low_spent_La…
-$ Monthly_Balance          &lt;fct&gt; 312.49408867943663, 284.62916249607184, 331.2…
-$ Credit_Score             &lt;fct&gt; Good, Good, Good, Good, Good, Good, Good, Sta…</code></pre>
-</div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ dplyr     1.1.4     ✔ readr     2.1.5</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ forcats   1.0.0     ✔ stringr   1.5.1</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ ggplot2   3.5.2     ✔ tibble    3.2.1</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ purrr     1.0.4     </span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ dplyr::filter() masks stats::filter()</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ dplyr::lag()    masks stats::lag()</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="do">## Attaching package: 'janitor'</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="do">## The following objects are masked from 'package:stats':</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="do">##     chisq.test, fisher.test</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="do">## corrplot 0.95 loaded</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Amelia)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="do">## Loading required package: Rcpp</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="do">## ## </span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="do">## ## Amelia II: Multiple Imputation</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="do">## ## (Version 1.8.3, built: 2024-11-07)</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="do">## ## Copyright (C) 2005-2025 James Honaker, Gary King and Matthew Blackwell</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="do">## ## Refer to http://gking.harvard.edu/amelia/ for more information</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="do">## ##</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"train.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"test.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Score.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co"># View dimensions</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(train)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 100000     28</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(test)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 50000    27</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(score)</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 99960    21</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick glimpse</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(train)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="do">## Rows: 100,000</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="do">## Columns: 28</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="do">## $ ID                       &lt;dbl&gt; 5634, 5635, 5636, 5637, 5638, 5639, 5640, 564…</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Customer_ID              &lt;fct&gt; CUS_0xd40, CUS_0xd40, CUS_0xd40, CUS_0xd40, C…</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Month                    &lt;fct&gt; January, February, March, April, May, June, J…</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Name                     &lt;fct&gt; "Aaron Maashoh", "Aaron Maashoh", "Aaron Maas…</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Age                      &lt;fct&gt; 23, 23, -500, 23, 23, 23, 23, 23, 28_, 28, 28…</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="do">## $ SSN                      &lt;fct&gt; 821-00-0265, 821-00-0265, 821-00-0265, 821-00…</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Occupation               &lt;fct&gt; Scientist, Scientist, Scientist, Scientist, S…</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Annual_Income            &lt;fct&gt; 19114.12, 19114.12, 19114.12, 19114.12, 19114…</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Monthly_Inhand_Salary    &lt;dbl&gt; 1824.843, NA, NA, NA, 1824.843, NA, 1824.843,…</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Num_Bank_Accounts        &lt;int&gt; 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, …</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Num_Credit_Card          &lt;int&gt; 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 1385, 4, 4, 4, …</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Interest_Rate            &lt;int&gt; 3, 3, 3, 3, 3, 3, 3, 3, 6, 6, 6, 6, 6, 6, 6, …</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Num_of_Loan              &lt;fct&gt; 4, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, …</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Type_of_Loan             &lt;fct&gt; "Auto Loan, Credit-Builder Loan, Personal Loa…</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Delay_from_due_date      &lt;int&gt; 3, -1, 3, 5, 6, 8, 3, 3, 3, 7, 3, 3, 3, 3, 3,…</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Num_of_Delayed_Payment   &lt;fct&gt; 7, , 7, 4, , 4, 8_, 6, 4, 1, -1, 3_, 1, 0, 4,…</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Changed_Credit_Limit     &lt;fct&gt; 11.27, 11.27, _, 6.27, 11.27, 9.27, 11.27, 11…</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Num_Credit_Inquiries     &lt;dbl&gt; 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, …</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Credit_Mix               &lt;fct&gt; _, Good, Good, Good, Good, Good, Good, Good, …</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Outstanding_Debt         &lt;fct&gt; 809.98, 809.98, 809.98, 809.98, 809.98, 809.9…</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Credit_Utilization_Ratio &lt;dbl&gt; 26.82262, 31.94496, 28.60935, 31.37786, 24.79…</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Credit_History_Age       &lt;fct&gt; 22 Years and 1 Months, NA, 22 Years and 3 Mon…</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Payment_of_Min_Amount    &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, N…</span></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Total_EMI_per_month      &lt;dbl&gt; 49.57495, 49.57495, 49.57495, 49.57495, 49.57…</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Amount_invested_monthly  &lt;fct&gt; 80.41529543900253, 118.28022162236736, 81.699…</span></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Payment_Behaviour        &lt;fct&gt; High_spent_Small_value_payments, Low_spent_La…</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Monthly_Balance          &lt;fct&gt; 312.49408867943663, 284.62916249607184, 331.2…</span></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="do">## $ Credit_Score             &lt;fct&gt; Good, Good, Good, Good, Good, Good, Good, Sta…</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="2" type="1">
 <li>Assessment of missing values A through check for missing values is conducted to determine the extent and distribution of incompleteness across the dataset</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(train))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>                      ID              Customer_ID                    Month 
-                       0                        0                        0 
-                    Name                      Age                      SSN 
-                       0                        0                        0 
-              Occupation            Annual_Income    Monthly_Inhand_Salary 
-                       0                        0                    15002 
-       Num_Bank_Accounts          Num_Credit_Card            Interest_Rate 
-                       0                        0                        0 
-             Num_of_Loan             Type_of_Loan      Delay_from_due_date 
-                       0                        0                        0 
-  Num_of_Delayed_Payment     Changed_Credit_Limit     Num_Credit_Inquiries 
-                       0                        0                     1965 
-              Credit_Mix         Outstanding_Debt Credit_Utilization_Ratio 
-                       0                        0                        0 
-      Credit_History_Age    Payment_of_Min_Amount      Total_EMI_per_month 
-                    9030                        0                        0 
- Amount_invested_monthly        Payment_Behaviour          Monthly_Balance 
-                       0                        0                        0 
-            Credit_Score 
-                       0 </code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: There was 1 warning in `dplyr::summarize()`.
-ℹ In argument: `dplyr::across(tidyselect::any_of(variable_names),
-  mangled_skimmers$funs)`.
-ℹ In group 0: .
-Caused by warning:
-! There were 5 warnings in `dplyr::summarize()`.
-The first warning was:
-ℹ In argument: `dplyr::across(tidyselect::any_of(variable_names),
-  mangled_skimmers$funs)`.
-Caused by warning in `sorted_count()`:
-! Variable contains value(s) of "" that have been converted to "empty".
-ℹ Run `dplyr::last_dplyr_warnings()` to see the 4 remaining warnings.</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(train))</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="do">##                       ID              Customer_ID                    Month </span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="do">##                        0                        0                        0 </span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="do">##                     Name                      Age                      SSN </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="do">##                        0                        0                        0 </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="do">##               Occupation            Annual_Income    Monthly_Inhand_Salary </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="do">##                        0                        0                    15002 </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="do">##        Num_Bank_Accounts          Num_Credit_Card            Interest_Rate </span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="do">##                        0                        0                        0 </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="do">##              Num_of_Loan             Type_of_Loan      Delay_from_due_date </span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="do">##                        0                        0                        0 </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="do">##   Num_of_Delayed_Payment     Changed_Credit_Limit     Num_Credit_Inquiries </span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="do">##                        0                        0                     1965 </span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="do">##               Credit_Mix         Outstanding_Debt Credit_Utilization_Ratio </span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="do">##                        0                        0                        0 </span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="do">##       Credit_History_Age    Payment_of_Min_Amount      Total_EMI_per_month </span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="do">##                     9030                        0                        0 </span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  Amount_invested_monthly        Payment_Behaviour          Monthly_Balance </span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="do">##                        0                        0                        0 </span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="do">##             Credit_Score </span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="do">##                        0</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(train)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: There was 1 warning in `dplyr::summarize()`.</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ In argument: `dplyr::across(tidyselect::any_of(variable_names),</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="do">##   mangled_skimmers$funs)`.</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ In group 0: .</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="do">## Caused by warning:</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="do">## ! There were 5 warnings in `dplyr::summarize()`.</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="do">## The first warning was:</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ In argument: `dplyr::across(tidyselect::any_of(variable_names),</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="do">##   mangled_skimmers$funs)`.</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Caused by warning in `sorted_count()`:</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="do">## ! Variable contains value(s) of "" that have been converted to "empty".</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Run `dplyr::last_dplyr_warnings()` to see the 4 remaining warnings.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
 <caption>Data summary</caption>
@@ -593,11 +575,11 @@ Caused by warning in `sorted_count()`:
 <li>Visualise missing values Yellow represents missing values, and black represents available values. Blocks of missingness in specific columns indicate a need for either targeted imputation or column removal, especially if missingness is extensive or not missing at random (NMAR).</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Amelia)  <span class="co"># For missmap visualization</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">missmap</span>(train, </span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Missing Values Map"</span>, </span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"yellow"</span>, <span class="st">"black"</span>), </span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend =</span> <span class="cn">TRUE</span>)      </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Amelia)  <span class="co"># For missmap visualization</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">missmap</span>(train, </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Missing Values Map"</span>, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"yellow"</span>, <span class="st">"black"</span>), </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend =</span> <span class="cn">TRUE</span>)      </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -610,134 +592,130 @@ Caused by warning in `sorted_count()`:
 <li>Data type correction Several columns originally read as character variables contain numeric data. These are converted to numeric or categorical types to enable statistical analysis.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a function to clean and convert character values to numeric</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>clean_numeric <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">as.character</span>(x)</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, x)</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[$%]"</span>, <span class="st">""</span>, x)</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[^0-9</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">-]"</span>, <span class="st">""</span>, x)</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">suppressWarnings</span>(<span class="fu">as.numeric</span>(x))</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co"># List of columns expected to be numeric but possibly read as character</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>cols_to_convert <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Age"</span>, <span class="st">"Annual_Income"</span>, <span class="st">"Outstanding_Debt"</span>, <span class="st">"Num_of_Loan"</span>, </span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Changed_Credit_Limit"</span>, <span class="st">"Num_of_Delayed_Payment"</span>, </span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Amount_invested_monthly"</span>, <span class="st">"Monthly_Balance"</span>)</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Check which columns exist in the data before applying</span></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>cols_to_convert <span class="ot">&lt;-</span> <span class="fu">intersect</span>(cols_to_convert, <span class="fu">colnames</span>(train))</span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply cleaning function only to existing columns</span></span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> cols_to_convert) {</span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  train[[col]] <span class="ot">&lt;-</span> <span class="fu">clean_numeric</span>(train[[col]])</span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert these columns to factors only if they exist</span></span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="st">"Credit_Mix"</span> <span class="sc">%in%</span> <span class="fu">names</span>(train)) {</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  train<span class="sc">$</span>Credit_Mix <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(train<span class="sc">$</span>Credit_Mix)</span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="st">"Payment_of_Min_Amount"</span> <span class="sc">%in%</span> <span class="fu">names</span>(train)) {</span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>  train<span class="sc">$</span>Payment_of_Min_Amount <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(train<span class="sc">$</span>Payment_of_Min_Amount)</span>
-<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Show summary of the cleaned dataset</span></span>
-<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>       ID             Customer_ID         Month             Name      
- Min.   :  5634   CUS_0x1000:    8   April   :12500           : 9985  
- 1st Qu.: 43133   CUS_0x1009:    8   August  :12500   Langep  :   44  
- Median : 80632   CUS_0x100b:    8   February:12500   Stevex  :   44  
- Mean   : 80632   CUS_0x1011:    8   January :12500   Jessicad:   39  
- 3rd Qu.:118130   CUS_0x1013:    8   July    :12500   Vaughanl:   39  
- Max.   :155629   CUS_0x1015:    8   June    :12500   Danielz :   38  
-                  (Other)   :99952   (Other) :25000   (Other) :89811  
-      Age                  SSN            Occupation    Annual_Income     
- Min.   :-500.0   #F%$D@*&amp;8  : 5572   _______  : 7062   Min.   :    7006  
- 1st Qu.:  24.0   000-08-1349:    8   Lawyer   : 6575   1st Qu.:   19458  
- Median :  33.0   000-40-3312:    8   Architect: 6355   Median :   37579  
- Mean   : 110.7   000-58-0568:    8   Engineer : 6350   Mean   :  176416  
- 3rd Qu.:  42.0   000-60-0688:    8   Scientist: 6299   3rd Qu.:   72791  
- Max.   :8698.0   000-80-0683:    8   Mechanic : 6291   Max.   :24198062  
-                  (Other)    :94388   (Other)  :61068                     
- Monthly_Inhand_Salary Num_Bank_Accounts Num_Credit_Card   Interest_Rate    
- Min.   :  303.6       Min.   :  -1.00   Min.   :   0.00   Min.   :   1.00  
- 1st Qu.: 1625.6       1st Qu.:   3.00   1st Qu.:   4.00   1st Qu.:   8.00  
- Median : 3093.7       Median :   6.00   Median :   5.00   Median :  13.00  
- Mean   : 4194.2       Mean   :  17.09   Mean   :  22.47   Mean   :  72.47  
- 3rd Qu.: 5957.4       3rd Qu.:   7.00   3rd Qu.:   7.00   3rd Qu.:  20.00  
- Max.   :15204.6       Max.   :1798.00   Max.   :1499.00   Max.   :5797.00  
- NA's   :15002                                                              
-  Num_of_Loan                       Type_of_Loan   Delay_from_due_date
- Min.   :-100.00                          :11408   Min.   :-5.00      
- 1st Qu.:   1.00   Not Specified          : 1408   1st Qu.:10.00      
- Median :   3.00   Credit-Builder Loan    : 1280   Median :18.00      
- Mean   :   3.01   Personal Loan          : 1272   Mean   :21.07      
- 3rd Qu.:   5.00   Debt Consolidation Loan: 1264   3rd Qu.:28.00      
- Max.   :1496.00   Student Loan           : 1240   Max.   :67.00      
-                   (Other)                :82128                      
- Num_of_Delayed_Payment Changed_Credit_Limit Num_Credit_Inquiries
- Min.   :  -3.00        Min.   :-6.49        Min.   :   0.00     
- 1st Qu.:   9.00        1st Qu.: 5.32        1st Qu.:   3.00     
- Median :  14.00        Median : 9.40        Median :   6.00     
- Mean   :  30.92        Mean   :10.39        Mean   :  27.75     
- 3rd Qu.:  18.00        3rd Qu.:14.87        3rd Qu.:   9.00     
- Max.   :4397.00        Max.   :36.97        Max.   :2597.00     
- NA's   :7002           NA's   :2091         NA's   :1965        
-    Credit_Mix    Outstanding_Debt  Credit_Utilization_Ratio
- _       :20195   Min.   :   0.23   Min.   :20.00           
- Bad     :18989   1st Qu.: 566.07   1st Qu.:28.05           
- Good    :24337   Median :1166.15   Median :32.31           
- Standard:36479   Mean   :1426.22   Mean   :32.29           
-                  3rd Qu.:1945.96   3rd Qu.:36.50           
-                  Max.   :4998.07   Max.   :50.00           
-                                                            
-              Credit_History_Age Payment_of_Min_Amount Total_EMI_per_month
- 15 Years and 11 Months:  446    NM :12007             Min.   :    0.00   
- 19 Years and 4 Months :  445    No :35667             1st Qu.:   30.31   
- 19 Years and 5 Months :  444    Yes:52326             Median :   69.25   
- 17 Years and 11 Months:  443                          Mean   : 1403.12   
- 19 Years and 3 Months :  441                          3rd Qu.:  161.22   
- (Other)               :88751                          Max.   :82331.00   
- NA's                  : 9030                                             
- Amount_invested_monthly                        Payment_Behaviour
- Min.   :    0.00        !@9#%8                          : 7600  
- 1st Qu.:   74.53        High_spent_Large_value_payments :13721  
- Median :  135.93        High_spent_Medium_value_payments:17540  
- Mean   :  637.41        High_spent_Small_value_payments :11340  
- 3rd Qu.:  265.73        Low_spent_Large_value_payments  :10425  
- Max.   :10000.00        Low_spent_Medium_value_payments :13861  
- NA's   :4479            Low_spent_Small_value_payments  :25513  
- Monthly_Balance        Credit_Score  
- Min.   :-3.333e+26   Good    :17828  
- 1st Qu.: 2.700e+02   Poor    :28998  
- Median : 3.370e+02   Standard:53174  
- Mean   :-3.036e+22                   
- 3rd Qu.: 4.700e+02                   
- Max.   : 1.602e+03                   
- NA's   :1200                         </code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a function to clean and convert character values to numeric</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>clean_numeric <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">as.character</span>(x)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, x)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[$%]"</span>, <span class="st">""</span>, x)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[^0-9</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">-]"</span>, <span class="st">""</span>, x)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">suppressWarnings</span>(<span class="fu">as.numeric</span>(x))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># List of columns expected to be numeric but possibly read as character</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>cols_to_convert <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Age"</span>, <span class="st">"Annual_Income"</span>, <span class="st">"Outstanding_Debt"</span>, <span class="st">"Num_of_Loan"</span>, </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Changed_Credit_Limit"</span>, <span class="st">"Num_of_Delayed_Payment"</span>, </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Amount_invested_monthly"</span>, <span class="st">"Monthly_Balance"</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Check which columns exist in the data before applying</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>cols_to_convert <span class="ot">&lt;-</span> <span class="fu">intersect</span>(cols_to_convert, <span class="fu">colnames</span>(train))</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply cleaning function only to existing columns</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> cols_to_convert) {</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  train[[col]] <span class="ot">&lt;-</span> <span class="fu">clean_numeric</span>(train[[col]])</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert these columns to factors only if they exist</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="st">"Credit_Mix"</span> <span class="sc">%in%</span> <span class="fu">names</span>(train)) {</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  train<span class="sc">$</span>Credit_Mix <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(train<span class="sc">$</span>Credit_Mix)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="st">"Payment_of_Min_Amount"</span> <span class="sc">%in%</span> <span class="fu">names</span>(train)) {</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  train<span class="sc">$</span>Payment_of_Min_Amount <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(train<span class="sc">$</span>Payment_of_Min_Amount)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Show summary of the cleaned dataset</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(train)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="do">##        ID             Customer_ID         Month             Name      </span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="do">##  Min.   :  5634   CUS_0x1000:    8   April   :12500           : 9985  </span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="do">##  1st Qu.: 43133   CUS_0x1009:    8   August  :12500   Langep  :   44  </span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="do">##  Median : 80632   CUS_0x100b:    8   February:12500   Stevex  :   44  </span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="do">##  Mean   : 80632   CUS_0x1011:    8   January :12500   Jessicad:   39  </span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="do">##  3rd Qu.:118130   CUS_0x1013:    8   July    :12500   Vaughanl:   39  </span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="do">##  Max.   :155629   CUS_0x1015:    8   June    :12500   Danielz :   38  </span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="do">##                   (Other)   :99952   (Other) :25000   (Other) :89811  </span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="do">##       Age                  SSN            Occupation    Annual_Income     </span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a><span class="do">##  Min.   :-500.0   #F%$D@*&amp;8  : 5572   _______  : 7062   Min.   :    7006  </span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="do">##  1st Qu.:  24.0   000-08-1349:    8   Lawyer   : 6575   1st Qu.:   19458  </span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a><span class="do">##  Median :  33.0   000-40-3312:    8   Architect: 6355   Median :   37579  </span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a><span class="do">##  Mean   : 110.7   000-58-0568:    8   Engineer : 6350   Mean   :  176416  </span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="do">##  3rd Qu.:  42.0   000-60-0688:    8   Scientist: 6299   3rd Qu.:   72791  </span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a><span class="do">##  Max.   :8698.0   000-80-0683:    8   Mechanic : 6291   Max.   :24198062  </span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="do">##                   (Other)    :94388   (Other)  :61068                     </span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="do">##  Monthly_Inhand_Salary Num_Bank_Accounts Num_Credit_Card   Interest_Rate    </span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a><span class="do">##  Min.   :  303.6       Min.   :  -1.00   Min.   :   0.00   Min.   :   1.00  </span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="do">##  1st Qu.: 1625.6       1st Qu.:   3.00   1st Qu.:   4.00   1st Qu.:   8.00  </span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="do">##  Median : 3093.7       Median :   6.00   Median :   5.00   Median :  13.00  </span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a><span class="do">##  Mean   : 4194.2       Mean   :  17.09   Mean   :  22.47   Mean   :  72.47  </span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a><span class="do">##  3rd Qu.: 5957.4       3rd Qu.:   7.00   3rd Qu.:   7.00   3rd Qu.:  20.00  </span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="do">##  Max.   :15204.6       Max.   :1798.00   Max.   :1499.00   Max.   :5797.00  </span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a><span class="do">##  NA's   :15002                                                              </span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a><span class="do">##   Num_of_Loan                       Type_of_Loan   Delay_from_due_date</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="do">##  Min.   :-100.00                          :11408   Min.   :-5.00      </span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a><span class="do">##  1st Qu.:   1.00   Not Specified          : 1408   1st Qu.:10.00      </span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a><span class="do">##  Median :   3.00   Credit-Builder Loan    : 1280   Median :18.00      </span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="do">##  Mean   :   3.01   Personal Loan          : 1272   Mean   :21.07      </span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a><span class="do">##  3rd Qu.:   5.00   Debt Consolidation Loan: 1264   3rd Qu.:28.00      </span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a><span class="do">##  Max.   :1496.00   Student Loan           : 1240   Max.   :67.00      </span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="do">##                    (Other)                :82128                      </span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a><span class="do">##  Num_of_Delayed_Payment Changed_Credit_Limit Num_Credit_Inquiries</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a><span class="do">##  Min.   :  -3.00        Min.   :-6.49        Min.   :   0.00     </span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="do">##  1st Qu.:   9.00        1st Qu.: 5.32        1st Qu.:   3.00     </span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a><span class="do">##  Median :  14.00        Median : 9.40        Median :   6.00     </span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a><span class="do">##  Mean   :  30.92        Mean   :10.39        Mean   :  27.75     </span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a><span class="do">##  3rd Qu.:  18.00        3rd Qu.:14.87        3rd Qu.:   9.00     </span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a><span class="do">##  Max.   :4397.00        Max.   :36.97        Max.   :2597.00     </span></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a><span class="do">##  NA's   :7002           NA's   :2091         NA's   :1965        </span></span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a><span class="do">##     Credit_Mix    Outstanding_Debt  Credit_Utilization_Ratio</span></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a><span class="do">##  _       :20195   Min.   :   0.23   Min.   :20.00           </span></span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a><span class="do">##  Bad     :18989   1st Qu.: 566.07   1st Qu.:28.05           </span></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="do">##  Good    :24337   Median :1166.15   Median :32.31           </span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a><span class="do">##  Standard:36479   Mean   :1426.22   Mean   :32.29           </span></span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a><span class="do">##                   3rd Qu.:1945.96   3rd Qu.:36.50           </span></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="do">##                   Max.   :4998.07   Max.   :50.00           </span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a><span class="do">##                                                             </span></span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a><span class="do">##               Credit_History_Age Payment_of_Min_Amount Total_EMI_per_month</span></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a><span class="do">##  15 Years and 11 Months:  446    NM :12007             Min.   :    0.00   </span></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a><span class="do">##  19 Years and 4 Months :  445    No :35667             1st Qu.:   30.31   </span></span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a><span class="do">##  19 Years and 5 Months :  444    Yes:52326             Median :   69.25   </span></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a><span class="do">##  17 Years and 11 Months:  443                          Mean   : 1403.12   </span></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a><span class="do">##  19 Years and 3 Months :  441                          3rd Qu.:  161.22   </span></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a><span class="do">##  (Other)               :88751                          Max.   :82331.00   </span></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a><span class="do">##  NA's                  : 9030                                             </span></span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a><span class="do">##  Amount_invested_monthly                        Payment_Behaviour</span></span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a><span class="do">##  Min.   :    0.00        !@9#%8                          : 7600  </span></span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a><span class="do">##  1st Qu.:   74.53        High_spent_Large_value_payments :13721  </span></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a><span class="do">##  Median :  135.93        High_spent_Medium_value_payments:17540  </span></span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a><span class="do">##  Mean   :  637.41        High_spent_Small_value_payments :11340  </span></span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a><span class="do">##  3rd Qu.:  265.73        Low_spent_Large_value_payments  :10425  </span></span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a><span class="do">##  Max.   :10000.00        Low_spent_Medium_value_payments :13861  </span></span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a><span class="do">##  NA's   :4479            Low_spent_Small_value_payments  :25513  </span></span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a><span class="do">##  Monthly_Balance        Credit_Score  </span></span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a><span class="do">##  Min.   :-3.333e+26   Good    :17828  </span></span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a><span class="do">##  1st Qu.: 2.700e+02   Poor    :28998  </span></span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a><span class="do">##  Median : 3.370e+02   Standard:53174  </span></span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a><span class="do">##  Mean   :-3.036e+22                   </span></span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a><span class="do">##  3rd Qu.: 4.700e+02                   </span></span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a><span class="do">##  Max.   : 1.602e+03                   </span></span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a><span class="do">##  NA's   :1200</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="5" type="1">
 <li>Removal of Irrelevant Features Columns such as identifiers and personal details (Ex: ID, Name, SSN) are removed as they do not contribute predictive value to the modeling task.</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colnames</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] "ID"                       "Customer_ID"             
- [3] "Month"                    "Name"                    
- [5] "Age"                      "SSN"                     
- [7] "Occupation"               "Annual_Income"           
- [9] "Monthly_Inhand_Salary"    "Num_Bank_Accounts"       
-[11] "Num_Credit_Card"          "Interest_Rate"           
-[13] "Num_of_Loan"              "Type_of_Loan"            
-[15] "Delay_from_due_date"      "Num_of_Delayed_Payment"  
-[17] "Changed_Credit_Limit"     "Num_Credit_Inquiries"    
-[19] "Credit_Mix"               "Outstanding_Debt"        
-[21] "Credit_Utilization_Ratio" "Credit_History_Age"      
-[23] "Payment_of_Min_Amount"    "Total_EMI_per_month"     
-[25] "Amount_invested_monthly"  "Payment_Behaviour"       
-[27] "Monthly_Balance"          "Credit_Score"            </code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colnames</span>(train)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">##  [1] "ID"                       "Customer_ID"             </span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="do">##  [3] "Month"                    "Name"                    </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">##  [5] "Age"                      "SSN"                     </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="do">##  [7] "Occupation"               "Annual_Income"           </span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="do">##  [9] "Monthly_Inhand_Salary"    "Num_Bank_Accounts"       </span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [11] "Num_Credit_Card"          "Interest_Rate"           </span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">## [13] "Num_of_Loan"              "Type_of_Loan"            </span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [15] "Delay_from_due_date"      "Num_of_Delayed_Payment"  </span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="do">## [17] "Changed_Credit_Limit"     "Num_Credit_Inquiries"    </span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="do">## [19] "Credit_Mix"               "Outstanding_Debt"        </span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="do">## [21] "Credit_Utilization_Ratio" "Credit_History_Age"      </span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [23] "Payment_of_Min_Amount"    "Total_EMI_per_month"     </span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="do">## [25] "Amount_invested_monthly"  "Payment_Behaviour"       </span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="do">## [27] "Monthly_Balance"          "Credit_Score"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="6" type="1">
 <li>PCA for visualisation</li>
@@ -746,16 +724,16 @@ Caused by warning in `sorted_count()`:
 <li>Distribution Plot</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 </main>
