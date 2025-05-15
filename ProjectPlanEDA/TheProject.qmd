@@ -57,7 +57,8 @@ cols_to_convert <- c("Age", "Annual_Income", "Outstanding_Debt", "Num_of_Loan",
 train[cols_to_convert] <- lapply(train[cols_to_convert], function(x) as.numeric(as.character(x)))
 
 train$Credit_Mix <- as.factor(train$Credit_Mix)
-train$Payment_of_Min_Amount <- as.factor(train$Payment_of_Min_Amount)     
+train$Payment_of_Min_Amount <- as.factor(train$Payment_of_Min_Amount)
+    
 ```
 
 5. Removal of Irrelevant Features
