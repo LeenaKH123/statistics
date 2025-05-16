@@ -2,9 +2,10 @@
 title: "The Project"
 format:
   html:
+    toc: true
+    toc-depth: 3
     code-fold: true
     code-tools: true
-    toc: true
     theme: flatly
 ---
 
@@ -14,7 +15,7 @@ https://www.kaggle.com/code/sudhanshu2198/multi-class-credit-score-classificatio
 Introduction:
 This report presents the exploratory data analysis (EDA) for a credit score classification problem. The goal is to understand the structure, qualiy and statistical properties of the dataset to inform feature selection and model development in subsequent phases.
 
-1. Data Loading and Initial Inspection
+## 1. Data Loading and Initial Inspection
 The training, test and the benchmark scoring datasets are imported and examined to uderstand their structure and and valriable types.
 
 ```{r}
@@ -40,14 +41,15 @@ dim(score)
 glimpse(train)
 ```
 
-2. Assessment of missing values
+## 2. Assessment of Missing Values
+### 2.1 Numerical Summary
 A through check for missing values is conducted to determine the extent and distribution of incompleteness across the dataset
 ```{r}
 colSums(is.na(train))
 skim(train)
 ```
 
-3. Visualise missing values
+### 2.2 Missing Value Visualization
 Yellow represents missing values, and black represents available values. Blocks of missingness in specific columns indicate a need for either targeted imputation or column removal, especially if missingness is extensive or not missing at random (NMAR).
 ```{r}
 library(Amelia)  # For missmap visualization
@@ -59,7 +61,7 @@ missmap(train,
 only about 1% of the dataset is missing, which is manageable, the dataset is mostly complete. Missing data is not concentrated in a few variables it is spread across multiple features. Columns like Monthly_Balance, Amount_invested_monthly and Changed_Credit_Limit appear to have more missing entries that others. This suggests random missingness.
 
 
-4. Data type correction
+## 3. Data Type Correction
 Several columns originally read as character variables contain numeric data. These are converted to numeric or categorical types to enable statistical analysis.
 ```{r}
 # Define a function to clean and convert character values to numeric
@@ -107,64 +109,243 @@ Credit_History_Age: missing values in over 9,000 rows.
 Payment_of_Min_Amount: correctly converted to factor, this column is clean.
 Amount_invested_monthly and Monthly_Balance: low missingness can be imputed safely.
 Categorical Noise: some columns contain nonsensical strings, such as SSN: Values like #F%$D@*&8, Payment_Behaviour: Value like !@9#%8, Occupation: Many are listed as "_______".
-Target Variable - Credit_Score: consistent with earlier findings, class imbalance should be addressed in modeling.
+Target Variable - Credit_Score: class imbalance should be addressed in modeling.
 
-
-6. Target Variable Check - Credit Score
+## 4. Target Variable Check – Credit Score
+### 4.1 Class Distribution
 Examine the distribution of the target variable Credit_Score that is to be predicted. To understand if the datset is balanced or imbalanced across the different credit score categories. If one class dominates the others, the model might favor that class.
 ```{r}
 table(train$Credit_Score)
-prop.table(table(train$Credit_Score)) * 100
-              
+prop.table(table(train$Credit_Score)) * 100              
 ```
 This tells us that 53.2% of the records are standard, 29% are poor, 17.8% are good. The dataset is imbalanced, the standard class is overrepresnted, a classification model trained on this data might favor the standard class unless balancing techniques are applied such as: SMOTE, class weights, resampling. Or evaluate with metrics beyong accuracy such as F1-score, precision/recall per class.
-
-
-
-
-
-
-5. Removal of Irrelevant Features
-Columns such as identifiers and personal details (Ex: ID, Name, SSN) are removed as they do not contribute predictive value to the modeling task.
+### 4.2 Visualizing Imbalance
 ```{r}
-    colnames(train)
+  # Count
+ggplot(train, aes(x = Credit_Score, fill = Credit_Score)) +
+  geom_bar() +
+  labs(title = "Credit Score Distribution", x = "Credit Score", y = "Count") +
+  theme_minimal()
 
+# Percentage
+train %>%
+  count(Credit_Score) %>%
+  mutate(Percent = n / sum(n) * 100) %>%
+  ggplot(aes(x = Credit_Score, y = Percent, fill = Credit_Score)) +
+  geom_col() +
+  labs(title = "Credit Score Percentage", y = "Percentage (%)") +
+  theme_minimal()        
 ```
 
-6. PCA for visualisation
+## 5. Outlier Detection and Skewed Distributions
+Visualise key numeric features for anomalies
 ```{r}
+# Age - Histogram and Boxplot
+ggplot(train, aes(x = Age)) +
+  geom_histogram(bins = 50, fill = "steelblue") +
+  labs(title = "Age Distribution")
 
-              
+ggplot(train, aes(x = "", y = Age)) +
+  geom_boxplot(fill = "orange") +
+  labs(title = "Boxplot of Age")
+
+# Annual Income - Focus on upper outliers
+ggplot(train, aes(x = "", y = Annual_Income)) +
+  geom_boxplot(fill = "gold") +
+  labs(title = "Annual Income Boxplot")
+
+ggplot(train, aes(x = Annual_Income)) +
+  geom_histogram(bins = 50, fill = "green") +
+  labs(title = "Annual Income Histogram") +
+  xlim(0, quantile(train$Annual_Income, 0.99, na.rm = TRUE))
 ```
 
-7. Distribution Plot
+## 6. Invalid or Noisy Categorical Entries
+Explore placeholders like "_______" and corrupted values.
 ```{r}
-       
+# Top 10 Occupations
+train %>%
+  count(Occupation, sort = TRUE) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(Occupation, n), y = n, fill = Occupation)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  labs(title = "Top 10 Occupations") +
+  theme_minimal()
+
+# Check Payment_Behaviour anomalies
+train %>%
+  count(Payment_Behaviour, sort = TRUE) %>%
+  top_n(10) %>%
+  ggplot(aes(x = reorder(Payment_Behaviour, n), y = n, fill = Payment_Behaviour)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  labs(title = "Top Payment Behaviour Categories") +
+  theme_minimal()              
 ```
 
+## 7. Exploring Categorical Variables
+Visualize how features like Credit_Mix vary with target.
+```{r}
+    ggplot(train, aes(x = Credit_Mix, fill = Credit_Score)) +
+  geom_bar(position = "fill") +
+  labs(title = "Credit Mix by Credit Score", y = "Proportion")   
+```
+
+## 8. Correlation of Numeric Features
+Detect multicollinearity with correlation heatmap.
+```{r}
+    numeric_vars <- train %>%
+  select(where(is.numeric)) %>%
+  drop_na()
+
+cor_matrix <- cor(numeric_vars)
+corrplot(cor_matrix, method = "color", tl.cex = 0.6)
+           
+```
+
+## 9. Principal Component Analysis (PCA)
+Visualise separately in reduced dimensions
+```{r}
+library(factoextra)
+
+# Remove target variable and keep only numeric columns
+pca_data <- train %>%
+  select(-Credit_Score) %>%
+  select(where(is.numeric)) %>%
+  na.omit()
+
+# Scale and run PCA
+pca_scaled <- scale(pca_data)
+pca_result <- prcomp(pca_scaled, center = TRUE, scale. = TRUE)
+
+# Plot PCA with colored points by Credit_Score
+fviz_pca_ind(pca_result,
+             geom.ind = "point",
+             col.ind = as.factor(train$Credit_Score[as.numeric(rownames(pca_data))]),
+             legend.title = "Credit Score") +
+  labs(title = "PCA - Credit Score Classes")
+           
+```
+
+## 10. Visualizing Numeric Outliers
+Boxplots for all key numneric columns together.
+```{r}
+library(tidyr)
+
+numeric_cols <- c("Num_Bank_Accounts", "Num_Credit_Card", "Interest_Rate", 
+                  "Num_of_Loan", "Num_of_Delayed_Payment", 
+                  "Credit_Utilization_Ratio", "Outstanding_Debt")
+
+train %>%
+  select(all_of(numeric_cols)) %>%
+  pivot_longer(cols = everything(), names_to = "Variable", values_to = "Value") %>%
+  ggplot(aes(x = Variable, y = Value)) +
+  geom_boxplot(fill = "skyblue", outlier.color = "red") +
+  coord_flip() +
+  labs(title = "Boxplots of Numeric Features") +
+  theme_minimal()               
+```
 ```{r}
                
 ```
 
-```{r}
-              
-```
+# 📌 Credit Score Classification – Project Plan
 
-```{r}
-               
-```
-```{r}
-               # Dimensions (rows, columns)
-```
+**Goal:** Build and evaluate a machine learning model to classify individuals into Credit Score categories (Poor, Standard, Good).
 
-```{r}
-               # Dimensions (rows, columns)
-```
+---
 
-```{r collapse=TRUE}
-               # Dimensions (rows, columns)
-```
+## 🔶 Phase 1: Data Preparation  
+**Timeline:** Week 1 (Mon–Fri)  
+**Goal:** Clean data, engineer features, and prepare datasets for modeling.
 
-```{r collapse=TRUE}
-               # Dimensions (rows, columns)
-```
+| Subtask | Description | Duration |
+|--------|-------------|----------|
+| 1.1 | Remove invalid numeric values (`Age`, `Annual_Income`) | 0.5 day |
+| 1.2 | Fix unrealistic values (`Num_of_Loan`, `Credit_Card`) | 0.5 day |
+| 1.3 | Impute/drop missing values (e.g., salary, credit age) | 1 day |
+| 1.4 | Convert `Credit_History_Age` to months | 0.5 day |
+| 1.5 | Clean placeholder text (e.g., `'_______'`) | 0.5 day |
+| 1.6 | Encode categorical variables | 0.5 day |
+| 1.7 | Create new features (e.g., `Loan_to_Income`) | 0.5 day |
+| 1.8 | Split into training/test sets | 0.5 day |
+| 1.9 | Check summary and structure | 0.5 day |
+
+---
+
+## 🔶 Phase 2: Exploratory Visualization  
+**Timeline:** Week 2 (Mon–Tue)
+
+| Subtask | Description | Duration |
+|--------|-------------|----------|
+| 2.1 | Plot Credit Score distribution (counts, %) | 0.5 day |
+| 2.2 | Histograms & boxplots for key numerics | 0.5 day |
+| 2.3 | Visualize missing data (`missmap`, `gg_miss_var`) | 0.5 day |
+| 2.4 | Visualize top categories (`Occupation`, `Behaviour`) | 0.5 day |
+| 2.5 | Plot correlation matrix | 0.5 day |
+| 2.6 | Run and plot PCA | 0.5 day |
+
+---
+
+## 🔶 Phase 3: Model Building  
+**Timeline:** Week 2 (Wed–Fri)
+
+| Subtask | Description | Duration |
+|--------|-------------|----------|
+| 3.1 | Build logistic, decision tree, KNN | 1 day |
+| 3.2 | Train Random Forest, XGBoost | 1 day |
+| 3.3 | Set up pipeline using `caret` or `tidymodels` | 0.5 day |
+| 3.4 | Save model outputs | 0.5 day |
+
+---
+
+## 🔶 Phase 4: Evaluation and Tuning  
+**Timeline:** Week 3 (Mon–Wed)
+
+| Subtask | Description | Duration |
+|--------|-------------|----------|
+| 4.1 | Evaluate with confusion matrix, F1, etc. | 1 day |
+| 4.2 | Plot confusion matrix, class performance | 0.5 day |
+| 4.3 | Visualize feature importance | 0.5 day |
+| 4.4 | Tune using cross-validation or grid search | 1 day |
+
+---
+
+## 🔶 Phase 5: Final Prediction  
+**Timeline:** Week 3 (Thu–Fri)
+
+| Subtask | Description | Duration |
+|--------|-------------|----------|
+| 5.1 | Predict on `Score.csv` or final test set | 0.5 day |
+| 5.2 | Export predictions to CSV | 0.5 day |
+| 5.3 | Review and validate prediction output | 0.5 day |
+| 5.4 | Save model object with `saveRDS()` | 0.5 day |
+
+---
+
+## 🔶 Phase 6: Report and Presentation  
+**Timeline:** Week 4 (Mon–Fri)
+
+| Subtask | Description | Duration |
+|--------|-------------|----------|
+| 6.1 | Draft final report with code and plots | 1.5 days |
+| 6.2 | Write executive summary and insights | 0.5 day |
+| 6.3 | Prepare slide deck for presentation | 1 day |
+| 6.4 | Rehearse and assign group roles | 0.5 day |
+| 6.5 | Final submission and presentation | 0.5–1 day |
+
+---
+
+## 🗓️ Weekly Summary
+
+| Week | Focus |
+|------|-------------------------------|
+| Week 1 | Data cleaning & feature prep |
+| Week 2 | Visualisation & model building |
+| Week 3 | Evaluation, tuning, prediction |
+| Week 4 | Report writing & presentation |
+## 📊 Gantt Chart – Project Phases Only
+![Project Phases](project_gantt_phases_only.png)
+
+

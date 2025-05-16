@@ -74,8 +74,41 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-  
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#data-loading-and-initial-inspection" id="toc-data-loading-and-initial-inspection" class="nav-link active" data-scroll-target="#data-loading-and-initial-inspection">1. Data Loading and Initial Inspection</a></li>
+  <li><a href="#assessment-of-missing-values" id="toc-assessment-of-missing-values" class="nav-link" data-scroll-target="#assessment-of-missing-values">2. Assessment of Missing Values</a>
+  <ul class="collapse">
+  <li><a href="#numerical-summary" id="toc-numerical-summary" class="nav-link" data-scroll-target="#numerical-summary">2.1 Numerical Summary</a></li>
+  <li><a href="#missing-value-visualization" id="toc-missing-value-visualization" class="nav-link" data-scroll-target="#missing-value-visualization">2.2 Missing Value Visualization</a></li>
+  </ul></li>
+  <li><a href="#data-type-correction" id="toc-data-type-correction" class="nav-link" data-scroll-target="#data-type-correction">3. Data Type Correction</a></li>
+  <li><a href="#target-variable-check-credit-score" id="toc-target-variable-check-credit-score" class="nav-link" data-scroll-target="#target-variable-check-credit-score">4. Target Variable Check – Credit Score</a>
+  <ul class="collapse">
+  <li><a href="#class-distribution" id="toc-class-distribution" class="nav-link" data-scroll-target="#class-distribution">4.1 Class Distribution</a></li>
+  </ul></li>
+  <li><a href="#outlier-detection-and-skewed-distributions" id="toc-outlier-detection-and-skewed-distributions" class="nav-link" data-scroll-target="#outlier-detection-and-skewed-distributions">5. Outlier Detection and Skewed Distributions</a></li>
+  <li><a href="#invalid-or-noisy-categorical-entries" id="toc-invalid-or-noisy-categorical-entries" class="nav-link" data-scroll-target="#invalid-or-noisy-categorical-entries">6. Invalid or Noisy Categorical Entries</a></li>
+  <li><a href="#exploring-categorical-variables" id="toc-exploring-categorical-variables" class="nav-link" data-scroll-target="#exploring-categorical-variables">7. Exploring Categorical Variables</a></li>
+  <li><a href="#correlation-of-numeric-features" id="toc-correlation-of-numeric-features" class="nav-link" data-scroll-target="#correlation-of-numeric-features">8. Correlation of Numeric Features</a></li>
+  <li><a href="#principal-component-analysis-pca" id="toc-principal-component-analysis-pca" class="nav-link" data-scroll-target="#principal-component-analysis-pca">9. Principal Component Analysis (PCA)</a></li>
+  <li><a href="#visualizing-numeric-outliers" id="toc-visualizing-numeric-outliers" class="nav-link" data-scroll-target="#visualizing-numeric-outliers">10. Visualizing Numeric Outliers</a></li>
+  <li><a href="#credit-score-classification-project-plan" id="toc-credit-score-classification-project-plan" class="nav-link" data-scroll-target="#credit-score-classification-project-plan">📌 Credit Score Classification – Project Plan</a>
+  <ul class="collapse">
+  <li><a href="#phase-1-data-preparation" id="toc-phase-1-data-preparation" class="nav-link" data-scroll-target="#phase-1-data-preparation">🔶 Phase 1: Data Preparation</a></li>
+  <li><a href="#phase-2-exploratory-visualization" id="toc-phase-2-exploratory-visualization" class="nav-link" data-scroll-target="#phase-2-exploratory-visualization">🔶 Phase 2: Exploratory Visualization</a></li>
+  <li><a href="#phase-3-model-building" id="toc-phase-3-model-building" class="nav-link" data-scroll-target="#phase-3-model-building">🔶 Phase 3: Model Building</a></li>
+  <li><a href="#phase-4-evaluation-and-tuning" id="toc-phase-4-evaluation-and-tuning" class="nav-link" data-scroll-target="#phase-4-evaluation-and-tuning">🔶 Phase 4: Evaluation and Tuning</a></li>
+  <li><a href="#phase-5-final-prediction" id="toc-phase-5-final-prediction" class="nav-link" data-scroll-target="#phase-5-final-prediction">🔶 Phase 5: Final Prediction</a></li>
+  <li><a href="#phase-6-report-and-presentation" id="toc-phase-6-report-and-presentation" class="nav-link" data-scroll-target="#phase-6-report-and-presentation">🔶 Phase 6: Report and Presentation</a></li>
+  <li><a href="#weekly-summary" id="toc-weekly-summary" class="nav-link" data-scroll-target="#weekly-summary">🗓️ Weekly Summary</a></li>
+  <li><a href="#gantt-chart-project-phases-only" id="toc-gantt-chart-project-phases-only" class="nav-link" data-scroll-target="#gantt-chart-project-phases-only">📊 Gantt Chart – Project Phases Only</a></li>
+  </ul></li>
+  </ul>
+</nav>
 </div>
 <main class="content" id="quarto-document-content">
 
@@ -100,9 +133,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>Data Source https://www.kaggle.com/code/sudhanshu2198/multi-class-credit-score-classification/input?select=Score.csv</p>
 <p>Introduction: This report presents the exploratory data analysis (EDA) for a credit score classification problem. The goal is to understand the structure, qualiy and statistical properties of the dataset to inform feature selection and model development in subsequent phases.</p>
-<ol type="1">
-<li>Data Loading and Initial Inspection The training, test and the benchmark scoring datasets are imported and examined to uderstand their structure and and valriable types.</li>
-</ol>
+<section id="data-loading-and-initial-inspection" class="level2">
+<h2 class="anchored" data-anchor-id="data-loading-and-initial-inspection">1. Data Loading and Initial Inspection</h2>
+<p>The training, test and the benchmark scoring datasets are imported and examined to uderstand their structure and and valriable types.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -220,9 +253,12 @@ $ Monthly_Balance          &lt;fct&gt; 312.49408867943663, 284.62916249607184, 3
 $ Credit_Score             &lt;fct&gt; Good, Good, Good, Good, Good, Good, Good, Sta…</code></pre>
 </div>
 </div>
-<ol start="2" type="1">
-<li>Assessment of missing values A through check for missing values is conducted to determine the extent and distribution of incompleteness across the dataset</li>
-</ol>
+</section>
+<section id="assessment-of-missing-values" class="level2">
+<h2 class="anchored" data-anchor-id="assessment-of-missing-values">2. Assessment of Missing Values</h2>
+<section id="numerical-summary" class="level3">
+<h3 class="anchored" data-anchor-id="numerical-summary">2.1 Numerical Summary</h3>
+<p>A through check for missing values is conducted to determine the extent and distribution of incompleteness across the dataset</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -637,9 +673,10 @@ Caused by warning in `sorted_count()`:
 </table>
 </div>
 </div>
-<ol start="3" type="1">
-<li>Visualise missing values Yellow represents missing values, and black represents available values. Blocks of missingness in specific columns indicate a need for either targeted imputation or column removal, especially if missingness is extensive or not missing at random (NMAR).</li>
-</ol>
+</section>
+<section id="missing-value-visualization" class="level3">
+<h3 class="anchored" data-anchor-id="missing-value-visualization">2.2 Missing Value Visualization</h3>
+<p>Yellow represents missing values, and black represents available values. Blocks of missingness in specific columns indicate a need for either targeted imputation or column removal, especially if missingness is extensive or not missing at random (NMAR).</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -657,9 +694,12 @@ Caused by warning in `sorted_count()`:
 </div>
 </div>
 </div>
-<ol start="4" type="1">
-<li>Data type correction Several columns originally read as character variables contain numeric data. These are converted to numeric or categorical types to enable statistical analysis.</li>
-</ol>
+<p>only about 1% of the dataset is missing, which is manageable, the dataset is mostly complete. Missing data is not concentrated in a few variables it is spread across multiple features. Columns like Monthly_Balance, Amount_invested_monthly and Changed_Credit_Limit appear to have more missing entries that others. This suggests random missingness.</p>
+</section>
+</section>
+<section id="data-type-correction" class="level2">
+<h2 class="anchored" data-anchor-id="data-type-correction">3. Data Type Correction</h2>
+<p>Several columns originally read as character variables contain numeric data. These are converted to numeric or categorical types to enable statistical analysis.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -771,63 +811,611 @@ Caused by warning in `sorted_count()`:
  NA's   :1200                         </code></pre>
 </div>
 </div>
-<ol start="5" type="1">
-<li>Removal of Irrelevant Features Columns such as identifiers and personal details (Ex: ID, Name, SSN) are removed as they do not contribute predictive value to the modeling task.</li>
-</ol>
+<p>The dataset has been successfully loaded and cleaned, with several formerly charecter-based numeric fields now recognised as numeric, there are some outliers and invalid entries and multiple columns with missing values that require further cleaning and imputation. Age: contains invalid ages (eg: -500 and 8698) Annual_Income: extreme outliers likely caused by errors or data entry issues. Monthly_Inhand_Salary: missing in ~15% of rows. Num_Bank_Accounts, Num_Credit_Card, Interest_Rate: these values suggest data errors. Num_of_Loan: -ve loan count is invalid Credit_History_Age: missing values in over 9,000 rows. Payment_of_Min_Amount: correctly converted to factor, this column is clean. Amount_invested_monthly and Monthly_Balance: low missingness can be imputed safely. Categorical Noise: some columns contain nonsensical strings, such as SSN: Values like #F%$D@*&amp;8, Payment_Behaviour: Value like !<span class="citation" data-cites="9">@9</span>#%8, Occupation: Many are listed as “_______”. Target Variable - Credit_Score: class imbalance should be addressed in modeling.</p>
+</section>
+<section id="target-variable-check-credit-score" class="level2">
+<h2 class="anchored" data-anchor-id="target-variable-check-credit-score">4. Target Variable Check – Credit Score</h2>
+<section id="class-distribution" class="level3">
+<h3 class="anchored" data-anchor-id="class-distribution">4.1 Class Distribution</h3>
+<p>Examine the distribution of the target variable Credit_Score that is to be predicted. To understand if the datset is balanced or imbalanced across the different credit score categories. If one class dominates the others, the model might favor that class.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colnames</span>(train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(train<span class="sc">$</span>Credit_Score)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code> [1] "ID"                       "Customer_ID"             
- [3] "Month"                    "Name"                    
- [5] "Age"                      "SSN"                     
- [7] "Occupation"               "Annual_Income"           
- [9] "Monthly_Inhand_Salary"    "Num_Bank_Accounts"       
-[11] "Num_Credit_Card"          "Interest_Rate"           
-[13] "Num_of_Loan"              "Type_of_Loan"            
-[15] "Delay_from_due_date"      "Num_of_Delayed_Payment"  
-[17] "Changed_Credit_Limit"     "Num_Credit_Inquiries"    
-[19] "Credit_Mix"               "Outstanding_Debt"        
-[21] "Credit_Utilization_Ratio" "Credit_History_Age"      
-[23] "Payment_of_Min_Amount"    "Total_EMI_per_month"     
-[25] "Amount_invested_monthly"  "Payment_Behaviour"       
-[27] "Monthly_Balance"          "Credit_Score"            </code></pre>
+<pre><code>
+    Good     Poor Standard 
+   17828    28998    53174 </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(<span class="fu">table</span>(train<span class="sc">$</span>Credit_Score)) <span class="sc">*</span> <span class="dv">100</span>              </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Good     Poor Standard 
+  17.828   28.998   53.174 </code></pre>
 </div>
 </div>
-<ol start="6" type="1">
-<li>PCA for visualisation</li>
-</ol>
-<ol start="7" type="1">
-<li>Distribution Plot</li>
-</ol>
+<p>This tells us that 53.2% of the records are standard, 29% are poor, 17.8% are good. The dataset is imbalanced, the standard class is overrepresnted, a classification model trained on this data might favor the standard class unless balancing techniques are applied such as: SMOTE, class weights, resampling. Or evaluate with metrics beyong accuracy such as F1-score, precision/recall per class. ### 4.2 Visualizing Imbalance</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Count</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> Credit_Score, <span class="at">fill =</span> Credit_Score)) <span class="sc">+</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Credit Score Distribution"</span>, <span class="at">x =</span> <span class="st">"Credit Score"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TheProject_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Percentage</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Credit_Score) <span class="sc">%&gt;%</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Percent =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Credit_Score, <span class="at">y =</span> Percent, <span class="at">fill =</span> Credit_Score)) <span class="sc">+</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Credit Score Percentage"</span>, <span class="at">y =</span> <span class="st">"Percentage (%)"</span>) <span class="sc">+</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()        </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TheProject_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="outlier-detection-and-skewed-distributions" class="level2">
+<h2 class="anchored" data-anchor-id="outlier-detection-and-skewed-distributions">5. Outlier Detection and Skewed Distributions</h2>
+<p>Visualise key numeric features for anomalies</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Age - Histogram and Boxplot</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> Age)) <span class="sc">+</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Age Distribution"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TheProject_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> Age)) <span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Boxplot of Age"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TheProject_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Annual Income - Focus on upper outliers</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> Annual_Income)) <span class="sc">+</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"gold"</span>) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Annual Income Boxplot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TheProject_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> Annual_Income)) <span class="sc">+</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>, <span class="at">fill =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Annual Income Histogram"</span>) <span class="sc">+</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, <span class="fu">quantile</span>(train<span class="sc">$</span>Annual_Income, <span class="fl">0.99</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 999 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_bar()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TheProject_files/figure-html/unnamed-chunk-7-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="invalid-or-noisy-categorical-entries" class="level2">
+<h2 class="anchored" data-anchor-id="invalid-or-noisy-categorical-entries">6. Invalid or Noisy Categorical Entries</h2>
+<p>Explore placeholders like “_______” and corrupted values.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Top 10 Occupations</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Occupation, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Occupation, n), <span class="at">y =</span> n, <span class="at">fill =</span> Occupation)) <span class="sc">+</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Occupations"</span>) <span class="sc">+</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Selecting by n</code></pre>
 </div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TheProject_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check Payment_Behaviour anomalies</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Payment_Behaviour, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Payment_Behaviour, n), <span class="at">y =</span> n, <span class="at">fill =</span> Payment_Behaviour)) <span class="sc">+</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top Payment Behaviour Categories"</span>) <span class="sc">+</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()              </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Selecting by n</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TheProject_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exploring-categorical-variables" class="level2">
+<h2 class="anchored" data-anchor-id="exploring-categorical-variables">7. Exploring Categorical Variables</h2>
+<p>Visualize how features like Credit_Mix vary with target.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> Credit_Mix, <span class="at">fill =</span> Credit_Score)) <span class="sc">+</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Credit Mix by Credit Score"</span>, <span class="at">y =</span> <span class="st">"Proportion"</span>)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TheProject_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="correlation-of-numeric-features" class="level2">
+<h2 class="anchored" data-anchor-id="correlation-of-numeric-features">8. Correlation of Numeric Features</h2>
+<p>Detect multicollinearity with correlation heatmap.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>    numeric_vars <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>cor_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(numeric_vars)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(cor_matrix, <span class="at">method =</span> <span class="st">"color"</span>, <span class="at">tl.cex =</span> <span class="fl">0.6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TheProject_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="principal-component-analysis-pca" class="level2">
+<h2 class="anchored" data-anchor-id="principal-component-analysis-pca">9. Principal Component Analysis (PCA)</h2>
+<p>Visualise separately in reduced dimensions</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove target variable and keep only numeric columns</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>pca_data <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Credit_Score) <span class="sc">%&gt;%</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">%&gt;%</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale and run PCA</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>pca_scaled <span class="ot">&lt;-</span> <span class="fu">scale</span>(pca_data)</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(pca_scaled, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot PCA with colored points by Credit_Score</span></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(pca_result,</span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">geom.ind =</span> <span class="st">"point"</span>,</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.ind =</span> <span class="fu">as.factor</span>(train<span class="sc">$</span>Credit_Score[<span class="fu">as.numeric</span>(<span class="fu">rownames</span>(pca_data))]),</span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a>             <span class="at">legend.title =</span> <span class="st">"Credit Score"</span>) <span class="sc">+</span></span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"PCA - Credit Score Classes"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TheProject_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visualizing-numeric-outliers" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-numeric-outliers">10. Visualizing Numeric Outliers</h2>
+<p>Boxplots for all key numneric columns together.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>numeric_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Num_Bank_Accounts"</span>, <span class="st">"Num_Credit_Card"</span>, <span class="st">"Interest_Rate"</span>, </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Num_of_Loan"</span>, <span class="st">"Num_of_Delayed_Payment"</span>, </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Credit_Utilization_Ratio"</span>, <span class="st">"Outstanding_Debt"</span>)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(numeric_cols)) <span class="sc">%&gt;%</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"Variable"</span>, <span class="at">values_to =</span> <span class="st">"Value"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Variable, <span class="at">y =</span> Value)) <span class="sc">+</span></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">outlier.color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Boxplots of Numeric Features"</span>) <span class="sc">+</span></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()               </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 7002 rows containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TheProject_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="credit-score-classification-project-plan" class="level1">
+<h1>📌 Credit Score Classification – Project Plan</h1>
+<p><strong>Goal:</strong> Build and evaluate a machine learning model to classify individuals into Credit Score categories (Poor, Standard, Good).</p>
+<hr>
+<section id="phase-1-data-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="phase-1-data-preparation">🔶 Phase 1: Data Preparation</h2>
+<p><strong>Timeline:</strong> Week 1 (Mon–Fri)<br>
+<strong>Goal:</strong> Clean data, engineer features, and prepare datasets for modeling.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 41%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Subtask</th>
+<th>Description</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1.1</td>
+<td>Remove invalid numeric values (<code>Age</code>, <code>Annual_Income</code>)</td>
+<td>0.5 day</td>
+</tr>
+<tr class="even">
+<td>1.2</td>
+<td>Fix unrealistic values (<code>Num_of_Loan</code>, <code>Credit_Card</code>)</td>
+<td>0.5 day</td>
+</tr>
+<tr class="odd">
+<td>1.3</td>
+<td>Impute/drop missing values (e.g., salary, credit age)</td>
+<td>1 day</td>
+</tr>
+<tr class="even">
+<td>1.4</td>
+<td>Convert <code>Credit_History_Age</code> to months</td>
+<td>0.5 day</td>
+</tr>
+<tr class="odd">
+<td>1.5</td>
+<td>Clean placeholder text (e.g., <code>'_______'</code>)</td>
+<td>0.5 day</td>
+</tr>
+<tr class="even">
+<td>1.6</td>
+<td>Encode categorical variables</td>
+<td>0.5 day</td>
+</tr>
+<tr class="odd">
+<td>1.7</td>
+<td>Create new features (e.g., <code>Loan_to_Income</code>)</td>
+<td>0.5 day</td>
+</tr>
+<tr class="even">
+<td>1.8</td>
+<td>Split into training/test sets</td>
+<td>0.5 day</td>
+</tr>
+<tr class="odd">
+<td>1.9</td>
+<td>Check summary and structure</td>
+<td>0.5 day</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="phase-2-exploratory-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="phase-2-exploratory-visualization">🔶 Phase 2: Exploratory Visualization</h2>
+<p><strong>Timeline:</strong> Week 2 (Mon–Tue)</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Subtask</th>
+<th>Description</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2.1</td>
+<td>Plot Credit Score distribution (counts, %)</td>
+<td>0.5 day</td>
+</tr>
+<tr class="even">
+<td>2.2</td>
+<td>Histograms &amp; boxplots for key numerics</td>
+<td>0.5 day</td>
+</tr>
+<tr class="odd">
+<td>2.3</td>
+<td>Visualize missing data (<code>missmap</code>, <code>gg_miss_var</code>)</td>
+<td>0.5 day</td>
+</tr>
+<tr class="even">
+<td>2.4</td>
+<td>Visualize top categories (<code>Occupation</code>, <code>Behaviour</code>)</td>
+<td>0.5 day</td>
+</tr>
+<tr class="odd">
+<td>2.5</td>
+<td>Plot correlation matrix</td>
+<td>0.5 day</td>
+</tr>
+<tr class="even">
+<td>2.6</td>
+<td>Run and plot PCA</td>
+<td>0.5 day</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="phase-3-model-building" class="level2">
+<h2 class="anchored" data-anchor-id="phase-3-model-building">🔶 Phase 3: Model Building</h2>
+<p><strong>Timeline:</strong> Week 2 (Wed–Fri)</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Subtask</th>
+<th>Description</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>3.1</td>
+<td>Build logistic, decision tree, KNN</td>
+<td>1 day</td>
+</tr>
+<tr class="even">
+<td>3.2</td>
+<td>Train Random Forest, XGBoost</td>
+<td>1 day</td>
+</tr>
+<tr class="odd">
+<td>3.3</td>
+<td>Set up pipeline using <code>caret</code> or <code>tidymodels</code></td>
+<td>0.5 day</td>
+</tr>
+<tr class="even">
+<td>3.4</td>
+<td>Save model outputs</td>
+<td>0.5 day</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="phase-4-evaluation-and-tuning" class="level2">
+<h2 class="anchored" data-anchor-id="phase-4-evaluation-and-tuning">🔶 Phase 4: Evaluation and Tuning</h2>
+<p><strong>Timeline:</strong> Week 3 (Mon–Wed)</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Subtask</th>
+<th>Description</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>4.1</td>
+<td>Evaluate with confusion matrix, F1, etc.</td>
+<td>1 day</td>
+</tr>
+<tr class="even">
+<td>4.2</td>
+<td>Plot confusion matrix, class performance</td>
+<td>0.5 day</td>
+</tr>
+<tr class="odd">
+<td>4.3</td>
+<td>Visualize feature importance</td>
+<td>0.5 day</td>
+</tr>
+<tr class="even">
+<td>4.4</td>
+<td>Tune using cross-validation or grid search</td>
+<td>1 day</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="phase-5-final-prediction" class="level2">
+<h2 class="anchored" data-anchor-id="phase-5-final-prediction">🔶 Phase 5: Final Prediction</h2>
+<p><strong>Timeline:</strong> Week 3 (Thu–Fri)</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Subtask</th>
+<th>Description</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>5.1</td>
+<td>Predict on <code>Score.csv</code> or final test set</td>
+<td>0.5 day</td>
+</tr>
+<tr class="even">
+<td>5.2</td>
+<td>Export predictions to CSV</td>
+<td>0.5 day</td>
+</tr>
+<tr class="odd">
+<td>5.3</td>
+<td>Review and validate prediction output</td>
+<td>0.5 day</td>
+</tr>
+<tr class="even">
+<td>5.4</td>
+<td>Save model object with <code>saveRDS()</code></td>
+<td>0.5 day</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="phase-6-report-and-presentation" class="level2">
+<h2 class="anchored" data-anchor-id="phase-6-report-and-presentation">🔶 Phase 6: Report and Presentation</h2>
+<p><strong>Timeline:</strong> Week 4 (Mon–Fri)</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Subtask</th>
+<th>Description</th>
+<th>Duration</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>6.1</td>
+<td>Draft final report with code and plots</td>
+<td>1.5 days</td>
+</tr>
+<tr class="even">
+<td>6.2</td>
+<td>Write executive summary and insights</td>
+<td>0.5 day</td>
+</tr>
+<tr class="odd">
+<td>6.3</td>
+<td>Prepare slide deck for presentation</td>
+<td>1 day</td>
+</tr>
+<tr class="even">
+<td>6.4</td>
+<td>Rehearse and assign group roles</td>
+<td>0.5 day</td>
+</tr>
+<tr class="odd">
+<td>6.5</td>
+<td>Final submission and presentation</td>
+<td>0.5–1 day</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="weekly-summary" class="level2">
+<h2 class="anchored" data-anchor-id="weekly-summary">🗓️ Weekly Summary</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Week</th>
+<th>Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Week 1</td>
+<td>Data cleaning &amp; feature prep</td>
+</tr>
+<tr class="even">
+<td>Week 2</td>
+<td>Visualisation &amp; model building</td>
+</tr>
+<tr class="odd">
+<td>Week 3</td>
+<td>Evaluation, tuning, prediction</td>
+</tr>
+<tr class="even">
+<td>Week 4</td>
+<td>Report writing &amp; presentation</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="gantt-chart-project-phases-only" class="level2">
+<h2 class="anchored" data-anchor-id="gantt-chart-project-phases-only">📊 Gantt Chart – Project Phases Only</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="project_gantt_phases_only.png" class="img-fluid figure-img"></p>
+<figcaption>Project Phases</figcaption>
+</figure>
 </div>
 <!-- -->
 
+</section>
+</section>
 
 </main>
 <!-- /main column -->
@@ -1299,142 +1887,355 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb30" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "The Project"</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: flatly</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>Data Source</span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>https://www.kaggle.com/code/sudhanshu2198/multi-class-credit-score-classification/input?select=Score.csv</span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>Introduction:</span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>This report presents the exploratory data analysis (EDA) for a credit score classification problem. The goal is to understand the structure, qualiy and statistical properties of the dataset to inform feature selection and model development in subsequent phases.</span>
-<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Data Loading and Initial Inspection</span>
-<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>The training, test and the benchmark scoring datasets are imported and examined to uderstand their structure and and valriable types.</span>
-<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required libraries</span></span>
-<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
-<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
-<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer)</span>
-<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
-<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Amelia)</span>
-<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
-<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"train.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-33"><a href="#cb30-33" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"test.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-34"><a href="#cb30-34" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Score.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb30-35"><a href="#cb30-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-36"><a href="#cb30-36" aria-hidden="true" tabindex="-1"></a><span class="co"># View dimensions</span></span>
-<span id="cb30-37"><a href="#cb30-37" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(train)</span>
-<span id="cb30-38"><a href="#cb30-38" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(test)</span>
-<span id="cb30-39"><a href="#cb30-39" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(score)</span>
-<span id="cb30-40"><a href="#cb30-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-41"><a href="#cb30-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick glimpse</span></span>
-<span id="cb30-42"><a href="#cb30-42" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(train)</span>
-<span id="cb30-43"><a href="#cb30-43" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-44"><a href="#cb30-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-45"><a href="#cb30-45" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Assessment of missing values</span>
-<span id="cb30-46"><a href="#cb30-46" aria-hidden="true" tabindex="-1"></a>A through check for missing values is conducted to determine the extent and distribution of incompleteness across the dataset</span>
-<span id="cb30-49"><a href="#cb30-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-50"><a href="#cb30-50" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(train))</span>
-<span id="cb30-51"><a href="#cb30-51" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(train)</span>
-<span id="cb30-52"><a href="#cb30-52" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-53"><a href="#cb30-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-54"><a href="#cb30-54" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>Visualise missing values</span>
-<span id="cb30-55"><a href="#cb30-55" aria-hidden="true" tabindex="-1"></a>Yellow represents missing values, and black represents available values. Blocks of missingness in specific columns indicate a need for either targeted imputation or column removal, especially if missingness is extensive or not missing at random (NMAR).</span>
-<span id="cb30-58"><a href="#cb30-58" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-59"><a href="#cb30-59" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Amelia)  <span class="co"># For missmap visualization</span></span>
-<span id="cb30-60"><a href="#cb30-60" aria-hidden="true" tabindex="-1"></a><span class="fu">missmap</span>(train, </span>
-<span id="cb30-61"><a href="#cb30-61" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Missing Values Map"</span>, </span>
-<span id="cb30-62"><a href="#cb30-62" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"yellow"</span>, <span class="st">"black"</span>), </span>
-<span id="cb30-63"><a href="#cb30-63" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend =</span> <span class="cn">TRUE</span>)      </span>
-<span id="cb30-64"><a href="#cb30-64" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-65"><a href="#cb30-65" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-66"><a href="#cb30-66" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>Data type correction</span>
-<span id="cb30-67"><a href="#cb30-67" aria-hidden="true" tabindex="-1"></a>Several columns originally read as character variables contain numeric data. These are converted to numeric or categorical types to enable statistical analysis.</span>
-<span id="cb30-70"><a href="#cb30-70" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-71"><a href="#cb30-71" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a function to clean and convert character values to numeric</span></span>
-<span id="cb30-72"><a href="#cb30-72" aria-hidden="true" tabindex="-1"></a>clean_numeric <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb30-73"><a href="#cb30-73" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">as.character</span>(x)</span>
-<span id="cb30-74"><a href="#cb30-74" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, x)</span>
-<span id="cb30-75"><a href="#cb30-75" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[$%]"</span>, <span class="st">""</span>, x)</span>
-<span id="cb30-76"><a href="#cb30-76" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[^0-9</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">-]"</span>, <span class="st">""</span>, x)</span>
-<span id="cb30-77"><a href="#cb30-77" aria-hidden="true" tabindex="-1"></a>  <span class="fu">suppressWarnings</span>(<span class="fu">as.numeric</span>(x))</span>
-<span id="cb30-78"><a href="#cb30-78" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb30-79"><a href="#cb30-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-80"><a href="#cb30-80" aria-hidden="true" tabindex="-1"></a><span class="co"># List of columns expected to be numeric but possibly read as character</span></span>
-<span id="cb30-81"><a href="#cb30-81" aria-hidden="true" tabindex="-1"></a>cols_to_convert <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Age"</span>, <span class="st">"Annual_Income"</span>, <span class="st">"Outstanding_Debt"</span>, <span class="st">"Num_of_Loan"</span>, </span>
-<span id="cb30-82"><a href="#cb30-82" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Changed_Credit_Limit"</span>, <span class="st">"Num_of_Delayed_Payment"</span>, </span>
-<span id="cb30-83"><a href="#cb30-83" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Amount_invested_monthly"</span>, <span class="st">"Monthly_Balance"</span>)</span>
-<span id="cb30-84"><a href="#cb30-84" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-85"><a href="#cb30-85" aria-hidden="true" tabindex="-1"></a><span class="co"># Check which columns exist in the data before applying</span></span>
-<span id="cb30-86"><a href="#cb30-86" aria-hidden="true" tabindex="-1"></a>cols_to_convert <span class="ot">&lt;-</span> <span class="fu">intersect</span>(cols_to_convert, <span class="fu">colnames</span>(train))</span>
-<span id="cb30-87"><a href="#cb30-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-88"><a href="#cb30-88" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply cleaning function only to existing columns</span></span>
-<span id="cb30-89"><a href="#cb30-89" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> cols_to_convert) {</span>
-<span id="cb30-90"><a href="#cb30-90" aria-hidden="true" tabindex="-1"></a>  train[[col]] <span class="ot">&lt;-</span> <span class="fu">clean_numeric</span>(train[[col]])</span>
-<span id="cb30-91"><a href="#cb30-91" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb30-92"><a href="#cb30-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-93"><a href="#cb30-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert these columns to factors only if they exist</span></span>
-<span id="cb30-94"><a href="#cb30-94" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="st">"Credit_Mix"</span> <span class="sc">%in%</span> <span class="fu">names</span>(train)) {</span>
-<span id="cb30-95"><a href="#cb30-95" aria-hidden="true" tabindex="-1"></a>  train<span class="sc">$</span>Credit_Mix <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(train<span class="sc">$</span>Credit_Mix)</span>
-<span id="cb30-96"><a href="#cb30-96" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb30-97"><a href="#cb30-97" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="st">"Payment_of_Min_Amount"</span> <span class="sc">%in%</span> <span class="fu">names</span>(train)) {</span>
-<span id="cb30-98"><a href="#cb30-98" aria-hidden="true" tabindex="-1"></a>  train<span class="sc">$</span>Payment_of_Min_Amount <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(train<span class="sc">$</span>Payment_of_Min_Amount)</span>
-<span id="cb30-99"><a href="#cb30-99" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb30-100"><a href="#cb30-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-101"><a href="#cb30-101" aria-hidden="true" tabindex="-1"></a><span class="co"># Show summary of the cleaned dataset</span></span>
-<span id="cb30-102"><a href="#cb30-102" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(train)</span>
-<span id="cb30-103"><a href="#cb30-103" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-104"><a href="#cb30-104" aria-hidden="true" tabindex="-1"></a> </span>
-<span id="cb30-105"><a href="#cb30-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-106"><a href="#cb30-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-107"><a href="#cb30-107" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>Removal of Irrelevant Features</span>
-<span id="cb30-108"><a href="#cb30-108" aria-hidden="true" tabindex="-1"></a>Columns such as identifiers and personal details (Ex: ID, Name, SSN) are removed as they do not contribute predictive value to the modeling task.</span>
-<span id="cb30-111"><a href="#cb30-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-112"><a href="#cb30-112" aria-hidden="true" tabindex="-1"></a>    <span class="fu">colnames</span>(train)</span>
-<span id="cb30-113"><a href="#cb30-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-114"><a href="#cb30-114" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-115"><a href="#cb30-115" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-116"><a href="#cb30-116" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span>PCA for visualisation</span>
-<span id="cb30-119"><a href="#cb30-119" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-120"><a href="#cb30-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-121"><a href="#cb30-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-122"><a href="#cb30-122" aria-hidden="true" tabindex="-1"></a><span class="ss">7. </span>Distribution Plot</span>
-<span id="cb30-125"><a href="#cb30-125" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-126"><a href="#cb30-126" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-127"><a href="#cb30-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-130"><a href="#cb30-130" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-131"><a href="#cb30-131" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-132"><a href="#cb30-132" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-135"><a href="#cb30-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-136"><a href="#cb30-136" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-137"><a href="#cb30-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-140"><a href="#cb30-140" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-141"><a href="#cb30-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-144"><a href="#cb30-144" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-145"><a href="#cb30-145" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span>
-<span id="cb30-146"><a href="#cb30-146" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-147"><a href="#cb30-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-150"><a href="#cb30-150" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb30-151"><a href="#cb30-151" aria-hidden="true" tabindex="-1"></a>               <span class="co"># Dimensions (rows, columns)</span></span>
-<span id="cb30-152"><a href="#cb30-152" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-153"><a href="#cb30-153" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-154"><a href="#cb30-154" aria-hidden="true" tabindex="-1"></a><span class="in">```{r collapse=TRUE}</span></span>
-<span id="cb30-155"><a href="#cb30-155" aria-hidden="true" tabindex="-1"></a><span class="in">               # Dimensions (rows, columns)</span></span>
-<span id="cb30-156"><a href="#cb30-156" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb30-157"><a href="#cb30-157" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-158"><a href="#cb30-158" aria-hidden="true" tabindex="-1"></a><span class="in">```{r collapse=TRUE}</span></span>
-<span id="cb30-159"><a href="#cb30-159" aria-hidden="true" tabindex="-1"></a><span class="in">               # Dimensions (rows, columns)</span></span>
-<span id="cb30-160"><a href="#cb30-160" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<div class="sourceCode" id="cb47" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "The Project"</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 3</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a><span class="co">    theme: flatly</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>Data Source</span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>https://www.kaggle.com/code/sudhanshu2198/multi-class-credit-score-classification/input?select=Score.csv</span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>Introduction:</span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>This report presents the exploratory data analysis (EDA) for a credit score classification problem. The goal is to understand the structure, qualiy and statistical properties of the dataset to inform feature selection and model development in subsequent phases.</span>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. Data Loading and Initial Inspection</span></span>
+<span id="cb47-19"><a href="#cb47-19" aria-hidden="true" tabindex="-1"></a>The training, test and the benchmark scoring datasets are imported and examined to uderstand their structure and and valriable types.</span>
+<span id="cb47-20"><a href="#cb47-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-23"><a href="#cb47-23" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-24"><a href="#cb47-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required libraries</span></span>
+<span id="cb47-25"><a href="#cb47-25" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb47-26"><a href="#cb47-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb47-27"><a href="#cb47-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb47-28"><a href="#cb47-28" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer)</span>
+<span id="cb47-29"><a href="#cb47-29" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb47-30"><a href="#cb47-30" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Amelia)</span>
+<span id="cb47-31"><a href="#cb47-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-32"><a href="#cb47-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb47-33"><a href="#cb47-33" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"train.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb47-34"><a href="#cb47-34" aria-hidden="true" tabindex="-1"></a>test <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"test.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb47-35"><a href="#cb47-35" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"Score.csv"</span>, <span class="at">stringsAsFactors =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb47-36"><a href="#cb47-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-37"><a href="#cb47-37" aria-hidden="true" tabindex="-1"></a><span class="co"># View dimensions</span></span>
+<span id="cb47-38"><a href="#cb47-38" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(train)</span>
+<span id="cb47-39"><a href="#cb47-39" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(test)</span>
+<span id="cb47-40"><a href="#cb47-40" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(score)</span>
+<span id="cb47-41"><a href="#cb47-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-42"><a href="#cb47-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick glimpse</span></span>
+<span id="cb47-43"><a href="#cb47-43" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(train)</span>
+<span id="cb47-44"><a href="#cb47-44" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-45"><a href="#cb47-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-46"><a href="#cb47-46" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. Assessment of Missing Values</span></span>
+<span id="cb47-47"><a href="#cb47-47" aria-hidden="true" tabindex="-1"></a><span class="fu">### 2.1 Numerical Summary</span></span>
+<span id="cb47-48"><a href="#cb47-48" aria-hidden="true" tabindex="-1"></a>A through check for missing values is conducted to determine the extent and distribution of incompleteness across the dataset</span>
+<span id="cb47-51"><a href="#cb47-51" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-52"><a href="#cb47-52" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(train))</span>
+<span id="cb47-53"><a href="#cb47-53" aria-hidden="true" tabindex="-1"></a><span class="fu">skim</span>(train)</span>
+<span id="cb47-54"><a href="#cb47-54" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-55"><a href="#cb47-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-56"><a href="#cb47-56" aria-hidden="true" tabindex="-1"></a><span class="fu">### 2.2 Missing Value Visualization</span></span>
+<span id="cb47-57"><a href="#cb47-57" aria-hidden="true" tabindex="-1"></a>Yellow represents missing values, and black represents available values. Blocks of missingness in specific columns indicate a need for either targeted imputation or column removal, especially if missingness is extensive or not missing at random (NMAR).</span>
+<span id="cb47-60"><a href="#cb47-60" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-61"><a href="#cb47-61" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Amelia)  <span class="co"># For missmap visualization</span></span>
+<span id="cb47-62"><a href="#cb47-62" aria-hidden="true" tabindex="-1"></a><span class="fu">missmap</span>(train, </span>
+<span id="cb47-63"><a href="#cb47-63" aria-hidden="true" tabindex="-1"></a>        <span class="at">main =</span> <span class="st">"Missing Values Map"</span>, </span>
+<span id="cb47-64"><a href="#cb47-64" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"yellow"</span>, <span class="st">"black"</span>), </span>
+<span id="cb47-65"><a href="#cb47-65" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend =</span> <span class="cn">TRUE</span>)      </span>
+<span id="cb47-66"><a href="#cb47-66" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-67"><a href="#cb47-67" aria-hidden="true" tabindex="-1"></a>only about 1% of the dataset is missing, which is manageable, the dataset is mostly complete. Missing data is not concentrated in a few variables it is spread across multiple features. Columns like Monthly_Balance, Amount_invested_monthly and Changed_Credit_Limit appear to have more missing entries that others. This suggests random missingness.</span>
+<span id="cb47-68"><a href="#cb47-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-69"><a href="#cb47-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-70"><a href="#cb47-70" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. Data Type Correction</span></span>
+<span id="cb47-71"><a href="#cb47-71" aria-hidden="true" tabindex="-1"></a>Several columns originally read as character variables contain numeric data. These are converted to numeric or categorical types to enable statistical analysis.</span>
+<span id="cb47-74"><a href="#cb47-74" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-75"><a href="#cb47-75" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a function to clean and convert character values to numeric</span></span>
+<span id="cb47-76"><a href="#cb47-76" aria-hidden="true" tabindex="-1"></a>clean_numeric <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb47-77"><a href="#cb47-77" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">as.character</span>(x)</span>
+<span id="cb47-78"><a href="#cb47-78" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">","</span>, <span class="st">""</span>, x)</span>
+<span id="cb47-79"><a href="#cb47-79" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[$%]"</span>, <span class="st">""</span>, x)</span>
+<span id="cb47-80"><a href="#cb47-80" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">"[^0-9</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">-]"</span>, <span class="st">""</span>, x)</span>
+<span id="cb47-81"><a href="#cb47-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">suppressWarnings</span>(<span class="fu">as.numeric</span>(x))</span>
+<span id="cb47-82"><a href="#cb47-82" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb47-83"><a href="#cb47-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-84"><a href="#cb47-84" aria-hidden="true" tabindex="-1"></a><span class="co"># List of columns expected to be numeric but possibly read as character</span></span>
+<span id="cb47-85"><a href="#cb47-85" aria-hidden="true" tabindex="-1"></a>cols_to_convert <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Age"</span>, <span class="st">"Annual_Income"</span>, <span class="st">"Outstanding_Debt"</span>, <span class="st">"Num_of_Loan"</span>, </span>
+<span id="cb47-86"><a href="#cb47-86" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Changed_Credit_Limit"</span>, <span class="st">"Num_of_Delayed_Payment"</span>, </span>
+<span id="cb47-87"><a href="#cb47-87" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"Amount_invested_monthly"</span>, <span class="st">"Monthly_Balance"</span>)</span>
+<span id="cb47-88"><a href="#cb47-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-89"><a href="#cb47-89" aria-hidden="true" tabindex="-1"></a><span class="co"># Check which columns exist in the data before applying</span></span>
+<span id="cb47-90"><a href="#cb47-90" aria-hidden="true" tabindex="-1"></a>cols_to_convert <span class="ot">&lt;-</span> <span class="fu">intersect</span>(cols_to_convert, <span class="fu">colnames</span>(train))</span>
+<span id="cb47-91"><a href="#cb47-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-92"><a href="#cb47-92" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply cleaning function only to existing columns</span></span>
+<span id="cb47-93"><a href="#cb47-93" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (col <span class="cf">in</span> cols_to_convert) {</span>
+<span id="cb47-94"><a href="#cb47-94" aria-hidden="true" tabindex="-1"></a>  train[[col]] <span class="ot">&lt;-</span> <span class="fu">clean_numeric</span>(train[[col]])</span>
+<span id="cb47-95"><a href="#cb47-95" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb47-96"><a href="#cb47-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-97"><a href="#cb47-97" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert these columns to factors only if they exist</span></span>
+<span id="cb47-98"><a href="#cb47-98" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="st">"Credit_Mix"</span> <span class="sc">%in%</span> <span class="fu">names</span>(train)) {</span>
+<span id="cb47-99"><a href="#cb47-99" aria-hidden="true" tabindex="-1"></a>  train<span class="sc">$</span>Credit_Mix <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(train<span class="sc">$</span>Credit_Mix)</span>
+<span id="cb47-100"><a href="#cb47-100" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb47-101"><a href="#cb47-101" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="st">"Payment_of_Min_Amount"</span> <span class="sc">%in%</span> <span class="fu">names</span>(train)) {</span>
+<span id="cb47-102"><a href="#cb47-102" aria-hidden="true" tabindex="-1"></a>  train<span class="sc">$</span>Payment_of_Min_Amount <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(train<span class="sc">$</span>Payment_of_Min_Amount)</span>
+<span id="cb47-103"><a href="#cb47-103" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb47-104"><a href="#cb47-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-105"><a href="#cb47-105" aria-hidden="true" tabindex="-1"></a><span class="co"># Show summary of the cleaned dataset</span></span>
+<span id="cb47-106"><a href="#cb47-106" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(train)</span>
+<span id="cb47-107"><a href="#cb47-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-108"><a href="#cb47-108" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb47-109"><a href="#cb47-109" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-110"><a href="#cb47-110" aria-hidden="true" tabindex="-1"></a>The dataset has been successfully loaded and cleaned, with several formerly charecter-based numeric fields now recognised as numeric, there are some outliers and invalid entries and multiple columns with missing values that require further cleaning and imputation.</span>
+<span id="cb47-111"><a href="#cb47-111" aria-hidden="true" tabindex="-1"></a>Age: contains invalid ages (eg: -500 and 8698)</span>
+<span id="cb47-112"><a href="#cb47-112" aria-hidden="true" tabindex="-1"></a>Annual_Income: extreme outliers likely caused by errors or data entry issues.</span>
+<span id="cb47-113"><a href="#cb47-113" aria-hidden="true" tabindex="-1"></a>Monthly_Inhand_Salary: missing in ~15% of rows.</span>
+<span id="cb47-114"><a href="#cb47-114" aria-hidden="true" tabindex="-1"></a>Num_Bank_Accounts, Num_Credit_Card, Interest_Rate: these values suggest data errors.</span>
+<span id="cb47-115"><a href="#cb47-115" aria-hidden="true" tabindex="-1"></a>Num_of_Loan: -ve loan count is invalid</span>
+<span id="cb47-116"><a href="#cb47-116" aria-hidden="true" tabindex="-1"></a>Credit_History_Age: missing values in over 9,000 rows.</span>
+<span id="cb47-117"><a href="#cb47-117" aria-hidden="true" tabindex="-1"></a>Payment_of_Min_Amount: correctly converted to factor, this column is clean.</span>
+<span id="cb47-118"><a href="#cb47-118" aria-hidden="true" tabindex="-1"></a>Amount_invested_monthly and Monthly_Balance: low missingness can be imputed safely.</span>
+<span id="cb47-119"><a href="#cb47-119" aria-hidden="true" tabindex="-1"></a>Categorical Noise: some columns contain nonsensical strings, such as SSN: Values like #F%$D@*&amp;8, Payment_Behaviour: Value like !@9#%8, Occupation: Many are listed as "_______".</span>
+<span id="cb47-120"><a href="#cb47-120" aria-hidden="true" tabindex="-1"></a>Target Variable - Credit_Score: class imbalance should be addressed in modeling.</span>
+<span id="cb47-121"><a href="#cb47-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-122"><a href="#cb47-122" aria-hidden="true" tabindex="-1"></a><span class="fu">## 4. Target Variable Check – Credit Score</span></span>
+<span id="cb47-123"><a href="#cb47-123" aria-hidden="true" tabindex="-1"></a><span class="fu">### 4.1 Class Distribution</span></span>
+<span id="cb47-124"><a href="#cb47-124" aria-hidden="true" tabindex="-1"></a>Examine the distribution of the target variable Credit_Score that is to be predicted. To understand if the datset is balanced or imbalanced across the different credit score categories. If one class dominates the others, the model might favor that class.</span>
+<span id="cb47-127"><a href="#cb47-127" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-128"><a href="#cb47-128" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(train<span class="sc">$</span>Credit_Score)</span>
+<span id="cb47-129"><a href="#cb47-129" aria-hidden="true" tabindex="-1"></a><span class="fu">prop.table</span>(<span class="fu">table</span>(train<span class="sc">$</span>Credit_Score)) <span class="sc">*</span> <span class="dv">100</span>              </span>
+<span id="cb47-130"><a href="#cb47-130" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-131"><a href="#cb47-131" aria-hidden="true" tabindex="-1"></a>This tells us that 53.2% of the records are standard, 29% are poor, 17.8% are good. The dataset is imbalanced, the standard class is overrepresnted, a classification model trained on this data might favor the standard class unless balancing techniques are applied such as: SMOTE, class weights, resampling. Or evaluate with metrics beyong accuracy such as F1-score, precision/recall per class.</span>
+<span id="cb47-132"><a href="#cb47-132" aria-hidden="true" tabindex="-1"></a><span class="fu">### 4.2 Visualizing Imbalance</span></span>
+<span id="cb47-135"><a href="#cb47-135" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-136"><a href="#cb47-136" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Count</span></span>
+<span id="cb47-137"><a href="#cb47-137" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> Credit_Score, <span class="at">fill =</span> Credit_Score)) <span class="sc">+</span></span>
+<span id="cb47-138"><a href="#cb47-138" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb47-139"><a href="#cb47-139" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Credit Score Distribution"</span>, <span class="at">x =</span> <span class="st">"Credit Score"</span>, <span class="at">y =</span> <span class="st">"Count"</span>) <span class="sc">+</span></span>
+<span id="cb47-140"><a href="#cb47-140" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb47-141"><a href="#cb47-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-142"><a href="#cb47-142" aria-hidden="true" tabindex="-1"></a><span class="co"># Percentage</span></span>
+<span id="cb47-143"><a href="#cb47-143" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
+<span id="cb47-144"><a href="#cb47-144" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Credit_Score) <span class="sc">%&gt;%</span></span>
+<span id="cb47-145"><a href="#cb47-145" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Percent =</span> n <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb47-146"><a href="#cb47-146" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Credit_Score, <span class="at">y =</span> Percent, <span class="at">fill =</span> Credit_Score)) <span class="sc">+</span></span>
+<span id="cb47-147"><a href="#cb47-147" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>() <span class="sc">+</span></span>
+<span id="cb47-148"><a href="#cb47-148" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Credit Score Percentage"</span>, <span class="at">y =</span> <span class="st">"Percentage (%)"</span>) <span class="sc">+</span></span>
+<span id="cb47-149"><a href="#cb47-149" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()        </span>
+<span id="cb47-150"><a href="#cb47-150" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-151"><a href="#cb47-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-152"><a href="#cb47-152" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5. Outlier Detection and Skewed Distributions</span></span>
+<span id="cb47-153"><a href="#cb47-153" aria-hidden="true" tabindex="-1"></a>Visualise key numeric features for anomalies</span>
+<span id="cb47-156"><a href="#cb47-156" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-157"><a href="#cb47-157" aria-hidden="true" tabindex="-1"></a><span class="co"># Age - Histogram and Boxplot</span></span>
+<span id="cb47-158"><a href="#cb47-158" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> Age)) <span class="sc">+</span></span>
+<span id="cb47-159"><a href="#cb47-159" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb47-160"><a href="#cb47-160" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Age Distribution"</span>)</span>
+<span id="cb47-161"><a href="#cb47-161" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-162"><a href="#cb47-162" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> Age)) <span class="sc">+</span></span>
+<span id="cb47-163"><a href="#cb47-163" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"orange"</span>) <span class="sc">+</span></span>
+<span id="cb47-164"><a href="#cb47-164" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Boxplot of Age"</span>)</span>
+<span id="cb47-165"><a href="#cb47-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-166"><a href="#cb47-166" aria-hidden="true" tabindex="-1"></a><span class="co"># Annual Income - Focus on upper outliers</span></span>
+<span id="cb47-167"><a href="#cb47-167" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> Annual_Income)) <span class="sc">+</span></span>
+<span id="cb47-168"><a href="#cb47-168" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"gold"</span>) <span class="sc">+</span></span>
+<span id="cb47-169"><a href="#cb47-169" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Annual Income Boxplot"</span>)</span>
+<span id="cb47-170"><a href="#cb47-170" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-171"><a href="#cb47-171" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> Annual_Income)) <span class="sc">+</span></span>
+<span id="cb47-172"><a href="#cb47-172" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">50</span>, <span class="at">fill =</span> <span class="st">"green"</span>) <span class="sc">+</span></span>
+<span id="cb47-173"><a href="#cb47-173" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Annual Income Histogram"</span>) <span class="sc">+</span></span>
+<span id="cb47-174"><a href="#cb47-174" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlim</span>(<span class="dv">0</span>, <span class="fu">quantile</span>(train<span class="sc">$</span>Annual_Income, <span class="fl">0.99</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb47-175"><a href="#cb47-175" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-176"><a href="#cb47-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-177"><a href="#cb47-177" aria-hidden="true" tabindex="-1"></a><span class="fu">## 6. Invalid or Noisy Categorical Entries</span></span>
+<span id="cb47-178"><a href="#cb47-178" aria-hidden="true" tabindex="-1"></a>Explore placeholders like "_______" and corrupted values.</span>
+<span id="cb47-181"><a href="#cb47-181" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-182"><a href="#cb47-182" aria-hidden="true" tabindex="-1"></a><span class="co"># Top 10 Occupations</span></span>
+<span id="cb47-183"><a href="#cb47-183" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
+<span id="cb47-184"><a href="#cb47-184" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Occupation, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb47-185"><a href="#cb47-185" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb47-186"><a href="#cb47-186" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Occupation, n), <span class="at">y =</span> n, <span class="at">fill =</span> Occupation)) <span class="sc">+</span></span>
+<span id="cb47-187"><a href="#cb47-187" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb47-188"><a href="#cb47-188" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb47-189"><a href="#cb47-189" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top 10 Occupations"</span>) <span class="sc">+</span></span>
+<span id="cb47-190"><a href="#cb47-190" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb47-191"><a href="#cb47-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-192"><a href="#cb47-192" aria-hidden="true" tabindex="-1"></a><span class="co"># Check Payment_Behaviour anomalies</span></span>
+<span id="cb47-193"><a href="#cb47-193" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
+<span id="cb47-194"><a href="#cb47-194" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(Payment_Behaviour, <span class="at">sort =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb47-195"><a href="#cb47-195" aria-hidden="true" tabindex="-1"></a>  <span class="fu">top_n</span>(<span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb47-196"><a href="#cb47-196" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(Payment_Behaviour, n), <span class="at">y =</span> n, <span class="at">fill =</span> Payment_Behaviour)) <span class="sc">+</span></span>
+<span id="cb47-197"><a href="#cb47-197" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb47-198"><a href="#cb47-198" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb47-199"><a href="#cb47-199" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Top Payment Behaviour Categories"</span>) <span class="sc">+</span></span>
+<span id="cb47-200"><a href="#cb47-200" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()              </span>
+<span id="cb47-201"><a href="#cb47-201" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-202"><a href="#cb47-202" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-203"><a href="#cb47-203" aria-hidden="true" tabindex="-1"></a><span class="fu">## 7. Exploring Categorical Variables</span></span>
+<span id="cb47-204"><a href="#cb47-204" aria-hidden="true" tabindex="-1"></a>Visualize how features like Credit_Mix vary with target.</span>
+<span id="cb47-207"><a href="#cb47-207" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-208"><a href="#cb47-208" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(train, <span class="fu">aes</span>(<span class="at">x =</span> Credit_Mix, <span class="at">fill =</span> Credit_Score)) <span class="sc">+</span></span>
+<span id="cb47-209"><a href="#cb47-209" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">"fill"</span>) <span class="sc">+</span></span>
+<span id="cb47-210"><a href="#cb47-210" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Credit Mix by Credit Score"</span>, <span class="at">y =</span> <span class="st">"Proportion"</span>)   </span>
+<span id="cb47-211"><a href="#cb47-211" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-212"><a href="#cb47-212" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-213"><a href="#cb47-213" aria-hidden="true" tabindex="-1"></a><span class="fu">## 8. Correlation of Numeric Features</span></span>
+<span id="cb47-214"><a href="#cb47-214" aria-hidden="true" tabindex="-1"></a>Detect multicollinearity with correlation heatmap.</span>
+<span id="cb47-217"><a href="#cb47-217" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-218"><a href="#cb47-218" aria-hidden="true" tabindex="-1"></a>    numeric_vars <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
+<span id="cb47-219"><a href="#cb47-219" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">%&gt;%</span></span>
+<span id="cb47-220"><a href="#cb47-220" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span>
+<span id="cb47-221"><a href="#cb47-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-222"><a href="#cb47-222" aria-hidden="true" tabindex="-1"></a>cor_matrix <span class="ot">&lt;-</span> <span class="fu">cor</span>(numeric_vars)</span>
+<span id="cb47-223"><a href="#cb47-223" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(cor_matrix, <span class="at">method =</span> <span class="st">"color"</span>, <span class="at">tl.cex =</span> <span class="fl">0.6</span>)</span>
+<span id="cb47-224"><a href="#cb47-224" aria-hidden="true" tabindex="-1"></a>           </span>
+<span id="cb47-225"><a href="#cb47-225" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-226"><a href="#cb47-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-227"><a href="#cb47-227" aria-hidden="true" tabindex="-1"></a><span class="fu">## 9. Principal Component Analysis (PCA)</span></span>
+<span id="cb47-228"><a href="#cb47-228" aria-hidden="true" tabindex="-1"></a>Visualise separately in reduced dimensions</span>
+<span id="cb47-231"><a href="#cb47-231" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-232"><a href="#cb47-232" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(factoextra)</span>
+<span id="cb47-233"><a href="#cb47-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-234"><a href="#cb47-234" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove target variable and keep only numeric columns</span></span>
+<span id="cb47-235"><a href="#cb47-235" aria-hidden="true" tabindex="-1"></a>pca_data <span class="ot">&lt;-</span> train <span class="sc">%&gt;%</span></span>
+<span id="cb47-236"><a href="#cb47-236" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Credit_Score) <span class="sc">%&gt;%</span></span>
+<span id="cb47-237"><a href="#cb47-237" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">%&gt;%</span></span>
+<span id="cb47-238"><a href="#cb47-238" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
+<span id="cb47-239"><a href="#cb47-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-240"><a href="#cb47-240" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale and run PCA</span></span>
+<span id="cb47-241"><a href="#cb47-241" aria-hidden="true" tabindex="-1"></a>pca_scaled <span class="ot">&lt;-</span> <span class="fu">scale</span>(pca_data)</span>
+<span id="cb47-242"><a href="#cb47-242" aria-hidden="true" tabindex="-1"></a>pca_result <span class="ot">&lt;-</span> <span class="fu">prcomp</span>(pca_scaled, <span class="at">center =</span> <span class="cn">TRUE</span>, <span class="at">scale. =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb47-243"><a href="#cb47-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-244"><a href="#cb47-244" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot PCA with colored points by Credit_Score</span></span>
+<span id="cb47-245"><a href="#cb47-245" aria-hidden="true" tabindex="-1"></a><span class="fu">fviz_pca_ind</span>(pca_result,</span>
+<span id="cb47-246"><a href="#cb47-246" aria-hidden="true" tabindex="-1"></a>             <span class="at">geom.ind =</span> <span class="st">"point"</span>,</span>
+<span id="cb47-247"><a href="#cb47-247" aria-hidden="true" tabindex="-1"></a>             <span class="at">col.ind =</span> <span class="fu">as.factor</span>(train<span class="sc">$</span>Credit_Score[<span class="fu">as.numeric</span>(<span class="fu">rownames</span>(pca_data))]),</span>
+<span id="cb47-248"><a href="#cb47-248" aria-hidden="true" tabindex="-1"></a>             <span class="at">legend.title =</span> <span class="st">"Credit Score"</span>) <span class="sc">+</span></span>
+<span id="cb47-249"><a href="#cb47-249" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"PCA - Credit Score Classes"</span>)</span>
+<span id="cb47-250"><a href="#cb47-250" aria-hidden="true" tabindex="-1"></a>           </span>
+<span id="cb47-251"><a href="#cb47-251" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-252"><a href="#cb47-252" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-253"><a href="#cb47-253" aria-hidden="true" tabindex="-1"></a><span class="fu">## 10. Visualizing Numeric Outliers</span></span>
+<span id="cb47-254"><a href="#cb47-254" aria-hidden="true" tabindex="-1"></a>Boxplots for all key numneric columns together.</span>
+<span id="cb47-257"><a href="#cb47-257" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-258"><a href="#cb47-258" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb47-259"><a href="#cb47-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-260"><a href="#cb47-260" aria-hidden="true" tabindex="-1"></a>numeric_cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Num_Bank_Accounts"</span>, <span class="st">"Num_Credit_Card"</span>, <span class="st">"Interest_Rate"</span>, </span>
+<span id="cb47-261"><a href="#cb47-261" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Num_of_Loan"</span>, <span class="st">"Num_of_Delayed_Payment"</span>, </span>
+<span id="cb47-262"><a href="#cb47-262" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Credit_Utilization_Ratio"</span>, <span class="st">"Outstanding_Debt"</span>)</span>
+<span id="cb47-263"><a href="#cb47-263" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-264"><a href="#cb47-264" aria-hidden="true" tabindex="-1"></a>train <span class="sc">%&gt;%</span></span>
+<span id="cb47-265"><a href="#cb47-265" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">all_of</span>(numeric_cols)) <span class="sc">%&gt;%</span></span>
+<span id="cb47-266"><a href="#cb47-266" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"Variable"</span>, <span class="at">values_to =</span> <span class="st">"Value"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb47-267"><a href="#cb47-267" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Variable, <span class="at">y =</span> Value)) <span class="sc">+</span></span>
+<span id="cb47-268"><a href="#cb47-268" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"skyblue"</span>, <span class="at">outlier.color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb47-269"><a href="#cb47-269" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb47-270"><a href="#cb47-270" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Boxplots of Numeric Features"</span>) <span class="sc">+</span></span>
+<span id="cb47-271"><a href="#cb47-271" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()               </span>
+<span id="cb47-272"><a href="#cb47-272" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-275"><a href="#cb47-275" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb47-276"><a href="#cb47-276" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb47-277"><a href="#cb47-277" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-278"><a href="#cb47-278" aria-hidden="true" tabindex="-1"></a><span class="fu"># 📌 Credit Score Classification – Project Plan</span></span>
+<span id="cb47-279"><a href="#cb47-279" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-280"><a href="#cb47-280" aria-hidden="true" tabindex="-1"></a>**Goal:** Build and evaluate a machine learning model to classify individuals into Credit Score categories (Poor, Standard, Good).</span>
+<span id="cb47-281"><a href="#cb47-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-282"><a href="#cb47-282" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb47-283"><a href="#cb47-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-284"><a href="#cb47-284" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🔶 Phase 1: Data Preparation  </span></span>
+<span id="cb47-285"><a href="#cb47-285" aria-hidden="true" tabindex="-1"></a>**Timeline:** Week 1 (Mon–Fri)  </span>
+<span id="cb47-286"><a href="#cb47-286" aria-hidden="true" tabindex="-1"></a>**Goal:** Clean data, engineer features, and prepare datasets for modeling.</span>
+<span id="cb47-287"><a href="#cb47-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-288"><a href="#cb47-288" aria-hidden="true" tabindex="-1"></a>| Subtask | Description | Duration |</span>
+<span id="cb47-289"><a href="#cb47-289" aria-hidden="true" tabindex="-1"></a>|--------|-------------|----------|</span>
+<span id="cb47-290"><a href="#cb47-290" aria-hidden="true" tabindex="-1"></a>| 1.1 | Remove invalid numeric values (<span class="in">`Age`</span>, <span class="in">`Annual_Income`</span>) | 0.5 day |</span>
+<span id="cb47-291"><a href="#cb47-291" aria-hidden="true" tabindex="-1"></a>| 1.2 | Fix unrealistic values (<span class="in">`Num_of_Loan`</span>, <span class="in">`Credit_Card`</span>) | 0.5 day |</span>
+<span id="cb47-292"><a href="#cb47-292" aria-hidden="true" tabindex="-1"></a>| 1.3 | Impute/drop missing values (e.g., salary, credit age) | 1 day |</span>
+<span id="cb47-293"><a href="#cb47-293" aria-hidden="true" tabindex="-1"></a>| 1.4 | Convert <span class="in">`Credit_History_Age`</span> to months | 0.5 day |</span>
+<span id="cb47-294"><a href="#cb47-294" aria-hidden="true" tabindex="-1"></a>| 1.5 | Clean placeholder text (e.g., <span class="in">`'_______'`</span>) | 0.5 day |</span>
+<span id="cb47-295"><a href="#cb47-295" aria-hidden="true" tabindex="-1"></a>| 1.6 | Encode categorical variables | 0.5 day |</span>
+<span id="cb47-296"><a href="#cb47-296" aria-hidden="true" tabindex="-1"></a>| 1.7 | Create new features (e.g., <span class="in">`Loan_to_Income`</span>) | 0.5 day |</span>
+<span id="cb47-297"><a href="#cb47-297" aria-hidden="true" tabindex="-1"></a>| 1.8 | Split into training/test sets | 0.5 day |</span>
+<span id="cb47-298"><a href="#cb47-298" aria-hidden="true" tabindex="-1"></a>| 1.9 | Check summary and structure | 0.5 day |</span>
+<span id="cb47-299"><a href="#cb47-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-300"><a href="#cb47-300" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb47-301"><a href="#cb47-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-302"><a href="#cb47-302" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🔶 Phase 2: Exploratory Visualization  </span></span>
+<span id="cb47-303"><a href="#cb47-303" aria-hidden="true" tabindex="-1"></a>**Timeline:** Week 2 (Mon–Tue)</span>
+<span id="cb47-304"><a href="#cb47-304" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-305"><a href="#cb47-305" aria-hidden="true" tabindex="-1"></a>| Subtask | Description | Duration |</span>
+<span id="cb47-306"><a href="#cb47-306" aria-hidden="true" tabindex="-1"></a>|--------|-------------|----------|</span>
+<span id="cb47-307"><a href="#cb47-307" aria-hidden="true" tabindex="-1"></a>| 2.1 | Plot Credit Score distribution (counts, %) | 0.5 day |</span>
+<span id="cb47-308"><a href="#cb47-308" aria-hidden="true" tabindex="-1"></a>| 2.2 | Histograms &amp; boxplots for key numerics | 0.5 day |</span>
+<span id="cb47-309"><a href="#cb47-309" aria-hidden="true" tabindex="-1"></a>| 2.3 | Visualize missing data (<span class="in">`missmap`</span>, <span class="in">`gg_miss_var`</span>) | 0.5 day |</span>
+<span id="cb47-310"><a href="#cb47-310" aria-hidden="true" tabindex="-1"></a>| 2.4 | Visualize top categories (<span class="in">`Occupation`</span>, <span class="in">`Behaviour`</span>) | 0.5 day |</span>
+<span id="cb47-311"><a href="#cb47-311" aria-hidden="true" tabindex="-1"></a>| 2.5 | Plot correlation matrix | 0.5 day |</span>
+<span id="cb47-312"><a href="#cb47-312" aria-hidden="true" tabindex="-1"></a>| 2.6 | Run and plot PCA | 0.5 day |</span>
+<span id="cb47-313"><a href="#cb47-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-314"><a href="#cb47-314" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb47-315"><a href="#cb47-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-316"><a href="#cb47-316" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🔶 Phase 3: Model Building  </span></span>
+<span id="cb47-317"><a href="#cb47-317" aria-hidden="true" tabindex="-1"></a>**Timeline:** Week 2 (Wed–Fri)</span>
+<span id="cb47-318"><a href="#cb47-318" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-319"><a href="#cb47-319" aria-hidden="true" tabindex="-1"></a>| Subtask | Description | Duration |</span>
+<span id="cb47-320"><a href="#cb47-320" aria-hidden="true" tabindex="-1"></a>|--------|-------------|----------|</span>
+<span id="cb47-321"><a href="#cb47-321" aria-hidden="true" tabindex="-1"></a>| 3.1 | Build logistic, decision tree, KNN | 1 day |</span>
+<span id="cb47-322"><a href="#cb47-322" aria-hidden="true" tabindex="-1"></a>| 3.2 | Train Random Forest, XGBoost | 1 day |</span>
+<span id="cb47-323"><a href="#cb47-323" aria-hidden="true" tabindex="-1"></a>| 3.3 | Set up pipeline using <span class="in">`caret`</span> or <span class="in">`tidymodels`</span> | 0.5 day |</span>
+<span id="cb47-324"><a href="#cb47-324" aria-hidden="true" tabindex="-1"></a>| 3.4 | Save model outputs | 0.5 day |</span>
+<span id="cb47-325"><a href="#cb47-325" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-326"><a href="#cb47-326" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb47-327"><a href="#cb47-327" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-328"><a href="#cb47-328" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🔶 Phase 4: Evaluation and Tuning  </span></span>
+<span id="cb47-329"><a href="#cb47-329" aria-hidden="true" tabindex="-1"></a>**Timeline:** Week 3 (Mon–Wed)</span>
+<span id="cb47-330"><a href="#cb47-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-331"><a href="#cb47-331" aria-hidden="true" tabindex="-1"></a>| Subtask | Description | Duration |</span>
+<span id="cb47-332"><a href="#cb47-332" aria-hidden="true" tabindex="-1"></a>|--------|-------------|----------|</span>
+<span id="cb47-333"><a href="#cb47-333" aria-hidden="true" tabindex="-1"></a>| 4.1 | Evaluate with confusion matrix, F1, etc. | 1 day |</span>
+<span id="cb47-334"><a href="#cb47-334" aria-hidden="true" tabindex="-1"></a>| 4.2 | Plot confusion matrix, class performance | 0.5 day |</span>
+<span id="cb47-335"><a href="#cb47-335" aria-hidden="true" tabindex="-1"></a>| 4.3 | Visualize feature importance | 0.5 day |</span>
+<span id="cb47-336"><a href="#cb47-336" aria-hidden="true" tabindex="-1"></a>| 4.4 | Tune using cross-validation or grid search | 1 day |</span>
+<span id="cb47-337"><a href="#cb47-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-338"><a href="#cb47-338" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb47-339"><a href="#cb47-339" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-340"><a href="#cb47-340" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🔶 Phase 5: Final Prediction  </span></span>
+<span id="cb47-341"><a href="#cb47-341" aria-hidden="true" tabindex="-1"></a>**Timeline:** Week 3 (Thu–Fri)</span>
+<span id="cb47-342"><a href="#cb47-342" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-343"><a href="#cb47-343" aria-hidden="true" tabindex="-1"></a>| Subtask | Description | Duration |</span>
+<span id="cb47-344"><a href="#cb47-344" aria-hidden="true" tabindex="-1"></a>|--------|-------------|----------|</span>
+<span id="cb47-345"><a href="#cb47-345" aria-hidden="true" tabindex="-1"></a>| 5.1 | Predict on <span class="in">`Score.csv`</span> or final test set | 0.5 day |</span>
+<span id="cb47-346"><a href="#cb47-346" aria-hidden="true" tabindex="-1"></a>| 5.2 | Export predictions to CSV | 0.5 day |</span>
+<span id="cb47-347"><a href="#cb47-347" aria-hidden="true" tabindex="-1"></a>| 5.3 | Review and validate prediction output | 0.5 day |</span>
+<span id="cb47-348"><a href="#cb47-348" aria-hidden="true" tabindex="-1"></a>| 5.4 | Save model object with <span class="in">`saveRDS()`</span> | 0.5 day |</span>
+<span id="cb47-349"><a href="#cb47-349" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-350"><a href="#cb47-350" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb47-351"><a href="#cb47-351" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-352"><a href="#cb47-352" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🔶 Phase 6: Report and Presentation  </span></span>
+<span id="cb47-353"><a href="#cb47-353" aria-hidden="true" tabindex="-1"></a>**Timeline:** Week 4 (Mon–Fri)</span>
+<span id="cb47-354"><a href="#cb47-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-355"><a href="#cb47-355" aria-hidden="true" tabindex="-1"></a>| Subtask | Description | Duration |</span>
+<span id="cb47-356"><a href="#cb47-356" aria-hidden="true" tabindex="-1"></a>|--------|-------------|----------|</span>
+<span id="cb47-357"><a href="#cb47-357" aria-hidden="true" tabindex="-1"></a>| 6.1 | Draft final report with code and plots | 1.5 days |</span>
+<span id="cb47-358"><a href="#cb47-358" aria-hidden="true" tabindex="-1"></a>| 6.2 | Write executive summary and insights | 0.5 day |</span>
+<span id="cb47-359"><a href="#cb47-359" aria-hidden="true" tabindex="-1"></a>| 6.3 | Prepare slide deck for presentation | 1 day |</span>
+<span id="cb47-360"><a href="#cb47-360" aria-hidden="true" tabindex="-1"></a>| 6.4 | Rehearse and assign group roles | 0.5 day |</span>
+<span id="cb47-361"><a href="#cb47-361" aria-hidden="true" tabindex="-1"></a>| 6.5 | Final submission and presentation | 0.5–1 day |</span>
+<span id="cb47-362"><a href="#cb47-362" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-363"><a href="#cb47-363" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb47-364"><a href="#cb47-364" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-365"><a href="#cb47-365" aria-hidden="true" tabindex="-1"></a><span class="fu">## 🗓️ Weekly Summary</span></span>
+<span id="cb47-366"><a href="#cb47-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-367"><a href="#cb47-367" aria-hidden="true" tabindex="-1"></a>| Week | Focus |</span>
+<span id="cb47-368"><a href="#cb47-368" aria-hidden="true" tabindex="-1"></a>|------|-------------------------------|</span>
+<span id="cb47-369"><a href="#cb47-369" aria-hidden="true" tabindex="-1"></a>| Week 1 | Data cleaning &amp; feature prep |</span>
+<span id="cb47-370"><a href="#cb47-370" aria-hidden="true" tabindex="-1"></a>| Week 2 | Visualisation &amp; model building |</span>
+<span id="cb47-371"><a href="#cb47-371" aria-hidden="true" tabindex="-1"></a>| Week 3 | Evaluation, tuning, prediction |</span>
+<span id="cb47-372"><a href="#cb47-372" aria-hidden="true" tabindex="-1"></a>| Week 4 | Report writing &amp; presentation |</span>
+<span id="cb47-373"><a href="#cb47-373" aria-hidden="true" tabindex="-1"></a><span class="fu">## 📊 Gantt Chart – Project Phases Only</span></span>
+<span id="cb47-374"><a href="#cb47-374" aria-hidden="true" tabindex="-1"></a><span class="al">![Project Phases](project_gantt_phases_only.png)</span></span>
+<span id="cb47-375"><a href="#cb47-375" aria-hidden="true" tabindex="-1"></a></span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
