@@ -7,6 +7,7 @@ format:
     code-fold: true
     code-tools: true
     theme: flatly
+    echo: false
 ---
 
 Data Source
@@ -26,21 +27,7 @@ library(skimr)
 library(DataExplorer)
 library(corrplot)
 library(Amelia)
-
-# Load the data
-train <- read.csv("train.csv", stringsAsFactors = TRUE)
-test <- read.csv("test.csv", stringsAsFactors = TRUE)
-score <- read.csv("Score.csv", stringsAsFactors = TRUE)
-
-# View dimensions
-dim(train)
-dim(test)
-dim(score)
-
-# Quick glimpse
-glimpse(train)
 ```
-
 ## 2. Assessment of Missing Values
 ### 2.1 Numerical Summary
 A through check for missing values is conducted to determine the extent and distribution of incompleteness across the dataset

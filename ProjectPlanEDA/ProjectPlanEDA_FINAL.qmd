@@ -1,0 +1,174 @@
+---
+title: "Credit Score Classification – EDA & Project Plan"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-tools: true
+    theme: flatly
+---
+
+# 🧩 Problem Definition
+
+This is a multi-class **classification problem** to predict `Credit_Score` (Poor, Standard, Good) based on user demographic and financial behavior data. The dataset contains ~100,000 records and was sourced from Kaggle. The classification outcome can support creditworthiness assessment and loan approval in financial systems.
+
+## Why this problem is interesting
+
+- Real-world impact for financial risk modeling  
+- Dataset contains noise, imbalance, and mixed data types  
+- Opportunities for meaningful EDA and model tuning
+
+# 🗃️ Dataset Overview
+
+- **Samples:** ~100,000  
+- **Features:** ~28 (categorical + numerical)  
+- **Target:** `Credit_Score` (Poor, Standard, Good)  
+- **Challenges:**
+  - Outliers in `Age`, `Annual_Income`
+  - Missing values (~1%) in multiple columns
+  - Noise in `Occupation`, `SSN`, `Payment_Behaviour`
+  - Class imbalance in target variable
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(skimr)
+library(Amelia)
+library(corrplot)
+library(factoextra)
+library(tidyr)
+```
+
+```{r}
+# Load data
+train <- read.csv("train.csv")
+```
+
+# 🔍 Missing Value Assessment
+
+## Numerical Summary
+
+```{r}
+colSums(is.na(train))
+```
+
+## Missingness Map
+
+```{r}
+missmap(train, main = "Missing Data Map", col = c("yellow", "black"))
+```
+
+**Summary:**
+- ~1% missing
+- Key columns with NAs: `Credit_History_Age`, `Amount_invested_monthly`
+
+# 🧹 Data Cleaning and Type Fixes
+
+```{r}
+clean_numeric <- function(x) {
+  x <- gsub(",", "", as.character(x))
+  x <- gsub("[$%]", "", x)
+  x <- gsub("[^0-9\.\-]", "", x)
+  suppressWarnings(as.numeric(x))
+}
+
+cols_to_clean <- c("Age", "Annual_Income", "Outstanding_Debt", "Num_of_Loan", 
+                   "Changed_Credit_Limit", "Num_of_Delayed_Payment", 
+                   "Amount_invested_monthly", "Monthly_Balance")
+
+for (col in intersect(cols_to_clean, names(train))) {
+  train[[col]] <- clean_numeric(train[[col]])
+}
+
+train$Credit_Mix <- as.factor(train$Credit_Mix)
+train$Payment_of_Min_Amount <- as.factor(train$Payment_of_Min_Amount)
+```
+
+# 📊 Target Class Distribution
+
+```{r}
+table(train$Credit_Score)
+```
+
+```{r}
+ggplot(train, aes(x = Credit_Score, fill = Credit_Score)) +
+  geom_bar() +
+  labs(title = "Credit Score Distribution", y = "Count")
+```
+
+# 🧭 Outlier Detection
+
+## Age and Income Outliers
+
+```{r}
+ggplot(train, aes(x = "", y = Age)) +
+  geom_boxplot(fill = "orange") +
+  labs(title = "Age Boxplot")
+```
+
+```{r}
+ggplot(train, aes(x = Annual_Income)) +
+  geom_histogram(bins = 40, fill = "steelblue") +
+  labs(title = "Annual Income Histogram")
+```
+
+# 🧮 Correlation and PCA
+
+## Correlation Matrix
+
+```{r}
+numeric_data <- train %>%
+  select(where(is.numeric)) %>%
+  drop_na()
+
+corrplot(cor(numeric_data), method = "color")
+```
+
+## PCA Visualization
+
+```{r}
+pca <- prcomp(scale(numeric_data), center = TRUE, scale. = TRUE)
+fviz_pca_ind(pca, geom.ind = "point", col.ind = train$Credit_Score[rownames(numeric_data)], 
+             legend.title = "Credit Score") +
+  labs(title = "PCA Visualization")
+```
+
+# 🧭 Project Plan
+
+## 📅 Phase Overview
+
+- **Phase 1:** Data Cleaning & Feature Engineering  
+- **Phase 2:** EDA & Visualization  
+- **Phase 3:** Model Building (RF, XGBoost, Logistic)  
+- **Phase 4:** Evaluation (F1, Accuracy, Conf. Matrix)  
+- **Phase 5:** Final Prediction  
+- **Phase 6:** Reporting & Presentation
+
+## 📆 Weekly Timeline
+
+| Week | Tasks |
+|------|----------------------------|
+| 1    | Cleaning, feature prep     |
+| 2    | EDA, visualisation         |
+| 3    | Modeling + evaluation      |
+| 4    | Reporting and submission   |
+
+## 📈 Gantt Chart
+
+![Gantt Chart](project_gantt_phases_only.png)
+
+# 📏 Evaluation Metrics
+
+- **Primary Metric:** Macro F1-score  
+- Also: Accuracy, Precision, Recall, Confusion Matrix  
+- Address imbalance using class weights or SMOTE
+
+# ✅ Summary
+
+This plan addresses all aspects of the assignment:
+- Clear classification objective  
+- Complex real-world dataset  
+- Defined timeline & visual plan  
+- Focused, efficient EDA  
+- Planned metrics and techniques

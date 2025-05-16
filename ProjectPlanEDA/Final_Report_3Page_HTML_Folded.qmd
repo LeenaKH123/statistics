@@ -1,0 +1,167 @@
+---
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: true
+    code-tools: true
+    theme: flatly   
+    css: style.css
+---
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  fig.width = 4,
+  fig.height = 3,
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Credit Score Classification – EDA & Project Plan
+# Problem Definition
+
+This is a multi-class **classification problem** to predict `Credit_Score` (Poor, Standard, Good) based on user demographic and financial behavior data. The dataset contains ~100,000 records and was sourced from Kaggle.
+
+## Why this problem is interesting
+
+- Real-world financial risk prediction  
+- Dataset includes missing values, noise, imbalance  
+- Useful for supervised classification techniques
+
+# Dataset Overview
+
+- **Samples:** ~100,000  
+- **Features:** mix of numeric and categorical  
+- **Target:** `Credit_Score` (Poor, Standard, Good)  
+- **Challenges:** outliers, noisy values (`_______`, symbols), imbalance
+
+```{r, include=FALSE}
+library(tidyverse)
+library(janitor)
+library(skimr)
+library(Amelia)
+library(corrplot)
+library(factoextra)
+library(tidyr)
+
+train <- read.csv("train.csv")
+```
+
+# Missing Value Assessment
+
+```{r}
+colSums(is.na(train))
+missmap(train, main = "Missing Data Map", col = c("yellow", "black"))
+```
+**Summary:** ~1% missing. Most common: `Credit_History_Age`, `Monthly_Inhand_Salary`, `Amount_invested_monthly`
+
+# Data Cleaning and Type Fixes
+
+```{r}
+clean_numeric <- function(x) {
+  x <- gsub(",", "", as.character(x))
+  x <- gsub("[$%]", "", x)
+  x <- gsub("[^0-9\\\\.\\\\-]", "", x)
+  suppressWarnings(as.numeric(x))
+}
+
+cols_to_clean <- c("Age", "Annual_Income", "Outstanding_Debt", "Num_of_Loan", 
+                   "Changed_Credit_Limit", "Num_of_Delayed_Payment", 
+                   "Amount_invested_monthly", "Monthly_Balance")
+
+for (col in intersect(cols_to_clean, names(train))) {
+  train[[col]] <- clean_numeric(train[[col]])
+}
+
+train$Credit_Mix <- as.factor(train$Credit_Mix)
+train$Payment_of_Min_Amount <- as.factor(train$Payment_of_Min_Amount)
+```
+Age: contains invalid ages (eg: -500 and 8698)
+Annual_Income: extreme outliers likely caused by errors or data entry issues.
+Monthly_Inhand_Salary: missing in ~15% of rows.
+Num_Bank_Accounts, Num_Credit_Card, Interest_Rate: these values suggest data errors.
+Num_of_Loan: -ve loan count is invalid
+Credit_History_Age: missing values in over 9,000 rows.
+Payment_of_Min_Amount: correctly converted to factor, this column is clean.
+Amount_invested_monthly and Monthly_Balance: low missingness can be imputed safely.
+Categorical Noise: some columns contain nonsensical strings, such as SSN: Values like #F%$D@*&8, Payment_Behaviour: Value like !@9#%8, Occupation: Many are listed as "_______".
+Target Variable - Credit_Score: class imbalance should be addressed in modeling.
+# Target Class Distribution
+
+```{r}
+ggplot(train, aes(x = Credit_Score, fill = Credit_Score)) +
+  geom_bar() +
+  labs(title = "Credit Score Distribution", y = "Count") +
+  theme_minimal()
+```
+The dataset has class imbalance, with the "Standard" credit score category being the most prevalent, followed by "Poor" and then "Good", which may bias classification models and necessitates the use of resampling or class-weighting techniques.
+
+
+# Outlier Detection
+
+```{r}
+ggplot(train, aes(x = "", y = Age)) +
+  geom_boxplot(fill = "orange") +
+  labs(title = "Age Boxplot") +
+  theme_minimal()
+```
+The boxplot of the Age variable reveals the presence of extreme outliers, with some values exceeding 7500, which are clearly unrealistic and indicate data entry errors. These anomalies should be investigated and removed or corrected to ensure accurate analysis and model training.
+
+# Correlation and PCA
+
+## Correlation Matrix (Simplified for Clarity)
+
+```{r, fig.width=4, fig.height=3}
+numeric_data <- train %>%
+  select(where(is.numeric)) %>%
+  drop_na()
+
+corrplot(cor(numeric_data), method = "color", tl.cex = 0.4)
+```
+The correlation heatmap indicates that most numerical features in the dataset have weak to moderate correlations, suggesting that each variable contributes relatively unique information. A notable strong negative correlation exists between Amount_invested_monthly and Monthly_Balance, implying that individuals who invest more tend to have lower monthly balances. Additionally, weak positive correlations among features such as Outstanding_Debt, Num_Credit_Card, and Total_EMI_per_month suggest these may be mildly associated with an individual's credit burden. These insights can guide feature selection and help reduce redundancy in the model.
+
+## PCA Plot
+
+```{r, fig.width=4, fig.height=3}
+pca_data <- train %>%
+  select(where(is.numeric)) %>%
+  na.omit()
+
+credit_labels <- train$Credit_Score[as.numeric(rownames(pca_data))]
+
+pca_scaled <- scale(pca_data)
+pca_result <- prcomp(pca_scaled, center = TRUE, scale. = TRUE)
+
+fviz_pca_ind(pca_result,
+             geom.ind = "point",
+             col.ind = as.factor(credit_labels),
+             legend.title = "Credit Score") +
+  labs(title = "PCA - Credit Score Classes")
+```
+The PCA plot shows the distribution of credit score classes along the first two principal components, which together explain 18.5% of the total variance in the dataset. While there is some clustering, particularly for the "Standard" class, the "Good" and "Poor" classes show significant overlap. This indicates that the classes are not linearly separable in reduced dimensions, suggesting that more complex modeling techniques may be required to effectively distinguish between credit score categories.
+
+# Project Plan
+
+## Phase Plan
+
+- Phase 1: Cleaning & Feature Prep  
+- Phase 2: EDA & Visuals  
+- Phase 3: Modeling (Logistic, Tree, RF, XGBoost)  
+- Phase 4: Evaluation  
+- Phase 5: Predictions  
+- Phase 6: Reporting
+
+## Weekly Timeline with Subtasks
+
+| Week | Tasks |
+|------|-------|
+| **1** | - Remove invalid values <br> - Impute missing <br> - Fix placeholders <br> - Encode categorical vars |
+| **2** | - Class imbalance plots <br> - Outlier checks <br> - Correlation <br> - PCA |
+| **3** | - Train models <br> - Tune & evaluate using F1, Confusion Matrix |
+| **4** | - Predict & export <br> - Finalize report <br> - Present findings |
+
+## Gantt Chart
+
+![Gantt Chart](project_gantt_phases_only.png){width=60%}
+
+
