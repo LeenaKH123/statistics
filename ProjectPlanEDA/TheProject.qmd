@@ -56,6 +56,8 @@ missmap(train,
         col = c("yellow", "black"), 
         legend = TRUE)      
 ```
+only about 1% of the dataset is missing, which is manageable, the dataset is mostly complete. Missing data is not concentrated in a few variables it is spread across multiple features. Columns like Monthly_Balance, Amount_invested_monthly and Changed_Credit_Limit appear to have more missing entries that others. This suggests random missingness.
+
 
 4. Data type correction
 Several columns originally read as character variables contain numeric data. These are converted to numeric or categorical types to enable statistical analysis.
@@ -95,6 +97,32 @@ summary(train)
 
  
 ```
+The dataset has been successfully loaded and cleaned, with several formerly charecter-based numeric fields now recognised as numeric, there are some outliers and invalid entries and multiple columns with missing values that require further cleaning and imputation.
+Age: contains invalid ages (eg: -500 and 8698)
+Annual_Income: extreme outliers likely caused by errors or data entry issues.
+Monthly_Inhand_Salary: missing in ~15% of rows.
+Num_Bank_Accounts, Num_Credit_Card, Interest_Rate: these values suggest data errors.
+Num_of_Loan: -ve loan count is invalid
+Credit_History_Age: missing values in over 9,000 rows.
+Payment_of_Min_Amount: correctly converted to factor, this column is clean.
+Amount_invested_monthly and Monthly_Balance: low missingness can be imputed safely.
+Categorical Noise: some columns contain nonsensical strings, such as SSN: Values like #F%$D@*&8, Payment_Behaviour: Value like !@9#%8, Occupation: Many are listed as "_______".
+Target Variable - Credit_Score: consistent with earlier findings, class imbalance should be addressed in modeling.
+
+
+6. Target Variable Check - Credit Score
+Examine the distribution of the target variable Credit_Score that is to be predicted. To understand if the datset is balanced or imbalanced across the different credit score categories. If one class dominates the others, the model might favor that class.
+```{r}
+table(train$Credit_Score)
+prop.table(table(train$Credit_Score)) * 100
+              
+```
+This tells us that 53.2% of the records are standard, 29% are poor, 17.8% are good. The dataset is imbalanced, the standard class is overrepresnted, a classification model trained on this data might favor the standard class unless balancing techniques are applied such as: SMOTE, class weights, resampling. Or evaluate with metrics beyong accuracy such as F1-score, precision/recall per class.
+
+
+
+
+
 
 5. Removal of Irrelevant Features
 Columns such as identifiers and personal details (Ex: ID, Name, SSN) are removed as they do not contribute predictive value to the modeling task.
