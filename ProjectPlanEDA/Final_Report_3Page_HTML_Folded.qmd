@@ -5,9 +5,12 @@ format:
     toc-depth: 3
     code-fold: true
     code-tools: true
-    theme: flatly   
+    theme: flatly
+    fig-align: center
+    self-contained: true
     css: style.css
 ---
+
 ```{r, include=FALSE}
 knitr::opts_chunk$set(
   fig.width = 4,
@@ -18,22 +21,28 @@ knitr::opts_chunk$set(
 )
 ```
 # Credit Score Classification – EDA & Project Plan
-# Problem Definition
-
-This is a multi-class **classification problem** to predict `Credit_Score` (Poor, Standard, Good) based on user demographic and financial behavior data. The dataset contains ~100,000 records and was sourced from Kaggle.
+# Overview of the problem
+The goal of this project is to build a multi-class classification model to predict a customer’s Credit Score (Poor, Standard, Good) using demographic and financial behavior data. This can support automated risk assessment in financial institutions and reduce manual workload.
 
 ## Why this problem is interesting
-
-- Real-world financial risk prediction  
-- Dataset includes missing values, noise, imbalance  
-- Useful for supervised classification techniques
+- Real-world impact: Credit score classification plays a crucial role in lending decisions, insurance pricing, and financial eligibility assessments.
+- Data complexity: The dataset presents real-life challenges including:
+- Missing values
+- Noisy and inconsistent entries (e.g. placeholders like “_______”, symbols like #F%$D)
+- Class imbalance
+- Outliers and corrupted numeric fields
+- Machine learning relevance: Offers a rich opportunity to apply supervised classification techniques, handle imbalanced classes, and test advanced models like Random Forest and XGBoost.
 
 # Dataset Overview
-
-- **Samples:** ~100,000  
-- **Features:** mix of numeric and categorical  
-- **Target:** `Credit_Score` (Poor, Standard, Good)  
-- **Challenges:** outliers, noisy values (`_______`, symbols), imbalance
+- Source:	Kaggle (https://www.kaggle.com/code/sudhanshu2198/multi-class-credit-score-classification)
+- train.csv: Used for EDA, data cleaning, and model training. Contains features and the target label Credit_Score.
+- test.csv: Used to evaluate model performance on unseen data. Contains features only.
+- score.csv: Used for final predictions and submission. Same structure as the test set.
+- Samples	~100,000
+- Features:	Mix of numeric and categorical
+- Target:	Credit_Score (Poor, Standard, Good)
+- Key Issues:	Outliers, noisy strings, class imbalance
+- Missing Values	~1% overall; highest in Credit_History_Age, Monthly_Inhand_Salary
 
 ```{r, include=FALSE}
 library(tidyverse)
@@ -43,7 +52,6 @@ library(Amelia)
 library(corrplot)
 library(factoextra)
 library(tidyr)
-
 train <- read.csv("train.csv")
 ```
 
@@ -76,16 +84,16 @@ for (col in intersect(cols_to_clean, names(train))) {
 train$Credit_Mix <- as.factor(train$Credit_Mix)
 train$Payment_of_Min_Amount <- as.factor(train$Payment_of_Min_Amount)
 ```
-Age: contains invalid ages (eg: -500 and 8698)
-Annual_Income: extreme outliers likely caused by errors or data entry issues.
-Monthly_Inhand_Salary: missing in ~15% of rows.
-Num_Bank_Accounts, Num_Credit_Card, Interest_Rate: these values suggest data errors.
-Num_of_Loan: -ve loan count is invalid
-Credit_History_Age: missing values in over 9,000 rows.
-Payment_of_Min_Amount: correctly converted to factor, this column is clean.
-Amount_invested_monthly and Monthly_Balance: low missingness can be imputed safely.
-Categorical Noise: some columns contain nonsensical strings, such as SSN: Values like #F%$D@*&8, Payment_Behaviour: Value like !@9#%8, Occupation: Many are listed as "_______".
-Target Variable - Credit_Score: class imbalance should be addressed in modeling.
+- Age: contains invalid ages (eg: -500 and 8698)
+- Annual_Income: extreme outliers likely caused by errors or data entry issues.
+- Monthly_Inhand_Salary: missing in ~15% of rows.
+- Num_Bank_Accounts, Num_Credit_Card, Interest_Rate: these values suggest data errors.
+- Num_of_Loan: -ve loan count is invalid
+- Credit_History_Age: missing values in over 9,000 rows.
+- Payment_of_Min_Amount: correctly converted to factor, this column is clean.
+- Amount_invested_monthly and Monthly_Balance: low missingness can be imputed safely.
+- Categorical Noise: some columns contain nonsensical strings, such as SSN: Values like #F%$D@*&8, Payment_Behaviour: Value like !@9#%8, Occupation: Many are listed as "_______".
+- Target Variable - Credit_Score: class imbalance should be addressed in modeling.
 # Target Class Distribution
 
 ```{r}
@@ -111,14 +119,40 @@ The boxplot of the Age variable reveals the presence of extreme outliers, with s
 
 ## Correlation Matrix (Simplified for Clarity)
 
-```{r, fig.width=4, fig.height=3}
+```{r, fig.width=5, fig.height=4}
+library(corrplot)
+
+# Select only numeric columns and drop NAs
 numeric_data <- train %>%
   select(where(is.numeric)) %>%
   drop_na()
 
-corrplot(cor(numeric_data), method = "color", tl.cex = 0.4)
+# Simple and clean correlation heatmap
+corrplot(
+  cor(numeric_data),
+  method = "color",
+  type = "upper",           # Upper triangle only
+  tl.cex = 0.6,             # Label font size
+  tl.col = "black",         # Label color
+  mar = c(0, 0, 2, 0),      # Margin to fit the title
+  title = "Correlation Matrix of Numeric Features"
+)
+
 ```
-The correlation heatmap indicates that most numerical features in the dataset have weak to moderate correlations, suggesting that each variable contributes relatively unique information. A notable strong negative correlation exists between Amount_invested_monthly and Monthly_Balance, implying that individuals who invest more tend to have lower monthly balances. Additionally, weak positive correlations among features such as Outstanding_Debt, Num_Credit_Card, and Total_EMI_per_month suggest these may be mildly associated with an individual's credit burden. These insights can guide feature selection and help reduce redundancy in the model.
+- Are there features that are highly correlated?
+- Strong Positive Correlations:
+- Monthly_Inhand_Salary & Monthly_Balance: ≈ 0.70
+- Monthly_Inhand_Salary & Amount_invested_monthly: ≈ 0.63
+These two pairs show strong positive correlation, indicating that: Higher income tends to result in higher savings and investment.
+- Moderate Negative Correlations:
+- Outstanding_Debt shows moderate negative correlation with:
+- Monthly_Inhand_Salary
+- Monthly_Balance
+- This suggests that individuals with higher debt may have less monthly cash available.
+- Minimal Correlations:
+- Features like: Num_Credit_Card, Num_Bank_Accounts, Interest_Rate
+Show weak or no correlation with other variables — which is good for model diversity and reducing feature redundancy.
+- Only a couple of features are highly correlated. Most features contribute independent information, which is beneficial for machine learning models and avoids multicollinearity issues.
 
 ## PCA Plot
 
@@ -140,28 +174,80 @@ fviz_pca_ind(pca_result,
 ```
 The PCA plot shows the distribution of credit score classes along the first two principal components, which together explain 18.5% of the total variance in the dataset. While there is some clustering, particularly for the "Standard" class, the "Good" and "Poor" classes show significant overlap. This indicates that the classes are not linearly separable in reduced dimensions, suggesting that more complex modeling techniques may be required to effectively distinguish between credit score categories.
 
+# Evaluation Metrics & Algorithms
+The classification model will be evaluated using several key metrics suited for multi-class problems:<br>
+- Accuracy: Measures the overall correctness of predictions.<br>
+- Precision, Recall, and F1-Score (calculated per class): Help assess how well the model distinguishes between Poor, Standard, and Good credit scores.<br>
+- Macro and Weighted F1-Scores: Macro F1 treats all classes equally, while Weighted F1 adjusts for class imbalance by accounting for the frequency of each class.<br>
+Confusion Matrix: Offers a detailed breakdown of correct and incorrect classifications to identify potential model bias or confusion between classes.<br>
+Model performance will be validated using k-fold cross-validation to ensure generalizability. Metrics will be computed on both training and test sets, with emphasis on F1 performance.<br>
+The following algorithms will be implemented and compared:<br>
+- Logistic Regression: A baseline linear model for multi-class classification.<br>
+- Decision Tree: A simple and interpretable non-linear model.<br>
+- Random Forest: An ensemble approach that reduces overfitting through averaging.<br>
+- XGBoost: A gradient boosting framework optimized for speed and performance, particularly in structured data tasks.<br>
+
 # Project Plan
 
-## Phase Plan
+## Phase Plan (3 Phases)
+- **Phase 1**: Data Cleaning & Exploration  
+- **Phase 2**: Modeling & Evaluation (Logistic, Tree, RF, XGBoost)  
+- **Phase 3**: Prediction & Reporting
 
-- Phase 1: Cleaning & Feature Prep  
-- Phase 2: EDA & Visuals  
-- Phase 3: Modeling (Logistic, Tree, RF, XGBoost)  
-- Phase 4: Evaluation  
-- Phase 5: Predictions  
-- Phase 6: Reporting
+## Data Usage
+- **`train.csv`** will be used for data cleaning, EDA, model training, and validation. It contains both features and the target label (`Credit_Score`).
+- **`test.csv`** will be used to evaluate the trained model on unseen data. It contains input features but no labels.
+- **`score.csv`** will be used for final prediction and model deployment simulation. It is structurally similar to the test set and is used to demonstrate how the model performs in real-world application.
 
 ## Weekly Timeline with Subtasks
 
-| Week | Tasks |
-|------|-------|
-| **1** | - Remove invalid values <br> - Impute missing <br> - Fix placeholders <br> - Encode categorical vars |
-| **2** | - Class imbalance plots <br> - Outlier checks <br> - Correlation <br> - PCA |
-| **3** | - Train models <br> - Tune & evaluate using F1, Confusion Matrix |
-| **4** | - Predict & export <br> - Finalize report <br> - Present findings |
+| Week     | Tasks |
+|----------|-------|
+| **Week 1** | - Load and clean `train.csv` <br> - Remove invalid and placeholder values <br> - Impute missing data <br> - Convert types and encode categorical variables <br> - Perform EDA (class imbalance, outliers, correlation, PCA) |
+| **Week 2** | - Train models using `train.csv` (Logistic Regression, Decision Tree, Random Forest, XGBoost) <br> - Perform cross-validation <br> - Evaluate using Accuracy, Precision, Recall, Macro/Weighted F1 <br> - Generate and interpret confusion matrix |
+| **Week 3** | - Apply the best model to `test.csv` and `score.csv` <br> - Export predictions for `score.csv` <br> - Finalize report with evaluation results <br> - Present findings |
+<br>
+<br>
 
-## Gantt Chart
+```{r, fig.width=10, fig.height=6, echo=FALSE, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(lubridate)
 
-![Gantt Chart](project_gantt_phases_only.png){width=60%}
+# Gantt chart data
+gantt_data <- tribble(
+  ~Task, ~Start, ~End, ~Phase,
+  "Load and clean train.csv", "2025-05-18", "2025-05-24", "Data Cleaning & Exploration",
+  "Remove invalid & placeholder values", "2025-05-18", "2025-05-24", "Data Cleaning & Exploration",
+  "Impute missing data", "2025-05-18", "2025-05-24", "Data Cleaning & Exploration",
+  "Encode categorical variables", "2025-05-18", "2025-05-24", "Data Cleaning & Exploration",
+  "EDA: imbalance, outliers, correlation, PCA", "2025-05-18", "2025-05-24", "Data Cleaning & Exploration",
+  
+  "Train models using train.csv", "2025-05-25", "2025-05-31", "Modeling & Evaluation",
+  "Cross-validation & tuning", "2025-05-25", "2025-05-31", "Modeling & Evaluation",
+  "Evaluate: Accuracy, F1, Confusion Matrix", "2025-05-25", "2025-05-31", "Modeling & Evaluation",
 
+  "Apply best model to test.csv & score.csv", "2025-06-01", "2025-06-03", "Prediction & Reporting",
+  "Export predictions for score.csv", "2025-06-01", "2025-06-03", "Prediction & Reporting",
+  "Finalize report with evaluation results", "2025-06-01", "2025-06-03", "Prediction & Reporting",
+  "Present findings", "2025-06-01", "2025-06-03", "Prediction & Reporting"
+) %>%
+  mutate(across(c(Start, End), ymd))
 
+# Plot the Gantt chart
+ggplot(gantt_data, aes(x = Start, xend = End, y = fct_rev(Task), yend = fct_rev(Task), color = Phase)) +
+  geom_segment(size = 6) +
+  labs(
+    title = "3-Week Project Gantt Chart with Dataset Usage",
+    x = "Date", y = NULL, color = "Project Phase"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+    legend.position = "bottom",
+    legend.title = element_text(size = 10),
+    legend.text = element_text(size = 9),
+    axis.text.y = element_text(size = 9),
+    panel.grid.minor = element_blank()
+  )
+```
