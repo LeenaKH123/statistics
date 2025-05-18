@@ -1,0 +1,150 @@
+---
+title: "Major League Baseball Salary Prediction"
+format:
+    html:
+        embed-resources: true
+---
+
+```{r setup, filename = "Required packages"}
+#| message: false
+library(tidyverse)
+library(caret)
+library(glmnet)
+library(ISLR)
+```
+
+# Major League Baseball
+
+The dataset we are using is one provided by the ISLR package. It contains Major League Baseball Data from the 1986 and 1987 seasons with 322 observations with 20 variables. It has some missing cases that isn't the focus of this module and can be removed with the following code.
+
+```{r}
+data(Hitters, package = "ISLR")
+Hitters <- na.omit(Hitters)
+```
+
+## Stepwise selection
+
+Implement a __backward__ stepwise selection procedure to remove five features. The response feature here is `Salary` which is numeric, so this is a regression and not a classification problem. Use the Root MSE as the performance metric for each selection step. Similar to the lab you may use `caret` to create a training and test split but otherwise implement the solution without using other packages (using `tidyverse` syntax is fine).
+
+```{r}
+## Candidate features
+features <- colnames(Hitters)
+features <- features[features != "Salary"]
+### Assess model on all candidates
+set.seed(5003)
+train_indices <- createDataPartition(Hitters$Salary, p = 0.6)[[1]]
+train_data <- Hitters[train_indices, ]
+test_data <- Hitters[-train_indices, ]
+
+# Full model
+model_full <- lm(Salary ~ ., data = train_data)
+
+# Perform backward stepwise regression (remove features one by one)
+model_step <- step(model_full, direction = "backward", trace = FALSE, k = log(nrow(train_data)))
+
+# Summary of selected model
+summary(model_step)
+
+# Predict on test data
+predictions <- predict(model_step, newdata = test_data)
+
+# Calculate RMSE for stepwise model
+rmse_step <- sqrt(mean((predictions - test_data$Salary)^2))
+rmse_step
+
+```
+
+## Lasso regression {.tabset .tabset-fade .tabset-pills}
+
+### Split data and fit
+
+Split the dataset into 60% train and 40% test. Perform a lasso regression using the `glmnet` package.
+Now I will perform Lasso Regression using the glmnet package, this technique applies L1 regularisation to shrink some coefficients exactly to zero, so performing variable selection.
+
+```{r}
+# Create design matrices for glmnet
+# 1. Create the design matrices (you already have this)
+x_train <- model.matrix(Salary ~ ., train_data)[, -1]
+y_train <- train_data$Salary
+
+x_test <- model.matrix(Salary ~ ., test_data)[, -1]
+y_test <- test_data$Salary
+
+# 2. Fit Lasso model using cross-validation
+library(glmnet)  # Ensure glmnet is loaded
+set.seed(5003)
+lasso_model <- cv.glmnet(x_train, y_train, alpha = 1)  # This is what defines 'lasso_model'
+
+# 3. Best lambda
+best_lambda <- lasso_model$lambda.min
+
+# 4. Predict
+lasso_preds <- predict(lasso_model, s = best_lambda, newx = x_test)
+
+# 5. Evaluate RMSE
+rmse_lasso <- sqrt(mean((lasso_preds - y_test)^2))
+rmse_lasso
+```
+
+### Inspect coefficients as function of $\lambda$
+
+Plot the lasso regression coefficients as a function of $\lambda$. Use cross-validation to find the best $\lambda$ value (You can use the inbuilt CV function in glmnet). **Hint** The `cv.glmnet` function will return the best $\lambda$ value as `lambda.min`.
+
+```{r lasso}
+# Set up grid of lambda values
+grid <- 10^seq(8, -2, length = 100)
+
+# Fit the lasso model over the lambda grid (no CV yet, just to see paths)
+lasso_full <- glmnet(x_train, y_train, alpha = 1, lambda = grid)
+
+# Plot coefficient shrinkage paths against log(lambda)
+plot(lasso_full, xvar = "lambda", label = TRUE)
+title("Lasso Coefficients vs log(Lambda)")
+```
+Cross-Validation to Find Optimal $\lambda$
+```{r lasso}
+# Perform cross-validation to select best lambda
+set.seed(5003)
+lasso_model <- cv.glmnet(x_train, y_train, alpha = 1, lambda = grid)
+
+# Plot mean cross-validated error curve
+plot(lasso_model)
+abline(v = log(lasso_model$lambda.min), col = "blue", lty = 2)
+title("Cross-Validation Error vs log(Lambda)")
+```
+Print Best Lambda Value
+```{r lasso}
+# Best lambda value from CV
+lasso_model$lambda.min
+```
+
+### Check if model is sparse
+
+Inspect the coefficients in the best model above and check if there there are any coefficients that have been shrunk to zero. **Hint** The `cv.glmnet` will also return the model fits for each $\lambda$ value. You can extract the coefficients for each $\lambda$ value using `cv.out$glmnet.fit$beta`.
+
+```{r}
+# Extract the coefficients at the best lambda
+lasso_coefs <- coef(lasso_model, s = lasso_model$lambda.min)
+
+# Show non-zero coefficients
+lasso_coefs[lasso_coefs != 0]
+
+# Count how many were shrunk to zero
+num_zero <- sum(lasso_coefs == 0)
+cat("Number of coefficients shrunk to zero:", num_zero, "\n")
+
+```
+
+### Assess on the test set
+
+Using the optimal trained model predict the salary of the test dataset and calculate the mean squared error.
+
+```{r assessment}
+# Predict on test set using the best lambda
+lasso_preds <- predict(lasso_model, s = lasso_model$lambda.min, newx = x_test)
+
+# Calculate RMSE
+rmse_lasso <- sqrt(mean((lasso_preds - y_test)^2))
+rmse_lasso
+
+```
