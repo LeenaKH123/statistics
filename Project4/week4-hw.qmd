@@ -102,7 +102,7 @@ plot(lasso_full, xvar = "lambda", label = TRUE)
 title("Lasso Coefficients vs log(Lambda)")
 ```
 Cross-Validation to Find Optimal $\lambda$
-```{r lasso}
+```{r lasso-setup}
 # Perform cross-validation to select best lambda
 set.seed(5003)
 lasso_model <- cv.glmnet(x_train, y_train, alpha = 1, lambda = grid)
