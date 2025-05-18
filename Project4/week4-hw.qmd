@@ -113,7 +113,7 @@ abline(v = log(lasso_model$lambda.min), col = "blue", lty = 2)
 title("Cross-Validation Error vs log(Lambda)")
 ```
 Print Best Lambda Value
-```{r lasso}
+```{r lasso2}
 # Best lambda value from CV
 lasso_model$lambda.min
 ```
