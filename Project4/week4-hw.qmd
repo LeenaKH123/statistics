@@ -143,7 +143,7 @@ cat("Number of coefficients shrunk to zero:", num_zero, "\n")
 - The variables with non-zero coefficients are the important predictors of Salary. These are the only ones Lasso chose to keep at the best λ.<br>
 
 - Number of Variables Selected <br>
-- Since we see fewer than 20 coefficients, it means Lasso shrunk several features to zero. I can count how many: <br>
+- Since we see fewer than 20 coefficients, it means Lasso shrunk several features to zero. <br>
 ```{r}
 
 sum(lasso_coefs != 0)  # total number of non-zero coefficients (includes intercept)

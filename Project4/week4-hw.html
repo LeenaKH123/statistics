@@ -3422,21 +3422,41 @@ F-statistic: 21.11 on 6 and 154 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre><code>Number of coefficients shrunk to zero: 4 </code></pre>
 </div>
 </div>
+<section id="sparsity-detected" class="level4">
+<h4 class="anchored" data-anchor-id="sparsity-detected">Sparsity Detected</h4>
+<ul>
+<li><p>Lasso has set some coefficients to exactly zero, meaning:<br></p></li>
+<li><p>Those features are excluded from the final model.<br></p></li>
+<li><p>This is a key advantage of Lasso over ordinary least squares — it performs automatic variable selection.<br></p></li>
+<li><p>Model Interpretation <br></p></li>
+<li><p>The variables with non-zero coefficients are the important predictors of Salary. These are the only ones Lasso chose to keep at the best λ.<br></p></li>
+<li><p>Number of Variables Selected <br></p></li>
+<li><p>Since we see fewer than 20 coefficients, it means Lasso shrunk several features to zero. I can count how many: <br></p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(lasso_coefs <span class="sc">!=</span> <span class="dv">0</span>)  <span class="co"># total number of non-zero coefficients (includes intercept)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16</code></pre>
+</div>
+</div>
+<p>Conclusion: The Lasso regression model resulted in a sparse solution, shrinking several coefficients to zero. This suggests that only a subset of the features are strongly predictive of salary. Such sparsity helps simplify the model and improve interpretability, particularly in the presence of multicollinearity or irrelevant variables.</p>
+</section>
 </section>
 <section id="assess-on-the-test-set" class="level3">
 <h3 class="anchored" data-anchor-id="assess-on-the-test-set">Assess on the test set</h3>
 <p>Using the optimal trained model predict the salary of the test dataset and calculate the mean squared error.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict on test set using the best lambda</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>lasso_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(lasso_model, <span class="at">s =</span> lasso_model<span class="sc">$</span>lambda.min, <span class="at">newx =</span> x_test)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate RMSE</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>rmse_lasso <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((lasso_preds <span class="sc">-</span> y_test)<span class="sc">^</span><span class="dv">2</span>))</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>rmse_lasso</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict on test set using the best lambda</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>lasso_preds <span class="ot">&lt;-</span> <span class="fu">predict</span>(lasso_model, <span class="at">s =</span> lasso_model<span class="sc">$</span>lambda.min, <span class="at">newx =</span> x_test)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate RMSE</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>rmse_lasso <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((lasso_preds <span class="sc">-</span> y_test)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>rmse_lasso</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 302.8004</code></pre>
 </div>
 </div>
+<p>The Lasso regression model achieved a test set RMSE of 302.8, indicating that the predicted salaries deviate from the actual values by approximately $302,800 on average. This result reflects the model’s generalization performance and can be used to compare against other modeling approaches such as linear regression or stepwise selection.</p>
 </section>
 </section>
 </section>
