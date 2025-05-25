@@ -48,12 +48,42 @@ split(rownames(movielens), cutree(h, k = 4))
 You may have noticed that not every movie has a rating by every user. This makes sense since no one could have possibly watched every movie. One question you may ask is whether the clustering result is based on the actual number in the rating (of 1 to 5 stars), or whether it's clustering for the existence of a rating. Make a new dataset by replacing all missing ratings (ie. the NAs) with 0, and all the ratings (regardless of value) with 1. And then repeat the hierarchical clustering, but this time use the **Manhattan distance**. Use `cutree` to find 4 clusters and compare to your result in the previous tree created above.
 
 ```{r zeros}
+# Create binary version of dataset: 1 if rated, 0 if NA
+movielens_binary <- ifelse(is.na(movielens), 0, 1)
+
+# Perform hierarchical clustering using Manhattan distance
+h_bin <- hclust(dist(movielens_binary, method = "manhattan"), method = "complete")
+plot(h_bin, cex = 0.4, main = "Binary Ratings (Manhattan Distance)")
+
+# Cut the tree into 4 clusters
+split(rownames(movielens_binary), cutree(h_bin, k = 4))
 ```
 
 
 # Author by word count {.tabset .tabset-fade .tabset-pills}
 
 The next dataset `author_count.csv` shows the counts of common words appearing in documents by four authors, Jane Austen, Jack London, William Shakespeare and John Milton. We like to investigate whether clustering based word characterstics is able to split the four authors apart. Here the first column shows the author, the remaining columns show the counts of each word.
+```{r}
+# Load the data
+author_data <- read.csv("author_count.csv", header = TRUE)
+
+# Separate the labels (true authors) and the features (word counts)
+authors <- author_data$author
+word_counts <- author_data[, -1]
+
+# Scale the word counts (important for clustering)
+word_counts_scaled <- scale(word_counts)
+
+# Compute distance matrix (Euclidean) and perform hierarchical clustering
+h_authors <- hclust(dist(word_counts_scaled), method = "complete")
+
+# Plot dendrogram
+plot(h_authors, labels = authors, cex = 0.6, main = "Hierarchical Clustering of Authors")
+
+# Cut into 4 clusters and examine cluster composition
+clusters <- cutree(h_authors, k = 4)
+table(clusters, authors)
+```
 
 ## Data input
 
@@ -68,6 +98,17 @@ authors <- factor(author.dat[[1]])
 Compute the PCA and visualize the output.
 
 ```{r pca}
+# Perform PCA
+pca_result <- prcomp(numeric.dat, scale. = TRUE)
+
+# Plot the first two principal components
+pca_df <- as.data.frame(pca_result$x)
+pca_df$Author <- authors
+
+ggplot(pca_df, aes(x = PC1, y = PC2, color = Author)) +
+  geom_point(size = 2) +
+  theme_minimal() +
+  labs(title = "PCA: Author Clustering", x = "PC1", y = "PC2")
 ```
 
 ## t-SNE
@@ -75,6 +116,19 @@ Compute and view the $t$-SNE plots for various perplexity levels for this datase
 
 
 ```{r tsne}
+library(Rtsne)
+
+# Run t-SNE with different perplexities
+set.seed(42)
+tsne_result <- Rtsne(scale(numeric.dat), perplexity = 10, dims = 2, verbose = FALSE)
+
+tsne_df <- as.data.frame(tsne_result$Y)
+tsne_df$Author <- authors
+
+ggplot(tsne_df, aes(x = V1, y = V2, color = Author)) +
+  geom_point(size = 2) +
+  theme_minimal() +
+  labs(title = "t-SNE (perplexity = 10)", x = "Dim 1", y = "Dim 2")
 ```
 
 ## MDS
@@ -82,11 +136,20 @@ Compute and view the $t$-SNE plots for various perplexity levels for this datase
 1. Consider the MultiDimensionalScaling (MDS) technique to visualize the data. Compute different distance matrices using the `dist` function for the `author_count` dataset.
 
 ```{r mds-dist}
+d <- dist(scale(numeric.dat))
 ```
 
 2. Create the MDS plot in 2 dimensions and colour the plot by the true author.
 
 ```{r mds-plots}
+mds_coords <- cmdscale(d, k = 2)
+mds_df <- as.data.frame(mds_coords)
+mds_df$Author <- authors
+
+ggplot(mds_df, aes(x = V1, y = V2, color = Author)) +
+  geom_point(size = 2) +
+  theme_minimal() +
+  labs(title = "MDS: Author Clustering", x = "Dim 1", y = "Dim 2")
 ```
 
 ## Compare and contrast
@@ -95,4 +158,23 @@ Select the best result in each case for PCA, $t$-SNE and MDS and compare the out
 
 
 ```{r comp-plots}
+# You could combine PCA, t-SNE, and MDS plots side by side if needed using patchwork
+library(patchwork)
+
+p1 <- ggplot(pca_df, aes(x = PC1, y = PC2, color = Author)) +
+  geom_point(size = 2) +
+  theme_minimal() +
+  labs(title = "PCA")
+
+p2 <- ggplot(tsne_df, aes(x = V1, y = V2, color = Author)) +
+  geom_point(size = 2) +
+  theme_minimal() +
+  labs(title = "t-SNE")
+
+p3 <- ggplot(mds_df, aes(x = V1, y = V2, color = Author)) +
+  geom_point(size = 2) +
+  theme_minimal() +
+  labs(title = "MDS")
+
+p1 + p2 + p3 + plot_layout(ncol = 3)
 ```
