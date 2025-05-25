@@ -1,0 +1,98 @@
+---
+title: "Lab Week 5"
+format:
+  html:
+    embed-resources: true
+---
+
+
+```{r setup, include=FALSE}
+# Set default chunk options for knitr (for R Markdown or Quarto)
+knitr::opts_chunk$set(echo = TRUE)
+
+# Load necessary libraries
+library(tidyverse)
+library(dendextend)
+```
+
+
+# Movie ratings data {.tabset .tabset-fade .tabset-pills}
+
+We will be analysing the MovieLens dataset which contains movie ratings of 58,000 movies by 280,000 users. The entire dataset is too big for us to work with in this lab. It has been preprocessed with only a small subset of the data being considered. If you want to do more exploration yourself, the entire dataset can be downloaded [here](https://grouplens.org/datasets/movielens/latest/).
+
+This part of the lab is based on a chapter in an online book by Rafael Irizarry. You can find it [here](https://rafalab.github.io/dsbook/). There are lots of examples in this book to show you how to use `R` for data science.
+
+## Data processing
+
+## Data input and IDA
+
+Load the data `movielens_top40.csv` into `R`. It contains the top 40 movies with the most ratings and users who rated at least 20 out of the 40 movies.  Note, IDA refers to initial data analysis.  This is important component for all data analytics.
+
+```{r load}
+movielens <- read.csv("movielens_top40.csv", header = TRUE)
+dim(movielens)
+range(movielens, na.rm = TRUE)
+```
+
+In this case, the data is structured in the opposite of a typical data layout. whereby the variables of interest are the movies and they appear on the rows and the user response values appear as the columns. This is done somewhat intentionally for the distance calculations coming soon that computes the pairwise distances, where the pairing is done by row.
+
+```{r}
+h <- hclust(dist(movielens, method = "euclidean"), method = "complete")
+plot(h, cex = 0.4)
+split(rownames(movielens), cutree(h, k = 4))
+```
+
+
+## Hierarchical clustering
+
+You may have noticed that not every movie has a rating by every user. This makes sense since no one could have possibly watched every movie. One question you may ask is whether the clustering result is based on the actual number in the rating (of 1 to 5 stars), or whether it's clustering for the existence of a rating. Make a new dataset by replacing all missing ratings (ie. the NAs) with 0, and all the ratings (regardless of value) with 1. And then repeat the hierarchical clustering, but this time use the **Manhattan distance**. Use `cutree` to find 4 clusters and compare to your result in the previous tree created above.
+
+```{r zeros}
+```
+
+
+# Author by word count {.tabset .tabset-fade .tabset-pills}
+
+The next dataset `author_count.csv` shows the counts of common words appearing in documents by four authors, Jane Austen, Jack London, William Shakespeare and John Milton. We like to investigate whether clustering based word characterstics is able to split the four authors apart. Here the first column shows the author, the remaining columns show the counts of each word.
+
+## Data input
+
+```{r}
+author.dat <- read.csv("author_count.csv", header = TRUE)
+numeric.dat <- author.dat[-1]
+authors <- factor(author.dat[[1]])
+```
+
+## PCA
+
+Compute the PCA and visualize the output.
+
+```{r pca}
+```
+
+## t-SNE
+Compute and view the $t$-SNE plots for various perplexity levels for this dataset. Here you will need to consider adjusting the perplexity values.
+
+
+```{r tsne}
+```
+
+## MDS
+
+1. Consider the MultiDimensionalScaling (MDS) technique to visualize the data. Compute different distance matrices using the `dist` function for the `author_count` dataset.
+
+```{r mds-dist}
+```
+
+2. Create the MDS plot in 2 dimensions and colour the plot by the true author.
+
+```{r mds-plots}
+```
+
+## Compare and contrast
+
+Select the best result in each case for PCA, $t$-SNE and MDS and compare the outputs. That is, decide which technique seems to cluster the authors with the best separation.
+
+
+```{r comp-plots}
+```
