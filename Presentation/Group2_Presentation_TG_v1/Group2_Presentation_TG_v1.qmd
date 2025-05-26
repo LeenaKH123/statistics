@@ -1,0 +1,179 @@
+---
+title: "Project Presentation Title"
+author: "Group 2"
+format:
+  revealjs:
+    auto-slide: 3000  # 3 seconds for just this file
+    slide-number: false
+    controls: false
+    progress: false
+---
+## Project Presentation Title {.title-slide}
+
+**Group 2**
+
+**Credit Score Classification Using Machine Learning**
+
+---
+format:
+  revealjs:
+    auto-slide: 20000  # 20 seconds for the rest
+    slide-number: true
+    controls: true
+    progress: true
+---
+## Project Introduction 
+
+- This project aims to build a multi-label classification model to predict the credit score with different categories such as Poor, Standard,     Good. 
+
+- Foundation of this project is a source data set with 100K+ observations and having different financial features associated with it.
+
+## Project Outcomes 
+
+- Some of the outcomes expected out of this project are
+    
+  - Highly scalable, robust and performant classifier to predict Credit Score categories and easily adaptable in BFSI sector
+  - Helps in customer segmentation based on Credit profiles
+  - Supports automated risk assessment and reduce manual load
+  - Empowers Fin sector to proactively address the lending risks and deliver the secured and unsecured credit with high confidence
+
+## Problem Statement 
+
+- Why it's an interesting problem to solve
+
+  - Firstly, achieving the expected outcomes is equally rewarding and challenging
+  - Multi-class types ; Huge volume of observations (~100K) and mix of numeric and categorical features
+  - Classes are highly imbalanced i.e. majority and minority classes
+  - Data Quality issues in terms of missingness, outliers, noise in features etc.
+  - Finally, real potential is huge i.e. Credit score classification plays a crucial role in lending decisions, insurance pricing, and financial                                          eligibility assessments.
+
+
+## EDA - Visualization (Correlation Matrix) 
+
+```{r correlation matrix}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(caret))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(reshape2))
+suppressPackageStartupMessages(library(corrplot))
+
+# Load the data
+score_dat <- read.csv("Score.csv", stringsAsFactors = TRUE)
+
+# Move Target variable to last position
+score_dat <- score_dat %>% select(-Credit_Score, Credit_Score)
+
+# Creating matrix
+cor_matrix_cc <- cor(score_dat[, sapply(score_dat, is.numeric)], use = "complete.obs")
+
+# Convert to DF for ggplot
+cor_data_cc <- melt(cor_matrix_cc)
+
+ggplot(cor_data_cc, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  geom_text(aes(label = round(value, 2)), color = "black", size = 2) +
+  scale_fill_gradient2(low = "blue", mid = "white", high = "red", midpoint = 0) +
+  theme_minimal() +
+  labs(title = "Correlation Heatmap Matrix for Credit Score Dataset ", fill = "Correlation") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+## EDA - Visualization (Scatter Plot) 
+
+```{r scatter plot}
+
+ggplot(score_dat, aes(x = Annual_Income/1000, y = Age, color = Credit_Score)) +
+  geom_point(size = 0.5) +
+  labs(title = "Plot of Annual Income, Age by Credit Score",
+       x = "Annual Income in 1000s ($)",
+       y = "Age",
+       color = "Credit Score") +
+  theme_minimal()
+```
+
+## Known Issue - "Class Imbalanced" 
+
+Class Imbalanced means count of observations belong to classes vary in huge difference.In general, ML models work best with balanced classes, however same cannot be expected from most of the real-world data sets where classes are imbalanced and special ways to treat that issue.
+
+Challenges with Imbalanced Data
+
+- Bias Toward Majority Class and often, ignoring minority patterns.
+- Poor Recall for Minority Class ; Fails to detect rare events (e.g., fraud detection or credit classification).
+
+## Ways to handle "Class Imbalanced" issue 
+
+Methods used to solve Class Imbalanced are (applicable to both linear and tree types of ML models)
+
+- Adjusting Class Weights -> Penalizes misclassification of the minority class more
+- Oversampling (e.g. SMOTE) or Undersampling -> Balances the dataset before training
+- Threshold Optimization -> Instead of default 0.5, choose a better decision threshold
+- Adds regularization for better decision boundaries
+
+## Linear Models (Logistic Regression) 
+
+- Logistic Regression
+    - Predicts the outcomes that belong to two or more categories.
+    - Looks at past data --> Identifies patterns --> Estimates Probability --> Makes Decision
+    - Examples
+        - High Income -> Chances of "Good" Credit Score
+        - High Debt   -> Chances of "Poor" Credit Score
+    - Limitations are
+        - Majority Class dominates often and minority can be ignored
+        - Poor Recall for Minority Class
+        - Works best for binary classification in comparison to multi-class labels
+
+## Linear Models (KNN) 
+
+- KNN
+    - Assigns class labels based on the majority vote of nearest neighbors labels
+    - Find the closest data points ; for e.g. Like asking nearby people for opinions.
+    - Count how many belong to each category i.e. More votes = stronger choice.
+    - Classify new data based on majority vote i.e. The new item gets labeled based on its nearest neighbors.
+    - Preferred Linear model
+    - Examples
+       - Applicants similar in various features are categorized accordingly
+
+
+## About Performance Metrics 
+
+Performance Metrics defined and calculated here tells us the story on how best the models perform against train, test and validation data sets.
+These metrics are evaluated across linear and tree-type models.
+
+- Why Accuracy is not a reliable metric for this use-case ?
+
+- Example scenario is 
+      Misleading Accuracy → A high accuracy might not mean good classification (e.g., if 90% of data is class 0, predicting all as class 0 gives       90% accuracy, but fails completely)
+
+## Performance Metrics (Simple) 
+
+With Accuracy is ruled out, other metrics that helps to gauge the effectiveness of models are 
+
+-  Sensitivity (Recall or True Positive Rate)
+    - Higher sensitivity means fewer false negatives
+    
+-  Specificity (Precision or True Negative Rate)
+    - Higher specificity means fewer false positives
+    - Helpful metric for this credit classification use-case
+    
+-  F1-Score
+    - Balances Precision & Recall, making it valuable for imbalanced data
+    - High F1-score = Model is good at both minimizing false positives & false negatives
+
+## Performance Metrics (Complex) 
+
+To handle Class Imbalanced data sets, additional performance metrics (which are complex in calculation) are
+
+- ROC (Receiver Operating Characteristic) - AUC (Area Under Curve)
+    - Handles class imbalance well
+    - AUC value ranges from 0 to 1 → Higher is better (closer to 1 = stronger classifier)
+- PR  (Precision Recall) - AUC (Area Under Curve)
+    - More reliable estimate for performance in highly imbalanced data 
+
+
+
+
+
+ 
+
+
