@@ -17,6 +17,7 @@ format:
     slide-number: true
     controls: true
     progress: true
+    smaller: true 
 ---
 ## Project Introduction 
 
