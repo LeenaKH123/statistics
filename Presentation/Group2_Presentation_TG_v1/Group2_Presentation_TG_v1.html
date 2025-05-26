@@ -168,7 +168,7 @@
 <h2>Dataset Overview</h2>
 <ul>
 <li>100,000+ customer records</li>
-<li>Features include: Income, Age, Debt, Bank Accounts</li>
+<li>Features: Income, Age, Debt, Bank Accounts, Occupation, Credit History</li>
 <li>Target variable: Credit_Score (Poor, Standard, Good)</li>
 <li>Files: train.csv, test.csv, score.csv</li>
 </ul>
@@ -178,7 +178,7 @@
 <ul>
 <li>Invalid ages: -500, 8698</li>
 <li>Corrupt SSNs: ‘#F%$D@’</li>
-<li>Missing values in Credit History &amp; Monthly Salary.</li>
+<li>Missing values in (Credit History &amp; Monthly Salary).</li>
 <li>Target class imbalance: “Standard” dominates (Standard &gt;&gt; Poor/Good)</li>
 </ul>
 </section>
@@ -263,6 +263,84 @@
 <li>Applicants similar in various features are categorized accordingly</li>
 </ul></li>
 </ul></li>
+</ul>
+</section>
+<section id="tree-based-model-decision-tree" class="slide level2">
+<h2>Tree-Based Model: Decision Tree</h2>
+<ul>
+<li>Easy to explain<br>
+</li>
+<li>Captures interactions<br>
+</li>
+<li>Overfits without regularization</li>
+</ul>
+</section>
+<section id="tree-based-model-random-forest" class="slide level2">
+<h2>Tree-Based Model: Random Forest</h2>
+<ul>
+<li>Ensemble of many trees<br>
+</li>
+<li>Reduces variance<br>
+</li>
+<li>Handles imbalance and noisy data better</li>
+</ul>
+</section>
+<section id="boosted-trees-xgboost" class="slide level2">
+<h2>Boosted Trees: XGBoost</h2>
+<ul>
+<li>Iteratively improves weak learners<br>
+</li>
+<li>Strongest performance on F1 Score and Recall<br>
+</li>
+<li>Most suitable for deployment</li>
+</ul>
+</section>
+<section id="model-evaluation" class="slide level2">
+<h2>Model Evaluation</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Accuracy</td>
+<td>~82%</td>
+</tr>
+<tr class="even">
+<td>F1 Score</td>
+<td>~0.71</td>
+</tr>
+<tr class="odd">
+<td>ROC-AUC</td>
+<td>~0.84</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Evaluated using stratified cross-validation</li>
+</ul>
+</section>
+<section id="business-value" class="slide level2">
+<h2>Business Value</h2>
+<ul>
+<li>Faster, scalable risk assessment<br>
+</li>
+<li>Improves loan decision quality<br>
+</li>
+<li>Helps identify valuable or risky customers earlier</li>
+</ul>
+</section>
+<section id="whats-next" class="slide level2">
+<h2>What’s Next?</h2>
+<ul>
+<li>Deploy model via internal API<br>
+</li>
+<li>Schedule retraining every 6 months<br>
+</li>
+<li>Monitor for performance decay and fairness</li>
 </ul>
 </section>
 <section id="about-performance-metrics" class="slide level2">

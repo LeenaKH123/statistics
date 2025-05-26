@@ -48,14 +48,14 @@ format:
 
 ## Dataset Overview
  - 100,000+ customer records
- - Features include: Income, Age, Debt, Bank Accounts 
+ - Features: Income, Age, Debt, Bank Accounts, Occupation, Credit History
  - Target variable: Credit_Score (Poor, Standard, Good)
  - Files: train.csv, test.csv, score.csv
 
 ## Data Challenges
  - Invalid ages: -500, 8698
  - Corrupt SSNs: '#F%$D@' 
- - Missing values in Credit History & Monthly Salary.
+ - Missing values in (Credit History & Monthly Salary).
  - Target class imbalance: “Standard” dominates (Standard >> Poor/Good) 
 
 ## EDA - Visualization (Correlation Matrix) 
@@ -257,6 +257,48 @@ Methods used to solve Class Imbalanced are (applicable to both linear and tree t
     - Preferred Linear model
     - Examples
        - Applicants similar in various features are categorized accordingly
+
+## Tree-Based Model: Decision Tree
+
+- Easy to explain  
+- Captures interactions  
+- Overfits without regularization
+
+## Tree-Based Model: Random Forest
+
+- Ensemble of many trees  
+- Reduces variance  
+- Handles imbalance and noisy data better
+
+## Boosted Trees: XGBoost
+
+- Iteratively improves weak learners  
+- Strongest performance on F1 Score and Recall  
+- Most suitable for deployment
+
+## Model Evaluation
+
+| Metric       | Value |
+|--------------|-------|
+| Accuracy     | ~82%  |
+| F1 Score     | ~0.71 |
+| ROC-AUC      | ~0.84 |
+
+- Evaluated using stratified cross-validation
+
+## Business Value
+
+- Faster, scalable risk assessment  
+- Improves loan decision quality  
+- Helps identify valuable or risky customers earlier
+
+## What’s Next?
+
+- Deploy model via internal API  
+- Schedule retraining every 6 months  
+- Monitor for performance decay and fairness
+
+
 
 
 ## About Performance Metrics 
