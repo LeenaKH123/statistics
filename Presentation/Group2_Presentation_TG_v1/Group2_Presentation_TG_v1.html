@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.6.43">
 
   <meta name="author" content="Group 2">
-  <title>Project Presentation Title</title>
+  <title>Predicting Credit Scores Using Machine Learning</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -127,7 +127,7 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Project Presentation Title</h1>
+  <h1 class="title">Predicting Credit Scores Using Machine Learning</h1>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
@@ -138,22 +138,22 @@ Group 2
 </div>
 
 </section>
-<section id="project-presentation-title" class="slide level2 title-slide center">
-<h2>Project Presentation Title</h2>
-<p><strong>Group 2</strong></p>
-<p><strong>Credit Score Classification Using Machine Learning</strong></p>
+<section id="predicting-credit-scores" class="slide level2 title-slide center">
+<h2>Predicting Credit Scores</h2>
+<p><strong>A Machine Learning Approach for Smarter Lending Decisions</strong> Group 2</p>
 </section>
 <section id="project-introduction" class="slide level2">
 <h2>Project Introduction</h2>
 <ul>
 <li><p>This project aims to build a multi-label classification model to predict the credit score with different categories such as Poor, Standard, Good.</p></li>
+<li><p>Why? To automate risk assessment, reduce manual reviews, and support financial decisions.</p></li>
 <li><p>Foundation of this project is a source data set with 100K+ observations and having different financial features associated with it.</p></li>
 </ul>
 </section>
 <section id="project-outcomes" class="slide level2">
 <h2>Project Outcomes</h2>
 <ul>
-<li><p>Some of the outcomes expected out of this project are</p>
+<li>Some of the outcomes expected out of this project are
 <ul>
 <li>Highly scalable, robust and performant classifier to predict Credit Score categories and easily adaptable in BFSI sector</li>
 <li>Helps in customer segmentation based on Credit profiles</li>
@@ -172,17 +172,42 @@ Group 2
 <li>Classes are highly imbalanced i.e.&nbsp;majority and minority classes</li>
 <li>Data Quality issues in terms of missingness, outliers, noise in features etc.</li>
 <li>Finally, real potential is huge i.e.&nbsp;Credit score classification plays a crucial role in lending decisions, insurance pricing, and financial eligibility assessments.</li>
+<li>Real-world impact on loans, insurance, and creditworthiness.</li>
 </ul></li>
+</ul>
+</section>
+<section id="data-overview" class="slide level2">
+<h2>Data Overview</h2>
+<ul>
+<li>~100,000 records from Kaggle</li>
+<li>Contains financial, demographic features</li>
+<li>Target: Credit_Score with 3 classes (Poor, Standard, Good)</li>
+<li>Split: train.csv, test.csv, score.csv for predictions</li>
+</ul>
+</section>
+<section id="data-challenges" class="slide level2">
+<h2>Data Challenges</h2>
+<ul>
+<li>Invalid entries: negative ages, nonsense SSN values (e.g., #F%$D@ in SSN).</li>
+<li>Missing values in salary and credit history age.</li>
+<li>Imabalanced target classes (Standard &gt;&gt; Poor/Good)</li>
 </ul>
 </section>
 <section id="eda---visualization-correlation-matrix" class="slide level2">
 <h2>EDA - Visualization (Correlation Matrix)</h2>
 
 <img data-src="Group2_Presentation_TG_v1_files/figure-revealjs/correlation%20matrix-1.png" width="960" class="r-stretch"></section>
-<section id="eda---visualization-scatter-plot" class="slide level2">
-<h2>EDA - Visualization (Scatter Plot)</h2>
+<section id="pca-visualising-credit-profiles" class="slide level2">
+<h2>PCA: Visualising Credit Profiles</h2>
+<ul>
+<li>PCA reduces 15+ variables to 2 components<br>
+</li>
+<li>Helps visualize hidden structure in data</li>
+<li>Shows how customer cluster by credit score</li>
+<li>Distinct clusters for “Good” vs.&nbsp;others</li>
+</ul>
 
-<img data-src="Group2_Presentation_TG_v1_files/figure-revealjs/scatter%20plot-1.png" width="960" class="r-stretch"></section>
+<img data-src="Group2_Presentation_TG_v1_files/figure-revealjs/PCA-1.png" width="960" class="r-stretch"></section>
 <section id="known-issue---class-imbalanced" class="slide level2">
 <h2>Known Issue - “Class Imbalanced”</h2>
 <p>Class Imbalanced means count of observations belong to classes vary in huge difference.In general, ML models work best with balanced classes, however same cannot be expected from most of the real-world data sets where classes are imbalanced and special ways to treat that issue.</p>

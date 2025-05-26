@@ -1,5 +1,5 @@
 ---
-title: "Project Presentation Title"
+title: "Predicting Credit Scores Using Machine Learning"
 author: "Group 2"
 format:
   revealjs:
@@ -8,12 +8,9 @@ format:
     controls: false
     progress: false
 ---
-## Project Presentation Title {.title-slide}
-
-**Group 2**
-
-**Credit Score Classification Using Machine Learning**
-
+## Predicting Credit Scores {.title-slide}
+**A Machine Learning Approach for Smarter Lending Decisions**
+Group 2
 ---
 format:
   revealjs:
@@ -24,14 +21,15 @@ format:
 ---
 ## Project Introduction 
 
-- This project aims to build a multi-label classification model to predict the credit score with different categories such as Poor, Standard,     Good. 
+- This project aims to build a multi-label classification model to predict the credit score with different categories such as Poor, Standard, Good. 
+
+- Why? To automate risk assessment, reduce manual reviews, and support financial decisions.
 
 - Foundation of this project is a source data set with 100K+ observations and having different financial features associated with it.
 
 ## Project Outcomes 
 
-- Some of the outcomes expected out of this project are
-    
+- Some of the outcomes expected out of this project are    
   - Highly scalable, robust and performant classifier to predict Credit Score categories and easily adaptable in BFSI sector
   - Helps in customer segmentation based on Credit profiles
   - Supports automated risk assessment and reduce manual load
@@ -46,7 +44,18 @@ format:
   - Classes are highly imbalanced i.e. majority and minority classes
   - Data Quality issues in terms of missingness, outliers, noise in features etc.
   - Finally, real potential is huge i.e. Credit score classification plays a crucial role in lending decisions, insurance pricing, and financial                                          eligibility assessments.
+  - Real-world impact on loans, insurance, and creditworthiness.
 
+## Data Overview
+ - ~100,000 records from Kaggle
+ - Contains financial, demographic features
+ - Target: Credit_Score with 3 classes (Poor, Standard, Good)
+ - Split: train.csv, test.csv, score.csv for predictions
+
+## Data Challenges
+ - Invalid entries: negative ages, nonsense SSN values (e.g., #F%$D@ in SSN).
+ - Missing values in salary and credit history age.
+ - Imabalanced target classes (Standard >> Poor/Good) 
 
 ## EDA - Visualization (Correlation Matrix) 
 
@@ -79,15 +88,52 @@ ggplot(cor_data_cc, aes(x = Var1, y = Var2, fill = value)) +
 
 ```
 
-## EDA - Visualization (Scatter Plot) 
+## PCA: Visualising Credit Profiles
+- PCA reduces 15+ variables to 2 components  
+- Helps visualize hidden structure in data
+- Shows how customer cluster by credit score
+- Distinct clusters for “Good” vs. others
+```{r PCA}
+# Load required libraries
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(caret))
+suppressPackageStartupMessages(library(reshape2))
+suppressPackageStartupMessages(library(corrplot))
 
-```{r scatter plot}
+# Load the data
+score_dat <- read.csv("Score.csv", stringsAsFactors = TRUE)
 
-ggplot(score_dat, aes(x = Annual_Income/1000, y = Age, color = Credit_Score)) +
-  geom_point(size = 0.5) +
-  labs(title = "Plot of Annual Income, Age by Credit Score",
-       x = "Annual Income in 1000s ($)",
-       y = "Age",
+# Check if 'Credit_Score' exists
+if (!"Credit_Score" %in% colnames(score_dat)) {
+  stop("The column 'Credit_Score' was not found in the dataset.")
+}
+
+# Remove rows with missing values (to avoid PCA errors)
+score_dat <- na.omit(score_dat)
+
+# Save the target labels
+credit_labels <- score_dat$Credit_Score
+
+# Select only numeric features (excluding the target)
+numeric.dat <- score_dat %>%
+  select(where(is.numeric))  # select all numeric columns
+
+# OPTIONAL: Drop 'Credit_Score' if it's numeric (just to be safe)
+if ("Credit_Score" %in% colnames(numeric.dat)) {
+  numeric.dat <- numeric.dat %>% select(-Credit_Score)
+}
+
+# Run PCA
+pca_result <- prcomp(numeric.dat, scale. = TRUE)
+pca_df <- as.data.frame(pca_result$x)
+pca_df$Credit_Score <- credit_labels  # Add labels back
+
+# Plot PCA
+ggplot(pca_df, aes(x = PC1, y = PC2, color = Credit_Score)) +
+  geom_point(size = 1.5, alpha = 0.7) +
+  labs(title = "PCA: 2D Projection of Customers by Credit Score",
+       x = "Principal Component 1",
+       y = "Principal Component 2",
        color = "Credit Score") +
   theme_minimal()
 ```
