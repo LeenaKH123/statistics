@@ -1,12 +1,11 @@
 ---
-title: "Predicting Credit Scores Using Machine Learning"
-author: "Group 2"
 format:
   revealjs:
     auto-slide: 3000  # 3 seconds for just this file
     slide-number: false
     controls: false
     progress: false
+    smaller: true 
 ---
 ## Predicting Credit Scores {.title-slide}
 **A Machine Learning Approach for Smarter Lending Decisions**
@@ -46,16 +45,17 @@ format:
   - Finally, real potential is huge i.e. Credit score classification plays a crucial role in lending decisions, insurance pricing, and financial                                          eligibility assessments.
   - Real-world impact on loans, insurance, and creditworthiness.
 
-## Data Overview
- - ~100,000 records from Kaggle
- - Contains financial, demographic features
- - Target: Credit_Score with 3 classes (Poor, Standard, Good)
- - Split: train.csv, test.csv, score.csv for predictions
+## Dataset Overview
+ - 100,000+ customer records
+ - Features include: Income, Age, Debt, Bank Accounts 
+ - Target variable: Credit_Score (Poor, Standard, Good)
+ - Files: train.csv, test.csv, score.csv
 
 ## Data Challenges
- - Invalid entries: negative ages, nonsense SSN values (e.g., #F%$D@ in SSN).
- - Missing values in salary and credit history age.
- - Imabalanced target classes (Standard >> Poor/Good) 
+ - Invalid ages: -500, 8698
+ - Corrupt SSNs: '#F%$D@' 
+ - Missing values in Credit History & Monthly Salary.
+ - Target class imbalance: “Standard” dominates (Standard >> Poor/Good) 
 
 ## EDA - Visualization (Correlation Matrix) 
 
@@ -89,9 +89,8 @@ ggplot(cor_data_cc, aes(x = Var1, y = Var2, fill = value)) +
 ```
 
 ## PCA: Visualising Credit Profiles
-- PCA reduces 15+ variables to 2 components  
-- Helps visualize hidden structure in data
-- Shows how customer cluster by credit score
+- PCA reduces feature complexity to 2 components  
+- Shows separation between customer types  
 - Distinct clusters for “Good” vs. others
 ```{r PCA}
 # Load required libraries
@@ -137,6 +136,84 @@ ggplot(pca_df, aes(x = PC1, y = PC2, color = Credit_Score)) +
        color = "Credit Score") +
   theme_minimal()
 ```
+
+## Project Phases & Dataset Use
+
+**Goal**: Predict credit scores (Poor, Standard, Good) using ML
+
+**Phase 1: Data Cleaning & Exploration** <br>
+- Clean and preprocess `train.csv`<br>
+- Handle missing values and invalid entries <br>
+- Encode categorical variables <br>
+- Conduct EDA (imbalance, correlation, PCA) <br>
+
+**Phase 2: Modeling & Evaluation**
+- Train models: Logistic, Decision Tree, Random Forest, XGBoost <br>
+- Cross-validation + F1 Score & ROC-AUC evaluation <br>
+
+**Phase 3: Prediction & Reporting**
+- Predict on `test.csv` and `score.csv` (real-world simulation) <br>
+- Export results <br>
+- Finalize report <br>
+
+## Gant Chart
+
+```{r GantChart}
+library(tidyverse)
+library(lubridate)
+library(forcats)
+library(ggplot2)
+
+# Define task data
+gantt_data <- tribble(
+  ~Task, ~Start, ~End, ~Phase,
+  "Load and clean train.csv", "2025-05-18", "2025-05-24", "Data Cleaning & Exploration",
+  "Remove invalid & placeholder values", "2025-05-18", "2025-05-24", "Data Cleaning & Exploration",
+  "Impute missing data", "2025-05-18", "2025-05-24", "Data Cleaning & Exploration",
+  "Encode categorical variables", "2025-05-18", "2025-05-24", "Data Cleaning & Exploration",
+  "EDA: imbalance, outliers, correlation, PCA", "2025-05-18", "2025-05-24", "Data Cleaning & Exploration",
+  "Train models (Logistic, Tree, RF, XGBoost)", "2025-05-25", "2025-05-31", "Modeling & Evaluation",
+  "Cross-validation & F1 scoring", "2025-05-25", "2025-05-31", "Modeling & Evaluation",
+  "Evaluate on test.csv", "2025-06-01", "2025-06-03", "Prediction & Reporting",
+  "Export predictions", "2025-06-01", "2025-06-03", "Prediction & Reporting",
+  "Finalize report with evaluation results", "2025-06-01", "2025-06-03", "Prediction & Reporting",
+  "Present findings", "2025-06-01", "2025-06-03", "Prediction & Reporting"
+) %>%
+  mutate(across(c(Start, End), ymd))
+
+# Define milestone data
+milestones <- tibble(
+  Task = "Present key data insights",
+  Date = ymd("2025-05-27"),
+  Phase = "Milestone"
+)
+
+# Reorder factor levels for consistent y-axis
+all_tasks <- fct_rev(factor(c(gantt_data$Task, milestones$Task)))
+
+# Plot Gantt chart with milestone
+ggplot() +
+  geom_segment(
+    data = gantt_data,
+    aes(x = Start, xend = End, y = Task, yend = Task, color = Phase),
+    size = 6
+  ) +
+  geom_point(
+    data = milestones,
+    aes(x = Date, y = Task, color = Phase),
+    shape = 18, size = 5, stroke = 2
+  ) +
+  scale_y_discrete(limits = levels(all_tasks)) +
+  labs(
+    title = "Project Timeline",
+    x = "Date", y = NULL, color = "Project Phase"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5)
+  )
+```
+
 
 ## Known Issue - "Class Imbalanced" 
 

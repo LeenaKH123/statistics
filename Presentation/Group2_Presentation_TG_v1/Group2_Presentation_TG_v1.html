@@ -9,8 +9,7 @@
 <link href="Group2_Presentation_TG_v1_files/libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.6.43">
 
-  <meta name="author" content="Group 2">
-  <title>Predicting Credit Scores Using Machine Learning</title>
+  <title>group2_presentation_tg_v1</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -126,18 +125,7 @@
   <div class="reveal">
     <div class="slides">
 
-<section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">Predicting Credit Scores Using Machine Learning</h1>
 
-<div class="quarto-title-authors">
-<div class="quarto-title-author">
-<div class="quarto-title-author-name">
-Group 2 
-</div>
-</div>
-</div>
-
-</section>
 <section id="predicting-credit-scores" class="slide level2 title-slide center">
 <h2>Predicting Credit Scores</h2>
 <p><strong>A Machine Learning Approach for Smarter Lending Decisions</strong> Group 2</p>
@@ -176,21 +164,22 @@ Group 2
 </ul></li>
 </ul>
 </section>
-<section id="data-overview" class="slide level2">
-<h2>Data Overview</h2>
+<section id="dataset-overview" class="slide level2">
+<h2>Dataset Overview</h2>
 <ul>
-<li>~100,000 records from Kaggle</li>
-<li>Contains financial, demographic features</li>
-<li>Target: Credit_Score with 3 classes (Poor, Standard, Good)</li>
-<li>Split: train.csv, test.csv, score.csv for predictions</li>
+<li>100,000+ customer records</li>
+<li>Features include: Income, Age, Debt, Bank Accounts</li>
+<li>Target variable: Credit_Score (Poor, Standard, Good)</li>
+<li>Files: train.csv, test.csv, score.csv</li>
 </ul>
 </section>
 <section id="data-challenges" class="slide level2">
 <h2>Data Challenges</h2>
 <ul>
-<li>Invalid entries: negative ages, nonsense SSN values (e.g., #F%$D@ in SSN).</li>
-<li>Missing values in salary and credit history age.</li>
-<li>Imabalanced target classes (Standard &gt;&gt; Poor/Good)</li>
+<li>Invalid ages: -500, 8698</li>
+<li>Corrupt SSNs: ‘#F%$D@’</li>
+<li>Missing values in Credit History &amp; Monthly Salary.</li>
+<li>Target class imbalance: “Standard” dominates (Standard &gt;&gt; Poor/Good)</li>
 </ul>
 </section>
 <section id="eda---visualization-correlation-matrix" class="slide level2">
@@ -200,14 +189,25 @@ Group 2
 <section id="pca-visualising-credit-profiles" class="slide level2">
 <h2>PCA: Visualising Credit Profiles</h2>
 <ul>
-<li>PCA reduces 15+ variables to 2 components<br>
+<li>PCA reduces feature complexity to 2 components<br>
 </li>
-<li>Helps visualize hidden structure in data</li>
-<li>Shows how customer cluster by credit score</li>
+<li>Shows separation between customer types<br>
+</li>
 <li>Distinct clusters for “Good” vs.&nbsp;others</li>
 </ul>
 
 <img data-src="Group2_Presentation_TG_v1_files/figure-revealjs/PCA-1.png" width="960" class="r-stretch"></section>
+<section id="project-phases-dataset-use" class="slide level2">
+<h2>Project Phases &amp; Dataset Use</h2>
+<p><strong>Goal</strong>: Predict credit scores (Poor, Standard, Good) using ML</p>
+<p><strong>Phase 1: Data Cleaning &amp; Exploration</strong> <br> - Clean and preprocess <code>train.csv</code><br> - Handle missing values and invalid entries <br> - Encode categorical variables <br> - Conduct EDA (imbalance, correlation, PCA) <br></p>
+<p><strong>Phase 2: Modeling &amp; Evaluation</strong> - Train models: Logistic, Decision Tree, Random Forest, XGBoost <br> - Cross-validation + F1 Score &amp; ROC-AUC evaluation <br></p>
+<p><strong>Phase 3: Prediction &amp; Reporting</strong> - Predict on <code>test.csv</code> and <code>score.csv</code> (real-world simulation) <br> - Export results <br> - Finalize report <br></p>
+</section>
+<section id="gant-chart" class="slide level2">
+<h2>Gant Chart</h2>
+
+<img data-src="Group2_Presentation_TG_v1_files/figure-revealjs/GantChart-1.png" width="960" class="r-stretch"></section>
 <section id="known-issue---class-imbalanced" class="slide level2">
 <h2>Known Issue - “Class Imbalanced”</h2>
 <p>Class Imbalanced means count of observations belong to classes vary in huge difference.In general, ML models work best with balanced classes, however same cannot be expected from most of the real-world data sets where classes are imbalanced and special ways to treat that issue.</p>
