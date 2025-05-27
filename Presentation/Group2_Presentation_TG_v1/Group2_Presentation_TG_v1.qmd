@@ -285,12 +285,20 @@ Methods used to solve Class Imbalanced are (applicable to both linear and tree t
 
 ```
 
-
 ## Tree-Based Model: Random Forest
 
-- Ensemble of many trees  
-- Reduces variance  
-- Handles imbalance and noisy data better
+- Builds many decision trees on random subsets of data and features  
+- Combines outputs via **majority vote** (classification)
+
+### Strengths
+- Reduces overfitting by averaging multiple trees  
+- Robust to noise and handles missing values  
+- Performs well on imbalanced data using class weights or sampling
+
+### Why We Used It
+- Strong baseline performance  
+- Outperformed logistic regression  
+- Balanced accuracy, F1-score, and interpretability
 
 ## Boosted Trees: XGBoost
 
