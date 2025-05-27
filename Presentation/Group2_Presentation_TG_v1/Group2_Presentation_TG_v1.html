@@ -308,11 +308,19 @@
 <section id="boosted-trees-xgboost" class="slide level2">
 <h2>Boosted Trees: XGBoost</h2>
 <ul>
-<li>Iteratively improves weak learners<br>
+<li>Trains models sequentially, where each tree <strong>corrects errors</strong> of the previous ones<br>
 </li>
-<li>Strongest performance on F1 Score and Recall<br>
+<li>Combines many <strong>weak learners</strong> into a strong predictive model<br>
 </li>
-<li>Most suitable for deployment</li>
+<li>Highly efficient and scalable for large datasets</li>
+</ul>
+<h3 id="why-we-chose-it">Why We Chose It</h3>
+<ul>
+<li>Delivered the <strong>highest F1 Score (~0.71)</strong> and <strong>Recall</strong> among all models<br>
+</li>
+<li>Effectively handled <strong>class imbalance</strong> and noisy features<br>
+</li>
+<li>Most robust and accurate for deployment in real-world credit prediction</li>
 </ul>
 </section>
 <section id="whats-next" class="slide level2">
