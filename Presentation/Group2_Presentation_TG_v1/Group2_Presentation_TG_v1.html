@@ -305,17 +305,19 @@
 <h3 id="why-we-used-it-1">Why We Used It</h3>
 <ul>
 <li>Multiple features showed <strong>non-linear patterns</strong> with <code>Credit_Score</code>(e.g., Age vs.&nbsp;Score, Income vs.&nbsp;Score showed curved/clustered trends).Dataset included <strong>outliers and noise</strong> (e.g., extreme age values like -500), Detected significant <strong>class imbalance</strong> — Standard ≫ Poor/Good, XGBoost excel at handling <strong>non-linearity, outliers, and class imbalance</strong></li>
-<li>High <strong>feature interactions</strong> observed (e.g., Income + Delay count)</li>
+<li>High <strong>feature interactions</strong> observed (e.g., Income + Delay count), XGBoost captures non-linear patterns and feature interactions like ‘High Income but frequent Delays’ that are difficult to model with linear approaches.</li>
 </ul>
 </section>
-<section id="whats-next" class="slide level2">
-<h2>What’s Next?</h2>
+<section id="summary-and-next-steps" class="slide level2">
+<h2>Summary and Next Steps</h2>
 <ul>
-<li>Deploy model via internal API<br>
-</li>
-<li>Schedule retraining every 6 months<br>
-</li>
-<li>Monitor for performance decay and fairness</li>
+<li>Found <strong>missing values</strong>, <strong>outliers</strong>, and skewed distributions in features like age, salary, and credit history</li>
+<li>Identified clear <strong>class imbalance</strong> in the target (<code>Credit_Score</code>), <strong>PCA</strong> suggested structure in the data with separable clusters across credit score classes, observed <strong>non-linear relationships</strong> and <strong>feature interactions</strong><br>
+– e.g., income and delay count jointly affecting credit profiles.</li>
+</ul>
+<h3 id="modeling-plan-informed-by-eda">Modeling Plan Informed by EDA</h3>
+<ul>
+<li>Linear models may be limited due to non-linearity and imbalance, tree-based models (e.g., Random Forest, XGBoost) are better suited based on data characteristics.Plan to apply <strong>stratified cross-validation</strong> to ensure robust model evaluation, will assess performance using F1 Score, ROC-AUC, and class-level recall.</li>
 </ul>
 </section>
 <section id="about-performance-metrics" class="slide level2">

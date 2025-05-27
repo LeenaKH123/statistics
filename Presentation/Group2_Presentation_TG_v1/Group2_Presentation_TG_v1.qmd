@@ -306,10 +306,12 @@ Methods used to solve Class Imbalanced are (applicable to both linear and tree t
 - High **feature interactions** observed (e.g., Income + Delay count), XGBoost captures non-linear patterns and feature interactions like ‘High Income but frequent Delays’ that are difficult to model with linear approaches.
 
 ## Summary and Next Steps
+- Found **missing values**, **outliers**, and skewed distributions in features like age, salary, and credit history
+- Identified clear **class imbalance** in the target (`Credit_Score`), **PCA** suggested structure in the data with separable clusters across credit score classes, observed **non-linear relationships** and **feature interactions**  
+  – e.g., income and delay count jointly affecting credit profiles.
 
-- Deploy model via internal API  
-- Schedule retraining every 6 months  
-- Monitor for performance decay and fairness
+### Modeling Plan Informed by EDA
+- Linear models may be limited due to non-linearity and imbalance, tree-based models (e.g., Random Forest, XGBoost) are better suited based on data characteristics.Plan to apply **stratified cross-validation** to ensure robust model evaluation, will assess performance using F1 Score, ROC-AUC, and class-level recall.
 
 ## About Performance Metrics 
 
