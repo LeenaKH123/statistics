@@ -299,17 +299,13 @@ Methods used to solve Class Imbalanced are (applicable to both linear and tree t
 
 ## Boosted Trees: XGBoost
 
-- Trains models sequentially, where each tree **corrects errors** of the previous ones  
-- Combines many **weak learners** into a strong predictive model  
-- Highly efficient and scalable for large datasets
+- Trains models sequentially, where each tree **corrects errors** of the previous ones, combines many **weak learners** into a strong predictive model, highly efficient and scalable for large datasets.
 
-### Why We Chose It
-- Delivered the **highest F1 Score (~0.71)** and **Recall** among all models  
-- Effectively handled **class imbalance** and noisy features  
-- Most robust and accurate for deployment in real-world credit prediction
+### Why We Used It
+- Multiple features showed **non-linear patterns** with `Credit_Score`(e.g., Age vs. Score, Income vs. Score showed curved/clustered trends).Dataset included **outliers and noise** (e.g., extreme age values like -500), Detected significant **class imbalance** — Standard ≫ Poor/Good, XGBoost excel at handling **non-linearity, outliers, and class imbalance**
+- High **feature interactions** observed (e.g., Income + Delay count), XGBoost captures non-linear patterns and feature interactions like ‘High Income but frequent Delays’ that are difficult to model with linear approaches.
 
-
-## What’s Next?
+## Summary and Next Steps
 
 - Deploy model via internal API  
 - Schedule retraining every 6 months  

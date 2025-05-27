@@ -292,7 +292,7 @@
 </ul>
 <h3 id="why-we-used-it">Why We Used It</h3>
 <ul>
-<li>Features like <strong>Income</strong>, <strong>Age</strong>, and <strong>Credit History Length</strong> showed non-linear relationships with <code>Credit_Score</code>, linear models may fail to capture non-linear trends in the data..</li>
+<li>Features like <strong>Income</strong>, <strong>Age</strong>, and <strong>Credit History Length</strong> showed non-linear relationships with <code>Credit_Score</code>, linear models may fail to capture non-linear trends in the data.</li>
 <li>Presence of <strong>missing values</strong> in fields like Salary and Credit_History.Tree-based models can handle <strong>missing, skewed, and categorical data</strong> more effectively and can naturally handle <strong>feature interactions</strong> and <strong>class imbalance</strong>.</li>
 <li>Detected <strong>outliers</strong> (e.g.&nbsp;Age = -500, Income = 0 or extremely high), strong <strong>class imbalance</strong> across <code>Credit_Score</code> levels (Standard ≫ Poor/Good).</li>
 </ul>
@@ -300,19 +300,12 @@
 <section id="boosted-trees-xgboost" class="slide level2">
 <h2>Boosted Trees: XGBoost</h2>
 <ul>
-<li>Trains models sequentially, where each tree <strong>corrects errors</strong> of the previous ones<br>
-</li>
-<li>Combines many <strong>weak learners</strong> into a strong predictive model<br>
-</li>
-<li>Highly efficient and scalable for large datasets</li>
+<li>Trains models sequentially, where each tree <strong>corrects errors</strong> of the previous ones, combines many <strong>weak learners</strong> into a strong predictive model, highly efficient and scalable for large datasets.</li>
 </ul>
-<h3 id="why-we-chose-it">Why We Chose It</h3>
+<h3 id="why-we-used-it-1">Why We Used It</h3>
 <ul>
-<li>Delivered the <strong>highest F1 Score (~0.71)</strong> and <strong>Recall</strong> among all models<br>
-</li>
-<li>Effectively handled <strong>class imbalance</strong> and noisy features<br>
-</li>
-<li>Most robust and accurate for deployment in real-world credit prediction</li>
+<li>Multiple features showed <strong>non-linear patterns</strong> with <code>Credit_Score</code>(e.g., Age vs.&nbsp;Score, Income vs.&nbsp;Score showed curved/clustered trends).Dataset included <strong>outliers and noise</strong> (e.g., extreme age values like -500), Detected significant <strong>class imbalance</strong> — Standard ≫ Poor/Good, XGBoost excel at handling <strong>non-linearity, outliers, and class imbalance</strong></li>
+<li>High <strong>feature interactions</strong> observed (e.g., Income + Delay count)</li>
 </ul>
 </section>
 <section id="whats-next" class="slide level2">
