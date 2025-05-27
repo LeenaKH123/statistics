@@ -260,8 +260,10 @@ Methods used to solve Class Imbalanced are (applicable to both linear and tree t
 ## Tree-Based Model: Decision Tree
 
 - A **simple Decision Tree** was used in EDA to explore how customer features like **income**, **loan status**, and **credit card use** relate to credit score categories. Helps validate patterns, guide **feature selection**, and spot early **class boundaries**.
+
 ### Insight
 > Customers with **high income** and **no active loans** were mostly classified as **Good credit**.
+
 ### How it Informs Later Stages
 - Features from the tree will be retained in final models.
 - Tree-based classifiers (e.g., Decision Tree, Random Forest, XGBoost) will be trained and compared.
