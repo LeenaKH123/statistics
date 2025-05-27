@@ -284,25 +284,17 @@
 <section id="tree-based-model-random-forest" class="slide level2">
 <h2>Tree-Based Model: Random Forest</h2>
 <ul>
-<li>Builds many decision trees on random subsets of data and features<br>
-</li>
-<li>Combines outputs via <strong>majority vote</strong> (classification)</li>
+<li>Builds many decision trees on random subsets of data and features and combines outputs via <strong>majority vote</strong> (classification).</li>
 </ul>
 <h3 id="strengths">Strengths</h3>
 <ul>
-<li>Reduces overfitting by averaging multiple trees<br>
-</li>
-<li>Robust to noise and handles missing values<br>
-</li>
-<li>Performs well on imbalanced data using class weights or sampling</li>
+<li>Reduces overfitting by averaging multiple trees, robust to noise and handles missing values, performs well on imbalanced data using class weights or sampling.</li>
 </ul>
 <h3 id="why-we-used-it">Why We Used It</h3>
 <ul>
-<li>Strong baseline performance<br>
-</li>
-<li>Outperformed logistic regression<br>
-</li>
-<li>Balanced accuracy, F1-score, and interpretability</li>
+<li>Features like <strong>Income</strong>, <strong>Age</strong>, and <strong>Credit History Length</strong> showed non-linear relationships with <code>Credit_Score</code>, linear models may fail to capture non-linear trends in the data..</li>
+<li>Presence of <strong>missing values</strong> in fields like Salary and Credit_History.Tree-based models can handle <strong>missing, skewed, and categorical data</strong> more effectively and can naturally handle <strong>feature interactions</strong> and <strong>class imbalance</strong>.</li>
+<li>Detected <strong>outliers</strong> (e.g.&nbsp;Age = -500, Income = 0 or extremely high), strong <strong>class imbalance</strong> across <code>Credit_Score</code> levels (Standard ≫ Poor/Good).</li>
 </ul>
 </section>
 <section id="boosted-trees-xgboost" class="slide level2">

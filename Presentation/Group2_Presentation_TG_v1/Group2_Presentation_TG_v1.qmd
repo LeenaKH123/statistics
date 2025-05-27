@@ -287,18 +287,15 @@ Methods used to solve Class Imbalanced are (applicable to both linear and tree t
 
 ## Tree-Based Model: Random Forest
 
-- Builds many decision trees on random subsets of data and features  
-- Combines outputs via **majority vote** (classification)
+- Builds many decision trees on random subsets of data and features and combines outputs via **majority vote** (classification).
 
 ### Strengths
-- Reduces overfitting by averaging multiple trees  
-- Robust to noise and handles missing values  
-- Performs well on imbalanced data using class weights or sampling
+- Reduces overfitting by averaging multiple trees, robust to noise and handles missing values, performs well on imbalanced data using class weights or sampling.
 
 ### Why We Used It
-- Strong baseline performance  
-- Outperformed logistic regression  
-- Balanced accuracy, F1-score, and interpretability
+- Features like **Income**, **Age**, and **Credit History Length** showed non-linear relationships with `Credit_Score`, linear models may fail to capture non-linear trends in the data.
+- Presence of **missing values** in fields like Salary and Credit_History.Tree-based models can handle **missing, skewed, and categorical data** more effectively and can naturally handle **feature interactions** and **class imbalance**.
+- Detected **outliers** (e.g. Age = -500, Income = 0 or extremely high), strong **class imbalance** across `Credit_Score` levels (Standard ≫ Poor/Good). 
 
 ## Boosted Trees: XGBoost
 
