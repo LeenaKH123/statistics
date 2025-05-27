@@ -23,9 +23,8 @@ format:
 
 - This project aims to build a multi-label classification model to predict the credit score with different categories such as Poor, Standard, Good. 
 
-- Why? To automate risk assessment, reduce manual reviews, and support financial decisions.
-
 - Foundation of this project is a source data set with 100K+ observations and having different financial features associated with it.
+- Why? To automate risk assessment, reduce manual reviews, and support financial decisions.
 
 ## Project Outcomes 
 
@@ -43,7 +42,7 @@ format:
   - Multi-class types ; Huge volume of observations (~100K) and mix of numeric and categorical features
   - Classes are highly imbalanced i.e. majority and minority classes
   - Data Quality issues in terms of missingness, outliers, noise in features etc.
-  - Finally, real potential is huge i.e. Credit score classification plays a crucial role in lending decisions, insurance pricing, and financial                                          eligibility assessments.
+  - Finally, real potential is huge i.e. Credit score classification plays a crucial role in lending decisions, insurance pricing, and financial eligibility assessments.
   - Real-world impact on loans, insurance, and creditworthiness.
 
 ## Dataset Overview
@@ -297,9 +296,6 @@ Methods used to solve Class Imbalanced are (applicable to both linear and tree t
 - Deploy model via internal API  
 - Schedule retraining every 6 months  
 - Monitor for performance decay and fairness
-
-
-
 
 ## About Performance Metrics 
 
