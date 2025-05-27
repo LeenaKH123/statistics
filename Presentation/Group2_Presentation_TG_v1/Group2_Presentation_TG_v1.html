@@ -134,8 +134,8 @@
 <h2>Project Introduction</h2>
 <ul>
 <li><p>This project aims to build a multi-label classification model to predict the credit score with different categories such as Poor, Standard, Good.</p></li>
-<li><p>Why? To automate risk assessment, reduce manual reviews, and support financial decisions.</p></li>
 <li><p>Foundation of this project is a source data set with 100K+ observations and having different financial features associated with it.</p></li>
+<li><p>Why? To automate risk assessment, reduce manual reviews, and support financial decisions.</p></li>
 </ul>
 </section>
 <section id="project-outcomes" class="slide level2">
@@ -268,11 +268,10 @@
 <section id="tree-based-model-decision-tree" class="slide level2">
 <h2>Tree-Based Model: Decision Tree</h2>
 <ul>
-<li>Easy to explain<br>
-</li>
-<li>Captures interactions<br>
-</li>
-<li>Overfits without regularization</li>
+<li>A <strong>simple Decision Tree</strong> was used in EDA to explore how customer features like <strong>income</strong>, <strong>loan status</strong>, and <strong>credit card use</strong> relate to credit score categories. Helps validate patterns, guide <strong>feature selection</strong>, and spot early <strong>class boundaries</strong>. ### Insight &gt; Customers with <strong>high income</strong> and <strong>no active loans</strong> were mostly classified as <strong>Good credit</strong>. ### How it Informs Later Stages</li>
+<li>Features from the tree will be retained in final models.</li>
+<li>Tree-based classifiers (e.g., Decision Tree, Random Forest, XGBoost) will be trained and compared.</li>
+<li>We’ll use <strong>cross-validation</strong> to evaluate performance and avoid overfitting.</li>
 </ul>
 </section>
 <section id="tree-based-model-random-forest" class="slide level2">
@@ -293,44 +292,6 @@
 <li>Strongest performance on F1 Score and Recall<br>
 </li>
 <li>Most suitable for deployment</li>
-</ul>
-</section>
-<section id="model-evaluation" class="slide level2">
-<h2>Model Evaluation</h2>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th>Metric</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Accuracy</td>
-<td>~82%</td>
-</tr>
-<tr class="even">
-<td>F1 Score</td>
-<td>~0.71</td>
-</tr>
-<tr class="odd">
-<td>ROC-AUC</td>
-<td>~0.84</td>
-</tr>
-</tbody>
-</table>
-<ul>
-<li>Evaluated using stratified cross-validation</li>
-</ul>
-</section>
-<section id="business-value" class="slide level2">
-<h2>Business Value</h2>
-<ul>
-<li>Faster, scalable risk assessment<br>
-</li>
-<li>Improves loan decision quality<br>
-</li>
-<li>Helps identify valuable or risky customers earlier</li>
 </ul>
 </section>
 <section id="whats-next" class="slide level2">
