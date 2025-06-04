@@ -1,0 +1,223 @@
+---
+title: "Credit Score Classification Report"
+author: "Group 2"
+format:
+  html:
+    toc: true
+    toc-location: right
+    toc-depth: 3
+    number-sections: true
+    code-fold: true
+    theme: cosmo
+---
+```{r}
+library(tidyverse)
+library(caret)
+library(ggplot2)
+library(GGally)
+library(corrplot)
+library(randomForest)
+library(xgboost)
+library(e1071)
+library(nnet)
+library(knitr)
+library(pROC)
+```
+
+# Introduction <br>
+
+In this report, we aim to build a multi-class classification model to predict credit scores of individuals based on financial, behavioral, and demographic data. The target variable `Credit_Score` has three classes: `Poor`, `Standard`, and `Good`.
+
+We use the [Kaggle Credit Score Dataset](https://www.kaggle.com/code/sudhanshu2198/multi-class-credit-score-classification) and apply a full machine learning pipeline: cleaning, exploration, feature engineering, modeling, and evaluation.
+
+---
+# Dataset Description <br>
+
+The dataset consists of **100,000 rows** and **28 columns** including customer ID fields, financial indicators (e.g., debt, income), behavioral traits (e.g., payment behavior), and the target label `Credit_Score`.
+
+---
+# Data Cleaning <br>
+
+```{r}
+#| code-fold: true
+library(tidyverse)
+
+data <- read.csv("train.csv")
+
+# Step 1: Drop ID-like columns
+data <- data %>% select(-c(ID, Customer_ID, SSN, Name))
+
+# Step 2: Convert numeric columns stored as text
+cols_to_numeric <- c("Age", "Annual_Income", "Num_of_Loan", "Num_of_Delayed_Payment",
+                     "Changed_Credit_Limit", "Outstanding_Debt", "Amount_invested_monthly",
+                     "Monthly_Balance")
+data[cols_to_numeric] <- lapply(data[cols_to_numeric], function(x) as.numeric(gsub("[^0-9.]", "", x)))
+
+# Step 3: Convert Credit_History_Age to months
+data$Credit_History_Months <- sapply(str_extract_all(data$Credit_History_Age, "\\d+"), function(x) {
+  if (length(x) >= 2) as.numeric(x[1])*12 + as.numeric(x[2])
+  else if (length(x) == 1) as.numeric(x[1])*12
+  else NA
+})
+data <- data %>% select(-Credit_History_Age)
+
+# Step 4: Median imputation for numeric columns
+num_cols <- sapply(data, is.numeric)
+data[num_cols] <- lapply(data[num_cols], function(x) {
+  x[is.na(x)] <- median(x, na.rm = TRUE)
+  return(x)
+})
+
+# Step 5: Mode imputation for categorical columns
+mode_impute <- function(x) {
+  ux <- unique(x[!is.na(x)])
+  ux[which.max(tabulate(match(x, ux)))]
+}
+cat_cols <- sapply(data, is.character)
+data[cat_cols] <- lapply(data[cat_cols], function(x) {
+  x[is.na(x)] <- mode_impute(x)
+  return(as.factor(x))
+})
+
+# Step 6: Ensure Credit_Score is a factor
+data$Credit_Score <- as.factor(data$Credit_Score)
+```
+Data cleaned: all numeric variables are converted, missing values are imputed, and categorical variables are encoded as factors.
+
+Exploratory Data Analysis (EDA) <br>
+```{r}
+#| code-fold: true
+#| code-fold: true
+library(GGally)
+
+# Plot pairwise relationships of key numeric features
+GGally::ggpairs(data %>% select(Credit_Score, Age, Annual_Income, Delay_from_due_date,
+                                Num_Credit_Card, Outstanding_Debt), aes(color = Credit_Score))
+
+```
+
+Key Insights:
+
+Higher Credit_Utilization_Ratio tends to associate with poorer scores.
+
+Annual_Income is positively skewed; transformation may help.
+
+🔧Feature Engineering <br>
+
+You can further refine the features based on domain knowledge:
+
+Create interaction terms (e.g. Income × Delay)
+
+Bin Age or Income if needed
+
+Drop constant or redundant variables
+
+Scale numeric variables (for models like logistic regression)
+
+
+Logistic Regression (Multinomial)
+
+```{r}
+#| code-fold: true
+library(nnet)
+library(caret)
+
+# Select a safe subset of predictors for multinomial model
+set.seed(123)
+log_model <- train(Credit_Score ~ Age + Annual_Income + Delay_from_due_date +
+                     Num_Credit_Card + Num_Bank_Accounts,
+                   data = data,
+                   method = "multinom",
+                   trControl = trainControl(method = "cv", number = 5))
+log_model
+```
+
+Model Performance Evaluation
+```{r}
+#| code-fold: true
+# Get predictions and confusion matrix
+preds <- predict(log_model, newdata = data)
+conf_matrix <- confusionMatrix(preds, data$Credit_Score)
+conf_matrix
+```
+✅ Conclusion
+The logistic regression model provided an interpretable baseline classifier
+
+Cleaned data and EDA suggest key factors: Delay from due date, Number of credit cards, and Annual Income
+
+Further models (e.g. Random Forest) may capture nonlinearities better
+
+With a robust preprocessing pipeline, the model can help identify risky customers early
+
+
+🧠 Future Model Enhancements
+Random Forest or XGBoost with class weights
+
+Hyperparameter tuning with tuneGrid
+
+SMOTE or ROSE for balancing
+
+Use full feature set with recipes::recipe() pipeline
+
+Random Forest
+
+```{r}
+
+
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+```{r}
+```
+
+
+```{r}
+```
